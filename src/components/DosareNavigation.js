@@ -1,7 +1,11 @@
 import { NavLink } from "react-router-dom";
 import classes from "./DosareNavigation.module.css";
+import { getIsProcuror } from "../util/auth";
 
 const DosareNavigation = () => {
+
+  const isProcuror = getIsProcuror();
+
   return (
     <header className={classes.header}>
       <nav>
@@ -17,7 +21,7 @@ const DosareNavigation = () => {
               Dosare nesolutionate
             </NavLink>
           </li>
-          <li>
+          {isProcuror === "false" && <li>
             <NavLink
               to="/dosare/nou"
               className={({ isActive }) =>
@@ -27,7 +31,7 @@ const DosareNavigation = () => {
             >
               Adauga dosar
             </NavLink>
-          </li>
+          </li>}
         </ul>
 
       </nav>

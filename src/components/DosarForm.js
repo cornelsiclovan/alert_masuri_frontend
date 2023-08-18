@@ -34,6 +34,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
   let procurorDosar = "";
   let procuroriRest = procurori;
 
+
   const isProcuror = getIsProcuror();
 
   if (dosar) {
@@ -45,6 +46,8 @@ const DosarForm = ({ method, dosar, procurori }) => {
     );
   }
 
+  console.log(isProcuror);
+
   const handleCheck = () => {
     setShowSolutionType(!showSolutionType);
 
@@ -54,6 +57,8 @@ const DosarForm = ({ method, dosar, procurori }) => {
   const cancelHandler = () => {
     navigate("..");
   };
+
+  console.log(isProcuror);
 
   return (
     <Form method={method} className={classes.form}>
@@ -80,15 +85,17 @@ const DosarForm = ({ method, dosar, procurori }) => {
           />
         </p>
       )}
+     
+      
       {dosar && showSolutionType && (
         <p style={{ display: "flex" }}>
-          <label htmlFor="este_solutionat" style={{ width: "10%" }}>
+          <label htmlFor="este_solutionat" style={{ width: "20%" }}>
             {" "}
-            Tip solutie
+            Solutie finala
           </label>
           <select id="tip_solutie" name="tip_solutie">
-            <option key="rtup" value="RTUP">
-              RTUP
+            <option key="rech" value="RECHIZITORIU">
+              RECHIZITORIU
             </option>
             <option key="rup" value="RUP">
               RUP
@@ -102,6 +109,49 @@ const DosarForm = ({ method, dosar, procurori }) => {
           </select>
         </p>
       )}
+      {dosar && <p style={{ display: "flex" }}>
+          <label htmlFor="tip_solutie_propusa" style={{ width: "20%" }}>
+            {" "}
+             Solutie propusa
+          </label>
+          <select id="tip_solutie_propusa" name="tip_solutie_propusa">
+            <option key={dosar.tip_solutie_propusa} value={dosar.tip_solutie_propusa}>
+              {dosar.tip_solutie_propusa}
+            </option>
+            <option key="rtup" value="RTUP">
+              RTUP
+            </option>
+            <option key="rup" value="RUP">
+              RUP
+            </option>
+            <option key="clasare" value="CLASARE">
+              CLASARE
+            </option>
+            <option key="declinare" value="DECLINARE">
+              DECLINARE
+            </option>
+          </select>
+        </p>}
+       {!dosar && <p style={{ display: "flex" }}>
+          <label htmlFor="tip_solutie_propusa" style={{ width: "20%" }}>
+            {" "}
+             Solutie propusa
+          </label>
+          <select id="tip_solutie_propusa" name="tip_solutie_propusa">
+            <option key="rtup" value="RTUP">
+              RTUP
+            </option>
+            <option key="rup" value="RUP">
+              RUP
+            </option>
+            <option key="clasare" value="CLASARE">
+              CLASARE
+            </option>
+            <option key="declinare" value="DECLINARE">
+              DECLINARE
+            </option>
+          </select>
+        </p>}
       <p>
         <label htmlFor="numar_dosar">Numar Dosar</label>
         <input
@@ -112,7 +162,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
           defaultValue={dosar ? dosar.numar : ""}
         />
       </p>
-      {!isProcuror && (
+      {isProcuror === "false" && (
         <p>
           <label htmlFor="procuror">Procuror </label>
           <select id="procurorId" type="select" name="procurorId" required>
@@ -127,7 +177,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
           </select>
         </p>
       )}
-      {isProcuror && (
+      {isProcuror === "true" && (
         <p>
           <label htmlFor="procuror">Procuror </label>
           <select id="procurorId" type="select" name="procurorId" required>
@@ -216,7 +266,8 @@ export const action = async ({ request, params }) => {
     procurorId: data.get("procurorId"),
     data_interceptari: data.get("data_interceptari") || null,
     este_solutionat: data.get("este_solutionat"),
-    tip_solutie: data.get("tip_solutie")
+    tip_solutie: data.get("tip_solutie"),
+    tip_solutie_propusa: data.get("tip_solutie_propusa")
   };
 
   let url = BASE_URL + "/dosar";

@@ -12,7 +12,6 @@ import { useState } from "react";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-
 const DosarForm = ({ method, dosar, procurori }) => {
   const data = useActionData();
   const navigate = useNavigate();
@@ -20,6 +19,9 @@ const DosarForm = ({ method, dosar, procurori }) => {
   const userId = getUserId();
 
   const [showSolutionType, setShowSolutionType] = useState(false);
+
+  const [isClasare, setIsClasare] = useState(false);
+  const [isRechizitoriu, setIsRechizitoriu] = useState(false);
 
   let helper = false;
 
@@ -34,7 +36,6 @@ const DosarForm = ({ method, dosar, procurori }) => {
   let procurorDosar = "";
   let procuroriRest = procurori;
 
-
   const isProcuror = getIsProcuror();
 
   if (dosar) {
@@ -46,10 +47,14 @@ const DosarForm = ({ method, dosar, procurori }) => {
     );
   }
 
-  console.log(isProcuror);
-
   const handleCheck = () => {
+    
+    if(showSolutionType) {
+      setIsClasare(false);
+    }
     setShowSolutionType(!showSolutionType);
+
+
 
     setIsSolutionat(!isSolutionat);
   };
@@ -58,7 +63,18 @@ const DosarForm = ({ method, dosar, procurori }) => {
     navigate("..");
   };
 
-  console.log(isProcuror);
+  const onSelectTipSolutie = (event) => {
+    console.log(isClasare);
+    if (event.target.value === "CLASARE") {
+      setIsClasare(true);
+      setIsRechizitoriu(false);
+    }
+
+    if (event.target.value === "RECHIZITORIU") {
+      setIsRechizitoriu(true);
+      setIsClasare(false);
+    }
+  };
 
   return (
     <Form method={method} className={classes.form}>
@@ -85,15 +101,18 @@ const DosarForm = ({ method, dosar, procurori }) => {
           />
         </p>
       )}
-     
-      
+
       {dosar && showSolutionType && (
         <p style={{ display: "flex" }}>
           <label htmlFor="este_solutionat" style={{ width: "20%" }}>
             {" "}
             Solutie finala
           </label>
-          <select id="tip_solutie" name="tip_solutie">
+          <select
+            id="tip_solutie"
+            name="tip_solutie"
+            onChange={onSelectTipSolutie}
+          >
             <option key="rech" value="RECHIZITORIU">
               RECHIZITORIU
             </option>
@@ -109,13 +128,91 @@ const DosarForm = ({ method, dosar, procurori }) => {
           </select>
         </p>
       )}
-      {dosar && <p style={{ display: "flex" }}>
+
+      {/* {dosar && isClasare && (
+        <>
+          <li style={{ listStyle: "none" }}> Litere </li>
+          <div style={{ display: "flex", justifyContent: "space-around" }}>
+            <li style={{ listStyle: "none" }}>
+              <label htmlFor="a" style={{ width: "10%" }}>
+                {" "}
+                a{" "}
+              </label>
+              <input type="checkbox" id="a" name="a" value="a" />
+            </li>
+            <li style={{ listStyle: "none" }}>
+              <label htmlFor="b" style={{ width: "10%" }}>
+                {" "}
+                b{" "}
+              </label>
+              <input type="checkbox" id="b" name="b" value="b" />
+            </li>
+            <li style={{ listStyle: "none" }}>
+              <label htmlFor="c" style={{ width: "10%" }}>
+                {" "}
+                c{" "}
+              </label>
+              <input type="checkbox" id="c" name="c" />
+            </li>
+            <li style={{ listStyle: "none" }}>
+              <label htmlFor="d" style={{ width: "10%" }}>
+                {" "}
+                d{" "}
+              </label>
+              <input type="checkbox" id="d" name="d" />
+            </li>
+          </div>
+        </>
+      )}
+
+      {dosar && isClasare && (
+        <p style={{ display: "flex" }}>
+          <label htmlFor="art_46" style={{ width: "10%" }}>
+            {" "}
+            Art. 46
+          </label>
+          <input type="checkbox" id="art_46" name="art_46" />
+        </p>
+      )}
+        
+      {dosar && isClasare && (
+          <p style={{ display: "flex" }}>
+            <label style={{width: "20%"}}>Infractiune </label>
+            <select>
+              <option>test</option>
+            </select>
+          </p>
+      )}
+
+      {dosar && isClasare && (
+        <p style={{ display: "flex" }}>
+          <label htmlFor="persoane_comunicare" style={{ width: "20%" }}>
+            {" "}
+            Persoane comunicare
+          </label>
+          <textarea
+
+            rows="4"
+            id="persoane_comunicare"
+            name="persoane_comunicare"
+            placeholder="introduceti persoanele cu ca text ca si cum le introduceti in ordonanta"
+          />
+        </p>
+      )} */}
+
+   
+        
+      {dosar && (
+        <p style={{ display: "flex" }}>
           <label htmlFor="tip_solutie_propusa" style={{ width: "20%" }}>
             {" "}
-             Solutie propusa
+            Solutie propusa
           </label>
           <select id="tip_solutie_propusa" name="tip_solutie_propusa">
-            <option key={dosar.tip_solutie_propusa} value={dosar.tip_solutie_propusa}>
+            <option
+              key={dosar.tip_solutie_propusa}
+              value={dosar.tip_solutie_propusa}
+            >
               {dosar.tip_solutie_propusa}
             </option>
             <option key="rtup" value="RTUP">
@@ -131,11 +228,13 @@ const DosarForm = ({ method, dosar, procurori }) => {
               DECLINARE
             </option>
           </select>
-        </p>}
-       {!dosar && <p style={{ display: "flex" }}>
+        </p>
+      )}
+      {!dosar && (
+        <p style={{ display: "flex" }}>
           <label htmlFor="tip_solutie_propusa" style={{ width: "20%" }}>
             {" "}
-             Solutie propusa
+            Solutie propusa
           </label>
           <select id="tip_solutie_propusa" name="tip_solutie_propusa">
             <option key="rtup" value="RTUP">
@@ -151,7 +250,8 @@ const DosarForm = ({ method, dosar, procurori }) => {
               DECLINARE
             </option>
           </select>
-        </p>}
+        </p>
+      )}
       <p>
         <label htmlFor="numar_dosar">Numar Dosar</label>
         <input
@@ -199,7 +299,6 @@ const DosarForm = ({ method, dosar, procurori }) => {
           id="data_dosar"
           type="date"
           name="data_dosar"
-          required
           defaultValue={dosar ? dosar.data : ""}
         />
       </p>
@@ -259,7 +358,7 @@ export const action = async ({ request, params }) => {
 
   const dosarData = {
     numar: data.get("numar_dosar"),
-    data: data.get("data_dosar"),
+    data: data.get("data_dosar") || null,
     data_arest: data.get("data_arest") || null,
     data_cj: data.get("data_cj") || null,
     data_sechestru: data.get("data_sechestru") || null,
@@ -267,7 +366,7 @@ export const action = async ({ request, params }) => {
     data_interceptari: data.get("data_interceptari") || null,
     este_solutionat: data.get("este_solutionat"),
     tip_solutie: data.get("tip_solutie"),
-    tip_solutie_propusa: data.get("tip_solutie_propusa")
+    tip_solutie_propusa: data.get("tip_solutie_propusa"),
   };
 
   let url = BASE_URL + "/dosar";

@@ -1,9 +1,10 @@
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { Await, defer, json, redirect, useLoaderData } from "react-router-dom";
 import DosareList from "../components/DosareList";
 import { getAuthToken, getIsAdmin, getIsProcuror } from "../util/auth";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
+
 
 const DosarePage = () => {
   const { dosare } = useLoaderData();
@@ -12,12 +13,14 @@ const DosarePage = () => {
     <>
     <Suspense fallback={<p style={{ textAlign: "center" }}>Loading...</p>}>
       <Await resolve={dosare}>
-        {(loadedDosare) => <DosareList dosare={loadedDosare} />}
+        {(loadedDosare) => <DosareList dosare={loadedDosare}/>}
       </Await>
     </Suspense>
     </>
   );
 };
+
+
 
 export default DosarePage;
 
@@ -51,6 +54,8 @@ const loadDosare = async () => {
     return resData.dosare;
   }
 };
+
+
 
 export function loader() {
  

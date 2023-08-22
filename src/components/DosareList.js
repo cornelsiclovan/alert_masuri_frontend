@@ -2,7 +2,7 @@ import { Form, Link } from "react-router-dom";
 import classes from "./DosareList.module.css";
 import { useEffect, useState } from "react";
 
-const DosareList = ({ dosare }) => {
+const DosareList = ({ dosare}) => {
   const [cuMasuriAsiguratorii, setCuMasuriAsiguratorii] = useState(false);
   const [dateNow, setDate] = useState(Date.now());
   const changeCuMasuriAsiguratorii = () => {
@@ -16,7 +16,23 @@ const DosareList = ({ dosare }) => {
   const [dosarCautat, setDosarCautat] = useState(null);
 
   const [dosareCuMasuri, setDosareCuMasuri] = useState(dosare);
+  const [dosSaseLuni, setDosSaseLuni] = useState(0);
+  let totalDosSaseLuni = 0;
+
   let dosareSortate;
+
+  let i = 0;
+
+
+  while(i < dosare.length) {
+    if((new Date(dosare[i].data).getTime() - new Date()) /(1000 * 3600 * 24) * -1 > 180) {
+      totalDosSaseLuni ++;
+    }
+    i++;
+  }
+  console.log(totalDosSaseLuni);
+
+  //setDosSaseLuni(totalDosSaseLuni);
 
   const handleCheck = (event) => {
     if (event.target.id === "arest") {
@@ -122,12 +138,13 @@ const DosareList = ({ dosare }) => {
     setDosarCautat(event.target.value);
   };
 
+
   return (
     <>
       <div className={classes.items}>
         <div style={{ display: "flex" }}>
-          {cuMasuriAsiguratorii && <h1> Dosarele cu masuri </h1>}
-          {!cuMasuriAsiguratorii && <h1> Toate dosarele </h1>}
+          {cuMasuriAsiguratorii && <h1> Dosare cu masuri </h1>}
+          {!cuMasuriAsiguratorii && <div><h1> Dosare intrate({dosare.length}) </h1> - Mai vechi de 6 luni ({totalDosSaseLuni})</div>}
           {!cuMasuriAsiguratorii && (
             <div
               style={{
@@ -172,7 +189,7 @@ const DosareList = ({ dosare }) => {
                 }}
                 onClick={changeCuMasuriAsiguratorii}
               >
-                Toate{" "}
+                Intrate{" "}
               </button>{" "}
             </div>
           )}
@@ -283,7 +300,7 @@ const DosareList = ({ dosare }) => {
                 console.log("dosarCautat", dosarCautat);
               }
 
-              if (dosarCautat === null || dosarCautat === "") {
+              if (dosarCautat === null || dosarCautat === "" ) {
                 return (
                   <li key={dosar.id} className={classes.item}>
                     <Link to={`/dosare/${dosar.id}`}>

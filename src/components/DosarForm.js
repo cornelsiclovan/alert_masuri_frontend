@@ -356,6 +356,8 @@ export const action = async ({ request, params }) => {
   const method = request.method;
   const data = await request.formData();
 
+
+
   const dosarData = {
     numar: data.get("numar_dosar"),
     data: data.get("data_dosar") || null,
@@ -370,6 +372,8 @@ export const action = async ({ request, params }) => {
   };
 
   let url = BASE_URL + "/dosar";
+
+  console.log(dosarData.data);
 
   if (method === "PATCH") {
     const dosarId = params.dosarId;

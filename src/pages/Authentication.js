@@ -31,7 +31,7 @@ export const action = async ({ request }) => {
     };
   }
 
-  console.log(BASE_URL);
+  console.log(authData);
 
   const response = await fetch(`${BASE_URL}`+ "/" + mode, {
     method: "POST",

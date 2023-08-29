@@ -254,10 +254,11 @@ const DosareList = ({ dosare }) => {
 
               const alertaArest = timpRamasArest <= 15 ? true : false;
               const alertaSechestru = timpRamasSechestru <= 30 ? true : false;
-              const alertaCj = timpRamasCj <= 15 ? true : false;
+              const alertaCj = parseInt(dosar.days_remaining) <= 4 ? true : false;
               const alertaInterceptari =
                 timpRamasInterceptari <= 15 ? true : false;
               const alertaIntrate = timpRamasIntrate >= 90 ? true : false;
+
 
               if (dosarCautat) {
                 console.log("dosarCautat", dosarCautat);
@@ -283,7 +284,7 @@ const DosareList = ({ dosare }) => {
                           style={{
                             backgroundColor: alertaIntrate ? "red" : "",
                           }}
-                        >
+                        >  
                           {dosar.data &&
                             `Intrare: ${dosar.data}, au trecut ${timpRamasIntrate} zile de la intrare`}
                         </p>
@@ -406,7 +407,7 @@ const DosareList = ({ dosare }) => {
 
                 const alertaArest = timpRamasArest <= 15 ? true : false;
                 const alertaSechestru = timpRamasSechestru <= 30 ? true : false;
-                const alertaCj = timpRamasCj <= 15 ? true : false;
+                const alertaCj = parseInt(dosar.days_remaining) <= 15 ? true : false;
                 const alertaInterceptari =
                   timpRamasInterceptari <= 15 ? true : false;
 

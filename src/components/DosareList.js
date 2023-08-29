@@ -2,11 +2,11 @@ import { Form, Link } from "react-router-dom";
 import classes from "./DosareList.module.css";
 import { useEffect, useState } from "react";
 
-const DosareList = ({ dosare}) => {
-  const [cuMasuriAsiguratorii, setCuMasuriAsiguratorii] = useState(false);
+const DosareList = ({ dosare }) => {
+  const [cuMasuriAsiguratorii, setCuMasuriAsiguratorii] = useState(true);
   const [dateNow, setDate] = useState(Date.now());
   const changeCuMasuriAsiguratorii = () => {
-    setCuMasuriAsiguratorii(!cuMasuriAsiguratorii);
+    setCuMasuriAsiguratorii(true);
   };
   const [isArest, setIsArest] = useState(false);
   const [isCj, setIsCj] = useState(false);
@@ -23,10 +23,16 @@ const DosareList = ({ dosare}) => {
 
   let i = 0;
 
+  const dosareFilterCuMasuri = dosare.filter((dosar) => dosar.days_remaining !== null);
+  const dosareFilterFaraMasuri = dosare.filter((dosar) => dosar.days_remaining === null);
 
-  while(i < dosare.length) {
-    if((new Date(dosare[i].data).getTime() - new Date()) /(1000 * 3600 * 24) * -1 > 180) {
-      totalDosSaseLuni ++;
+  while (i < dosare.length) {
+    if (
+      ((new Date(dosare[i].data).getTime() - new Date()) / (1000 * 3600 * 24)) *
+        -1 >
+      180
+    ) {
+      totalDosSaseLuni++;
     }
     i++;
   }
@@ -138,70 +144,27 @@ const DosareList = ({ dosare}) => {
     setDosarCautat(event.target.value);
   };
 
+  console.log(dosare);
 
   return (
-    <>
+    <div className={classes.group}>
       <div className={classes.items}>
         <div style={{ display: "flex" }}>
-          {cuMasuriAsiguratorii && <h1> Dosare cu masuri </h1>}
-          {!cuMasuriAsiguratorii && <div><h1> Dosare intrate({dosare.length}) </h1> - Mai vechi de 6 luni ({totalDosSaseLuni})</div>}
-          {!cuMasuriAsiguratorii && (
-            <div
-              style={{
-                width: "50%",
-                alignItems: "center",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <button
-                style={{
-                  backgroundColor: "white",
-                  color: "darkorange",
-                  padding: "10px",
-                  borderRadius: "10px",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-                onClick={changeCuMasuriAsiguratorii}
-              >
-                Cu masuri{" "}
-              </button>{" "}
-            </div>
-          )}
-          {cuMasuriAsiguratorii && (
-            <div
-              style={{
-                width: "40%",
-                alignItems: "center",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <button
-                style={{
-                  backgroundColor: "white",
-                  color: "darkorange",
-                  padding: "10px",
-                  borderRadius: "10px",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-                onClick={changeCuMasuriAsiguratorii}
-              >
-                Intrate{" "}
-              </button>{" "}
-            </div>
-          )}
+          <div>
+            <h1> Dosare intrate({dosareFilterFaraMasuri.length}) </h1> - Mai vechi de 6 luni (
+            {totalDosSaseLuni})
+          </div>
+
+         
 
           <input
-            style={{ height: "30px", marginTop: "30px" }}
+            style={{ height: "30px", marginTop: "20px", marginLeft: "70px" }}
             type="text"
             placeholder="Numar de dosar"
             onChange={onChangeDosarInput}
           ></input>
         </div>
-        {cuMasuriAsiguratorii && (
+        {/* {cuMasuriAsiguratorii && (
           <div style={{ display: "flex", justifyContent: "space-around" }}>
             <li style={{ listStyle: "none" }}> Sorteaza dupa: </li>
             <li style={{ listStyle: "none" }}>
@@ -261,11 +224,11 @@ const DosareList = ({ dosare}) => {
               />
             </li>
           </div>
-        )}
+        )} */}
         <br />
         <ul className={classes.list}>
-          {!cuMasuriAsiguratorii &&
-            dosare.map((dosar) => {
+          {
+            dosareFilterFaraMasuri.map((dosar) => {
               const timpRamasArest = Math.floor(
                 (new Date(dosar.data_arest).getTime() - dateNow) /
                   (1000 * 3600 * 24)
@@ -300,7 +263,7 @@ const DosareList = ({ dosare}) => {
                 console.log("dosarCautat", dosarCautat);
               }
 
-              if (dosarCautat === null || dosarCautat === "" ) {
+              if (dosarCautat === null || dosarCautat === "") {
                 return (
                   <li key={dosar.id} className={classes.item}>
                     <Link to={`/dosare/${dosar.id}`}>
@@ -343,8 +306,8 @@ const DosareList = ({ dosare}) => {
                         <time
                           style={{ backgroundColor: alertaCj ? "red" : "" }}
                         >
-                          {dosar.data_cj &&
-                            `control judiciar: ${dosar.data_cj}, mai sunt ${timpRamasCj} zile pana la expirarea masurii`}
+                          {dosar.days_remaining &&
+                            `masura preventiva: ${dosar.data}, mai sunt ${dosar.days_remaining} zile pana la expirarea masurii`}
                         </time>
                         {dosar.data_cj && <br />}
                         <time
@@ -392,8 +355,8 @@ const DosareList = ({ dosare}) => {
                         <time
                           style={{ backgroundColor: alertaCj ? "red" : "" }}
                         >
-                          {dosar.data_cj &&
-                            `control judiciar: ${dosar.data_cj}, mai sunt ${timpRamasCj} zile pana la expirarea masurii`}
+                          {dosar.days_remaining &&
+                            `masura preventiva: ${dosar.data}, mai sunt ${dosar.days_remaining} zile pana la expirarea masurii`}
                         </time>
                         {dosar.data_cj && <br />}
                         <time
@@ -411,8 +374,13 @@ const DosareList = ({ dosare}) => {
                 );
               }
             })}
+        </ul>
+      </div>
+      <div className={classes.items}>
+        <h1> Dosare cu masuri </h1>
+        <ul>
           {cuMasuriAsiguratorii &&
-            dosareCuMasuri.map((dosar) => {
+            dosareFilterCuMasuri.map((dosar) => {
               if (
                 dosar.isControlJudiciar ||
                 dosar.isArest ||
@@ -472,8 +440,8 @@ const DosareList = ({ dosare}) => {
                           <time
                             style={{ backgroundColor: alertaCj ? "red" : "" }}
                           >
-                            {dosar.data_cj &&
-                              `control judiciar: ${dosar.data_cj}, mai sunt ${timpRamasCj} zile pana la expirarea masurii`}
+                            {dosar.days_remaining &&
+                              `masura preventiva: ${dosar.data}, mai sunt ${dosar.days_remaining} zile pana la expirarea masurii`}
                           </time>
                           {dosar.data_cj && <br />}
                           <time
@@ -523,8 +491,8 @@ const DosareList = ({ dosare}) => {
                           <time
                             style={{ backgroundColor: alertaCj ? "red" : "" }}
                           >
-                            {dosar.data_cj &&
-                              `control judiciar: ${dosar.data_cj}, mai sunt ${timpRamasCj} zile pana la expirarea masurii`}
+                            {dosar.days_remaining &&
+                              `masura preventiva: ${dosar.data}, mai sunt ${dosar.days_remaining} zile pana la expirarea masurii`}
                           </time>
                           {dosar.data_cj && <br />}
                           <time
@@ -545,7 +513,7 @@ const DosareList = ({ dosare}) => {
             })}
         </ul>
       </div>
-    </>
+    </div>
   );
 };
 

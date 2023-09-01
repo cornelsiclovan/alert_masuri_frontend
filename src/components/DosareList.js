@@ -275,6 +275,7 @@ const DosareList = ({ dosare }) => {
                         <p>
                           Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
                         </p>
+                        <p>Data inceperii la procuror: {dosar.data_inceperii_la_procuror.split("T")[0]}</p>
                         {dosar && dosar.este_solutionat === 1 && (
                           <p>
                             Solutie finala: <b>{dosar.tip_solutie}</b>
@@ -286,7 +287,7 @@ const DosareList = ({ dosare }) => {
                           }}
                         >  
                           {dosar.data &&
-                            `Intrare: ${dosar.data}, au trecut ${timpRamasIntrate} zile de la intrare`}
+                            `Intrare: ${dosar.data.split("T")[0]}, au trecut ${timpRamasIntrate} zile de la intrare`}
                         </p>
                         <time
                           style={{ backgroundColor: alertaArest ? "red" : "" }}

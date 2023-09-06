@@ -24,8 +24,9 @@ const DosareList = ({ dosare }) => {
 
   let i = 0;
 
-  const dosareFilterCuMasuri = dosare.filter((dosar) => dosar.days_remaining !== null);
+  const dosareFilterCuMasuri = dosare.filter((dosar) => dosar.days_remaining !== null && dosar.isSechestru !== true);
   const dosareFilterFaraMasuri = dosare.filter((dosar) => dosar.days_remaining === null);
+  const dosareFilterCuSechestru = dosare.filter((dosar) => dosar.isSechestru === true)
 
   while (i < dosare.length) {
     if (
@@ -516,6 +517,143 @@ const DosareList = ({ dosare }) => {
               }
             })}
         </ul>
+      </div>
+      <div className={classes.items}>
+        {dosareFilterCuSechestru.length!==0 && (<><h1> Dosare cu sechestru </h1>
+        <ul>
+          {cuMasuriAsiguratorii &&
+            dosareFilterCuSechestru.map((dosar) => {
+              if (
+                dosar.isControlJudiciar ||
+                dosar.isArest ||
+                dosar.isSechestru ||
+                dosar.isInterceptari
+              ) {
+                const timpRamasArest = Math.floor(
+                  (new Date(dosar.data_arest).getTime() - dateNow) /
+                    (1000 * 3600 * 24)
+                );
+                const timpRamasCj = Math.floor(
+                  (new Date(dosar.data_cj).getTime() - dateNow) /
+                    (1000 * 3600 * 24)
+                );
+                const timpRamasSechestru = Math.floor(
+                  (new Date(dosar.data_sechestru).getTime() - dateNow) /
+                    (1000 * 3600 * 24)
+                );
+                const timpRamasInterceptari = Math.floor(
+                  (new Date(dosar.data_interceptari).getTime() - dateNow) /
+                    (1000 * 3600 * 24)
+                );
+
+                const alertaArest = timpRamasArest <= 15 ? true : false;
+                const alertaSechestru = parseInt(dosar.days_remaining) > 180 ? true : false;
+                const alertaCj = parseInt(dosar.days_remaining) <= 15 ? true : false;
+                const alertaInterceptari =
+                  timpRamasInterceptari <= 15 ? true : false;
+
+                if (dosarCautat === null || dosarCautat === "") {
+                  return (
+                    <li key={dosar.id} className={classes.item}>
+                      <Link to={`/dosare/${dosar.id}`}>
+                        <div className={classes.content}>
+                          <h1>
+                            {dosar.numar} - {dosar.numeProcuror}
+                          </h1>
+                          <time>instituire/mentinere: {dosar.data.split("T")[0]}</time> <br />
+                          <time
+                            style={{
+                              backgroundColor: alertaArest ? "red" : "",
+                            }}
+                          >
+                            {dosar.data_arest &&
+                              `arest: ${dosar.data_arest}, mai sunt ${timpRamasArest} zile pana la expirarea masurii`}
+                          </time>
+                          {dosar.data_arest && <br />}
+                          <time
+                            style={{
+                              backgroundColor: alertaSechestru ? "red" : "",
+                            }}
+                          >
+                            {dosar.data_sechestru &&
+                              `sechestru: ${dosar.data_sechestru}, mai sunt ${timpRamasSechestru} zile pana la expirarea masurii`}
+                          </time>
+                          {dosar.data_sechestru && <br />}
+                          <time
+                            style={{ backgroundColor: alertaSechestru ? "red" : "" }}
+                          >
+                            {dosar.days_remaining &&
+                              `de la insituire/mentinere au trecut ${dosar.days_remaining} zile`}
+                          </time>
+                          {dosar.data_cj && <br />}
+                          <time
+                            style={{
+                              backgroundColor: alertaInterceptari ? "red" : "",
+                            }}
+                          >
+                            {dosar.data_interceptari &&
+                              `interceptari: ${dosar.data_interceptari}, mai sunt ${timpRamasInterceptari} zile pana la expirarea masurii`}
+                          </time>
+                          {dosar.data_interceptari && <br />}
+                        </div>
+                      </Link>
+                    </li>
+                  );
+                } else if (
+                  dosar &&
+                  dosarCautat &&
+                  dosar.numar.toLowerCase().includes(dosarCautat.toLowerCase())
+                ) {
+                  return (
+                    <li key={dosar.id} className={classes.item}>
+                      <Link to={`/dosare/${dosar.id}`}>
+                        <div className={classes.content}>
+                          <h1>
+                            {dosar.numar} - {dosar.numeProcuror}
+                          </h1>
+                          <time>intrare: {dosar.data}</time> <br />
+                          <time
+                            style={{
+                              backgroundColor: alertaArest ? "red" : "",
+                            }}
+                          >
+                            {dosar.data_arest &&
+                              `arest: ${dosar.data_arest}, mai sunt ${timpRamasArest} zile pana la expirarea masurii`}
+                          </time>
+                          {dosar.data_arest && <br />}
+                          <time
+                            style={{
+                              backgroundColor: alertaSechestru ? "red" : "",
+                            }}
+                          >
+                            {dosar.data_sechestru &&
+                              `sechestru: ${dosar.data_sechestru}, mai sunt ${timpRamasSechestru} zile pana la expirarea masurii`}
+                          </time>
+                          {dosar.data_sechestru && <br />}
+                          <time
+                            style={{ backgroundColor: alertaCj ? "red" : "" }}
+                          >
+                            {dosar.days_remaining &&
+                              `masura preventiva: ${dosar.data}, mai sunt ${dosar.days_remaining} zile pana la expirarea masurii`}
+                          </time>
+                          {dosar.data_cj && <br />}
+                          <time
+                            style={{
+                              backgroundColor: alertaInterceptari ? "red" : "",
+                            }}
+                          >
+                            {dosar.data_interceptari &&
+                              `interceptari: ${dosar.data_interceptari}, mai sunt ${timpRamasInterceptari} zile pana la expirarea masurii`}
+                          </time>
+                          {dosar.data_interceptari && <br />}
+                        </div>
+                      </Link>
+                    </li>
+                  );
+                }
+              }
+            })}
+        </ul></>)}
       </div>
     </div>
     </>

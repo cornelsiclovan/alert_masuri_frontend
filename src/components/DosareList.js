@@ -1,6 +1,7 @@
 import { Form, Link } from "react-router-dom";
 import classes from "./DosareList.module.css";
 import { useEffect, useState } from "react";
+import ProcurorList from "./ProcurorList";
 
 const DosareList = ({ dosare }) => {
   const [cuMasuriAsiguratorii, setCuMasuriAsiguratorii] = useState(true);
@@ -147,6 +148,7 @@ const DosareList = ({ dosare }) => {
   console.log(dosare);
 
   return (
+    <>
     <div className={classes.group}>
       <div className={classes.items}>
         <div style={{ display: "flex" }}>
@@ -420,7 +422,7 @@ const DosareList = ({ dosare }) => {
                           <h1>
                             {dosar.numar} - {dosar.numeProcuror}
                           </h1>
-                          <time>intrare: {dosar.data}</time> <br />
+                          <time>expirare masura preventiva: {dosar.data.split("T")[0]}</time> <br />
                           <time
                             style={{
                               backgroundColor: alertaArest ? "red" : "",
@@ -443,7 +445,7 @@ const DosareList = ({ dosare }) => {
                             style={{ backgroundColor: alertaCj ? "red" : "" }}
                           >
                             {dosar.days_remaining &&
-                              `masura preventiva: ${dosar.data}, mai sunt ${dosar.days_remaining} zile pana la expirarea masurii`}
+                              `masura preventiva expira in ${dosar.days_remaining} zile`}
                           </time>
                           {dosar.data_cj && <br />}
                           <time
@@ -516,6 +518,8 @@ const DosareList = ({ dosare }) => {
         </ul>
       </div>
     </div>
+    </>
+
   );
 };
 

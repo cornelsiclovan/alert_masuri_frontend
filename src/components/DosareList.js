@@ -14,19 +14,29 @@ const DosareList = ({ dosare }) => {
   const [isSechestru, setIsSechestru] = useState(false);
   const [isInterceptari, setIsInterceptari] = useState(false);
 
+
+
   const [dosarCautat, setDosarCautat] = useState(null);
 
   const [dosareCuMasuri, setDosareCuMasuri] = useState(dosare);
-  const [dosSaseLuni, setDosSaseLuni] = useState(0);
+
   let totalDosSaseLuni = 0;
 
   let dosareSortate;
 
   let i = 0;
 
+  let procurori = [];
+
+
   const dosareFilterCuMasuri = dosare.filter((dosar) => dosar.days_remaining !== null && dosar.isSechestru !== true);
   const dosareFilterFaraMasuri = dosare.filter((dosar) => dosar.days_remaining === null);
   const dosareFilterCuSechestru = dosare.filter((dosar) => dosar.isSechestru === true)
+  const dosareMaiVechiDeSaseLuni = dosare.filter((dosar) => ((new Date(dosar.data).getTime() - new Date()) / (1000 * 3600 * 24)) *
+  -1 >
+180 )
+
+  const [numarDosare, setNumarDosare] = useState(dosareFilterFaraMasuri.length);
 
   while (i < dosare.length) {
     if (
@@ -38,9 +48,10 @@ const DosareList = ({ dosare }) => {
     }
     i++;
   }
-  console.log(totalDosSaseLuni);
 
-  //setDosSaseLuni(totalDosSaseLuni);
+  
+ // console.log(totalDosSaseLuni);
+ const [dosSaseLuni, setDosSaseLuni] = useState(dosareMaiVechiDeSaseLuni.length);
 
   const handleCheck = (event) => {
     if (event.target.id === "arest") {
@@ -144,6 +155,10 @@ const DosareList = ({ dosare }) => {
 
   const onChangeDosarInput = (event) => {
     setDosarCautat(event.target.value);
+    const dosareFilterFaraMasuri = dosare.filter((dosar) =>  dosar.numeProcuror.toLowerCase().includes(event.target.value.toLowerCase()) || dosar.numar.includes(event.target.value));
+    setNumarDosare(dosareFilterFaraMasuri.length);
+    const dosareMaiVechiDeSaseLuni = dosareFilterFaraMasuri.filter((dosar) => ((new Date(dosar.data).getTime() - new Date()) / (1000 * 3600 * 24)) * -1 > 180)
+    setDosSaseLuni(dosareMaiVechiDeSaseLuni.length);
   };
 
   console.log(dosare);
@@ -154,16 +169,13 @@ const DosareList = ({ dosare }) => {
       <div className={classes.items}>
         <div style={{ display: "flex" }}>
           <div>
-            <h1> Dosare intrate({dosareFilterFaraMasuri.length}) </h1> - Mai vechi de 6 luni (
-            {totalDosSaseLuni})
+            <h1> Dosare intrate({numarDosare}) </h1> - Mai vechi de 6 luni (
+            {dosSaseLuni})
           </div>
-
-         
-
           <input
-            style={{ height: "30px", marginTop: "20px", marginLeft: "70px" }}
+            style={{ height: "30px", marginTop: "20px", marginLeft: "50px", width: "260px" }}
             type="text"
-            placeholder="Numar de dosar"
+            placeholder="Numar de dosar / Nume procuror"
             onChange={onChangeDosarInput}
           ></input>
         </div>
@@ -334,7 +346,7 @@ const DosareList = ({ dosare }) => {
               } else if (
                 dosar &&
                 dosarCautat &&
-                dosar.numar.toLowerCase().includes(dosarCautat.toLowerCase())
+                (dosar.numar.toLowerCase().includes(dosarCautat.toLowerCase()) || dosar.numeProcuror.toLowerCase().includes(dosarCautat.toLowerCase()))
               ) {
                 return (
                   <li key={dosar.id} className={classes.item}>
@@ -350,7 +362,15 @@ const DosareList = ({ dosare }) => {
                           <b>{dosar.tip_solutie_propusa}</b>
                         </p>)}
                         <p>Data inceperii la procuror: {dosar.data_inceperii_la_procuror.split("T")[0]}</p>
-                        <time>intrare: {dosar.data}</time> <br />
+                        
+                        <p
+                          style={{
+                            backgroundColor: alertaIntrate ? "red" : "",
+                          }}
+                        >  
+                          {dosar.data &&
+                            `Intrare: ${dosar.data.split("T")[0]}, au trecut ${timpRamasIntrate} zile de la intrare`}
+                        </p>
                         <time
                           style={{ backgroundColor: alertaArest ? "red" : "" }}
                         >
@@ -475,7 +495,7 @@ const DosareList = ({ dosare }) => {
                 } else if (
                   dosar &&
                   dosarCautat &&
-                  dosar.numar.toLowerCase().includes(dosarCautat.toLowerCase())
+                  (dosar.numar.toLowerCase().includes(dosarCautat.toLowerCase()) || dosar.numeProcuror.toLowerCase().includes(dosarCautat.toLowerCase()))
                 ) {
                   return (
                     <li key={dosar.id} className={classes.item}>
@@ -612,7 +632,7 @@ const DosareList = ({ dosare }) => {
                 } else if (
                   dosar &&
                   dosarCautat &&
-                  dosar.numar.toLowerCase().includes(dosarCautat.toLowerCase())
+                  (dosar.numar.toLowerCase().includes(dosarCautat.toLowerCase()) || dosar.numeProcuror.toLowerCase().includes(dosarCautat.toLowerCase()))
                 ) {
                   return (
                     <li key={dosar.id} className={classes.item}>
@@ -621,7 +641,12 @@ const DosareList = ({ dosare }) => {
                           <h1>
                             {dosar.numar} - {dosar.numeProcuror}
                           </h1>
-                          <time>intrare: {dosar.data}</time> <br />
+                          <time
+                            style={{ backgroundColor: alertaSechestru ? "red" : "" }}
+                          >
+                            {dosar.days_remaining &&
+                              `de la insituire/mentinere au trecut ${dosar.days_remaining} zile`}
+                          </time>
                           <time
                             style={{
                               backgroundColor: alertaArest ? "red" : "",

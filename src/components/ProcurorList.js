@@ -1,6 +1,6 @@
 const ProcurorList = ({ dosare }) => { 
 
-    return <>ProcurorList</>
+    return <><button>Procuror 1</button><button>Procuror 1</button><button>Procuror 1</button></>
 }
 
 export default ProcurorList;

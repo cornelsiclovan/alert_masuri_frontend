@@ -275,9 +275,12 @@ const DosareList = ({ dosare }) => {
                         <h1>
                           {dosar.numar} - <small>{dosar.numeProcuror}</small>
                         </h1>
-                        <p>
+                        {dosar.tip_solutie_propusa !== "UPP" &&(<p>
                           Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
-                        </p>
+                        </p>)}
+                        {dosar.tip_solutie_propusa === "UPP" &&(<p>
+                          <b>{dosar.tip_solutie_propusa}</b>
+                        </p>)}
                         <p>Data inceperii la procuror: {dosar.data_inceperii_la_procuror.split("T")[0]}</p>
                         {dosar && dosar.este_solutionat === 1 && (
                           <p>
@@ -340,6 +343,13 @@ const DosareList = ({ dosare }) => {
                         <h1>
                           {dosar.numar} - <small>{dosar.numeProcuror}</small>
                         </h1>
+                        {dosar.tip_solutie_propusa !== "UPP" &&(<p>
+                          Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
+                        </p>)}
+                        {dosar.tip_solutie_propusa === "UPP" &&(<p>
+                          <b>{dosar.tip_solutie_propusa}</b>
+                        </p>)}
+                        <p>Data inceperii la procuror: {dosar.data_inceperii_la_procuror.split("T")[0]}</p>
                         <time>intrare: {dosar.data}</time> <br />
                         <time
                           style={{ backgroundColor: alertaArest ? "red" : "" }}

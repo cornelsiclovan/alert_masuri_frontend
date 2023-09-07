@@ -500,11 +500,11 @@ const DosareList = ({ dosare }) => {
                   return (
                     <li key={dosar.id} className={classes.item}>
                       <Link to={`/dosare/${dosar.id}`}>
-                        <div className={classes.content}>
+                      <div className={classes.content}>
                           <h1>
                             {dosar.numar} - {dosar.numeProcuror}
                           </h1>
-                          <time>intrare: {dosar.data}</time> <br />
+                          <time>expirare masura preventiva: {dosar.data.split("T")[0]}</time> <br />
                           <time
                             style={{
                               backgroundColor: alertaArest ? "red" : "",
@@ -527,7 +527,7 @@ const DosareList = ({ dosare }) => {
                             style={{ backgroundColor: alertaCj ? "red" : "" }}
                           >
                             {dosar.days_remaining &&
-                              `masura preventiva: ${dosar.data}, mai sunt ${dosar.days_remaining} zile pana la expirarea masurii`}
+                              `masura preventiva expira in ${dosar.days_remaining} zile`}
                           </time>
                           {dosar.data_cj && <br />}
                           <time
@@ -637,16 +637,11 @@ const DosareList = ({ dosare }) => {
                   return (
                     <li key={dosar.id} className={classes.item}>
                       <Link to={`/dosare/${dosar.id}`}>
-                        <div className={classes.content}>
+                      <div className={classes.content}>
                           <h1>
                             {dosar.numar} - {dosar.numeProcuror}
                           </h1>
-                          <time
-                            style={{ backgroundColor: alertaSechestru ? "red" : "" }}
-                          >
-                            {dosar.days_remaining &&
-                              `de la insituire/mentinere au trecut ${dosar.days_remaining} zile`}
-                          </time>
+                          <time>instituire/mentinere: {dosar.data.split("T")[0]}</time> <br />
                           <time
                             style={{
                               backgroundColor: alertaArest ? "red" : "",
@@ -666,10 +661,10 @@ const DosareList = ({ dosare }) => {
                           </time>
                           {dosar.data_sechestru && <br />}
                           <time
-                            style={{ backgroundColor: alertaCj ? "red" : "" }}
+                            style={{ backgroundColor: alertaSechestru ? "red" : "" }}
                           >
                             {dosar.days_remaining &&
-                              `masura preventiva: ${dosar.data}, mai sunt ${dosar.days_remaining} zile pana la expirarea masurii`}
+                              `de la insituire/mentinere au trecut ${dosar.days_remaining} zile`}
                           </time>
                           {dosar.data_cj && <br />}
                           <time

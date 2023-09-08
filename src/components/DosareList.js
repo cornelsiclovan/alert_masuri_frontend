@@ -293,7 +293,7 @@ const DosareList = ({ dosare }) => {
                         {dosar.tip_solutie_propusa === "UPP" &&(<p>
                           <b>{dosar.tip_solutie_propusa}</b>
                         </p>)}
-                        <p>Data inceperii la procuror: {dosar.data_inceperii_la_procuror.split("T")[0]}</p>
+                        <p>Data desemnare procuror: {dosar.data_inceperii_la_procuror.split("T")[0]}</p>
                         {dosar && dosar.este_solutionat === 1 && (
                           <p>
                             Solutie finala: <b>{dosar.tip_solutie}</b>
@@ -361,7 +361,7 @@ const DosareList = ({ dosare }) => {
                         {dosar.tip_solutie_propusa === "UPP" &&(<p>
                           <b>{dosar.tip_solutie_propusa}</b>
                         </p>)}
-                        <p>Data inceperii la procuror: {dosar.data_inceperii_la_procuror.split("T")[0]}</p>
+                        <p>Data desemnare procuror: {dosar.data_inceperii_la_procuror.split("T")[0]}</p>
                         
                         <p
                           style={{

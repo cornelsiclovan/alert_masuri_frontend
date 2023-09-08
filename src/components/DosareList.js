@@ -577,7 +577,7 @@ const DosareList = ({ dosare }) => {
                 );
 
                 const alertaArest = timpRamasArest <= 15 ? true : false;
-                const alertaSechestru = parseInt(dosar.days_remaining) > 180 ? true : false;
+                const alertaSechestru = parseInt(dosar.days_remaining) > 150 ? true : false;
                 const alertaCj = parseInt(dosar.days_remaining) <= 15 ? true : false;
                 const alertaInterceptari =
                   timpRamasInterceptari <= 15 ? true : false;

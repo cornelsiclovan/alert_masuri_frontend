@@ -3,7 +3,7 @@ import classes from "./DosareList.module.css";
 import { useEffect, useState } from "react";
 import ProcurorList from "./ProcurorList";
 
-const DosareList = ({ dosare }) => {
+const DosareList = ({ dosare, isAc }) => {
   const [cuMasuriAsiguratorii, setCuMasuriAsiguratorii] = useState(true);
   const [dateNow, setDate] = useState(Date.now());
   const changeCuMasuriAsiguratorii = () => {
@@ -14,13 +14,11 @@ const DosareList = ({ dosare }) => {
   const [isSechestru, setIsSechestru] = useState(false);
   const [isInterceptari, setIsInterceptari] = useState(false);
 
-
+  const [dosareCuAc, setDosareCuAc] = useState(false);
 
   const [dosarCautat, setDosarCautat] = useState(null);
 
   const [dosareCuMasuri, setDosareCuMasuri] = useState(dosare);
-
-  let totalDosSaseLuni = 0;
 
   let dosareSortate;
 
@@ -28,158 +26,97 @@ const DosareList = ({ dosare }) => {
 
   let procurori = [];
 
+  let dosareFilterFaraMasuri = [];
+  let dosareFilterCuSechestru = [];
 
-  const dosareFilterCuMasuri = dosare.filter((dosar) => dosar.days_remaining !== null && dosar.isSechestru !== true);
-  const dosareFilterFaraMasuri = dosare.filter((dosar) => dosar.days_remaining === null);
-  const dosareFilterCuSechestru = dosare.filter((dosar) => dosar.isSechestru === true)
-  const dosareMaiVechiDeSaseLuni = dosare.filter((dosar) => ((new Date(dosar.data).getTime() - new Date()) / (1000 * 3600 * 24)) *
-  -1 >
-180 )
+  let dosareMaiVechiDeSaseLuni = [];
+  let dosareFilterCuMasuri = [];
+
+  if (isAc) {
+    dosareFilterFaraMasuri = dosare;
+  }
+
+  if (!isAc) {
+    dosareFilterCuSechestru = dosare.filter(
+      (dosar) => dosar.isSechestru === true
+    );
+    dosareFilterFaraMasuri = dosare.filter(
+      (dosar) => dosar.days_remaining === null
+    );
+    dosareFilterCuMasuri = dosare.filter(
+      (dosar) => dosar.days_remaining !== null && dosar.isSechestru !== true
+    );
+    dosareMaiVechiDeSaseLuni = dosare.filter(
+      (dosar) =>
+        ((new Date(dosar.data).getTime() - new Date()) / (1000 * 3600 * 24)) *
+          -1 >
+        180
+    );
+  }
+
+
+ 
 
   const [numarDosare, setNumarDosare] = useState(dosareFilterFaraMasuri.length);
 
-  while (i < dosare.length) {
-    if (
-      ((new Date(dosare[i].data).getTime() - new Date()) / (1000 * 3600 * 24)) *
-        -1 >
-      180
-    ) {
-      totalDosSaseLuni++;
-    }
-    i++;
-  }
+  const [dosSaseLuni, setDosSaseLuni] = useState(
+    dosareMaiVechiDeSaseLuni.length
+  );
 
-  
- // console.log(totalDosSaseLuni);
- const [dosSaseLuni, setDosSaseLuni] = useState(dosareMaiVechiDeSaseLuni.length);
-
-  const handleCheck = (event) => {
-    if (event.target.id === "arest") {
-      if (!isArest) {
-        let filteredDos = dosare.filter((dosar) => dosar.data_arest !== null);
-
-        dosareSortate = filteredDos.sort((a, b) =>
-          new Date(a.data_arest).getTime() > new Date(b.data_arest).getTime()
-            ? 1
-            : -1
-        );
-      } else {
-        dosareSortate = dosare.sort((a, b) =>
-          new Date(a.data).getTime() > new Date(b.data).getTime() ? 1 : -1
-        );
-      }
-      if (!isArest) {
-        setIsCj(false);
-        setIsSechestru(false);
-        setIsInterceptari(false);
-      }
-
-      setIsArest(!isArest);
-    }
-
-    if (event.target.id === "sechestru") {
-      if (!isSechestru) {
-        let filteredDos = dosare.filter(
-          (dosar) => dosar.data_sechestru !== null
-        );
-
-        dosareSortate = filteredDos.sort((a, b) =>
-          new Date(a.data_sechestru).getTime() >
-          new Date(b.data_sechestru).getTime()
-            ? 1
-            : -1
-        );
-      } else {
-        dosareSortate = dosare.sort((a, b) =>
-          new Date(a.data).getTime() > new Date(b.data).getTime() ? 1 : -1
-        );
-      }
-      if (!isSechestru) {
-        setIsArest(false);
-        setIsCj(false);
-        setIsInterceptari(false);
-      }
-
-      setIsSechestru(!isSechestru);
-    }
-
-    if (event.target.id === "cj") {
-      if (!isCj) {
-        let filteredDos = dosare.filter((dosar) => dosar.data_cj !== null);
-
-        dosareSortate = filteredDos.sort((a, b) =>
-          new Date(a.data_cj).getTime() > new Date(b.data_cj).getTime() ? 1 : -1
-        );
-      } else {
-        dosareSortate = dosare.sort((a, b) =>
-          new Date(a.data).getTime() > new Date(b.data).getTime() ? 1 : -1
-        );
-      }
-      if (!isCj) {
-        setIsArest(false);
-        setIsSechestru(false);
-        setIsInterceptari(false);
-      }
-
-      setIsCj(!isCj);
-    }
-
-    if (event.target.id === "interceptari") {
-      if (!isInterceptari) {
-        let filteredDos = dosare.filter(
-          (dosar) => dosar.data_interceptari !== null
-        );
-
-        dosareSortate = filteredDos.sort((a, b) =>
-          new Date(a.data_interceptari).getTime() >
-          new Date(b.data_interceptari).getTime()
-            ? 1
-            : -1
-        );
-      } else {
-        dosareSortate = dosare.sort((a, b) =>
-          new Date(a.data).getTime() > new Date(b.data).getTime() ? 1 : -1
-        );
-      }
-      if (!isCj) {
-        setIsArest(false);
-        setIsSechestru(false);
-        setIsCj(false);
-      }
-
-      setIsInterceptari(!isInterceptari);
-    }
-
-    setDosareCuMasuri(dosareSortate);
-  };
+  const handleCheck = (event) => {};
 
   const onChangeDosarInput = (event) => {
-    setDosarCautat(event.target.value);
-    const dosareFilterFaraMasuri = dosare.filter((dosar) =>  dosar.numeProcuror.toLowerCase().includes(event.target.value.toLowerCase()) || dosar.numar.includes(event.target.value));
-    setNumarDosare(dosareFilterFaraMasuri.length);
-    const dosareMaiVechiDeSaseLuni = dosareFilterFaraMasuri.filter((dosar) => ((new Date(dosar.data).getTime() - new Date()) / (1000 * 3600 * 24)) * -1 > 180)
-    setDosSaseLuni(dosareMaiVechiDeSaseLuni.length);
+
+      setDosarCautat(event.target.value);
+      dosareFilterFaraMasuri = dosareFilterFaraMasuri.filter(
+        (dosar) =>
+          dosar.numeProcuror
+            .toLowerCase()
+            .includes(event.target.value.toLowerCase()) ||
+          dosar.numar.includes(event.target.value)
+      );
+      setNumarDosare(dosareFilterFaraMasuri.length);
+      const dosareMaiVechiDeSaseLuni = dosareFilterFaraMasuri.filter(
+        (dosar) =>
+          ((new Date(dosar.data).getTime() - new Date()) / (1000 * 3600 * 24)) *
+            -1 >
+          180
+      );
+      setDosSaseLuni(dosareMaiVechiDeSaseLuni.length);
+    
   };
 
-  console.log(dosare);
+  //console.log(dosare);
 
   return (
     <>
-    <div className={classes.group}>
-      <div className={classes.items}>
-        <div style={{ display: "flex" }}>
-          <div>
-            <h1> Dosare intrate({numarDosare}) </h1> - Mai vechi de 6 luni (
-            {dosSaseLuni})
+      <div className={classes.group}>
+        <div className={classes.items}>
+          <div style={{ display: "flex" }}>
+            <div>
+              {!isAc && <h1> Dosare intrate({numarDosare}) </h1>}
+              {isAc && (
+                <h1 style={{ width: "400px" }}>
+                  {" "}
+                  Dosare cu AC({numarDosare}){" "}
+                </h1>
+              )}
+              {!isAc && <>- Mai vechi de 6 luni ({dosSaseLuni})</>}
+            </div>
+            <input
+              style={{
+                height: "30px",
+                marginTop: "20px",
+                marginLeft: "50px",
+                width: "260px",
+              }}
+              type="text"
+              placeholder="Numar de dosar / Nume procuror"
+              onChange={onChangeDosarInput}
+             
+            ></input>
           </div>
-          <input
-            style={{ height: "30px", marginTop: "20px", marginLeft: "50px", width: "260px" }}
-            type="text"
-            placeholder="Numar de dosar / Nume procuror"
-            onChange={onChangeDosarInput}
-          ></input>
-        </div>
-        {/* {cuMasuriAsiguratorii && (
+          {/* {cuMasuriAsiguratorii && (
           <div style={{ display: "flex", justifyContent: "space-around" }}>
             <li style={{ listStyle: "none" }}> Sorteaza dupa: </li>
             <li style={{ listStyle: "none" }}>
@@ -240,10 +177,9 @@ const DosareList = ({ dosare }) => {
             </li>
           </div>
         )} */}
-        <br />
-        <ul className={classes.list}>
-          {
-            dosareFilterFaraMasuri.map((dosar) => {
+          <br />
+          <ul className={classes.list}>
+            {dosareFilterFaraMasuri.map((dosar) => {
               const timpRamasArest = Math.floor(
                 (new Date(dosar.data_arest).getTime() - dateNow) /
                   (1000 * 3600 * 24)
@@ -261,23 +197,47 @@ const DosareList = ({ dosare }) => {
                   (1000 * 3600 * 24)
               );
 
-              const timpRamasIntrate = Math.floor(
+              let timpRamasIntrate = Math.floor(
                 ((new Date(dosar.data).getTime() - dateNow) /
                   (1000 * 3600 * 24)) *
                   -1
               );
 
+              let timpInZile = timpRamasIntrate;
+
+              const aniTimpRamasIntrate = Math.floor(timpRamasIntrate / 360);
+              const restZile = timpRamasIntrate % 360;
+              const luniRamasIntrate = Math.floor(restZile / 30);
+              const zileRamasIntrate = restZile % 30;
+
+
+
               const alertaArest = timpRamasArest <= 15 ? true : false;
               const alertaSechestru = timpRamasSechestru <= 30 ? true : false;
-              const alertaCj = parseInt(dosar.days_remaining) <= 4 ? true : false;
+              const alertaCj =
+                parseInt(dosar.days_remaining) <= 4 ? true : false;
               const alertaInterceptari =
                 timpRamasInterceptari <= 15 ? true : false;
               const alertaIntrate = timpRamasIntrate >= 90 ? true : false;
+              
+              timpRamasIntrate = "";
 
-
-              if (dosarCautat) {
-                console.log("dosarCautat", dosarCautat);
+              if(aniTimpRamasIntrate !== 0) {
+                timpRamasIntrate += aniTimpRamasIntrate + " ani ";
               }
+
+              if(luniRamasIntrate !== 0) {
+                timpRamasIntrate += luniRamasIntrate + " luni ";
+              }
+
+              if(zileRamasIntrate !== 0) {
+                timpRamasIntrate += zileRamasIntrate + " zile" 
+              }
+             
+
+              // if (dosarCautat) {
+              //   console.log("dosarCautat", dosarCautat);
+              // }
 
               if (dosarCautat === null || dosarCautat === "") {
                 return (
@@ -287,13 +247,22 @@ const DosareList = ({ dosare }) => {
                         <h1>
                           {dosar.numar} - <small>{dosar.numeProcuror}</small>
                         </h1>
-                        {dosar.tip_solutie_propusa !== "UPP" &&(<p>
-                          Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
-                        </p>)}
-                        {dosar.tip_solutie_propusa === "UPP" &&(<p>
-                          <b>{dosar.tip_solutie_propusa}</b>
-                        </p>)}
-                        <p>Data desemnare procuror: {dosar.data_inceperii_la_procuror.split("T")[0]}</p>
+                        {!isAc && dosar.tip_solutie_propusa !== "UPP" && (
+                          <p>
+                            Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
+                          </p>
+                        )}
+                        {!isAc && dosar.tip_solutie_propusa === "UPP" && (
+                          <p>
+                            <b>{dosar.tip_solutie_propusa}</b>
+                          </p>
+                        )}
+                        {!isAc && (
+                          <p>
+                            Data desemnare procuror:{" "}
+                            {dosar.data_inceperii_la_procuror.split("T")[0]}
+                          </p>
+                        )}
                         {dosar && dosar.este_solutionat === 1 && (
                           <p>
                             Solutie finala: <b>{dosar.tip_solutie}</b>
@@ -303,10 +272,39 @@ const DosareList = ({ dosare }) => {
                           style={{
                             backgroundColor: alertaIntrate ? "red" : "",
                           }}
-                        >  
-                          {dosar.data &&
-                            `Intrare: ${dosar.data.split("T")[0]}, au trecut ${timpRamasIntrate} zile de la intrare`}
+                        >
+                          {!isAc &&
+                            dosar.data &&
+                            `Intrare: ${
+                              dosar.data.split("T")[0]
+                            }, au trecut ${timpRamasIntrate} zile de la intrare`}
                         </p>
+
+                        <p>
+                          {isAc && (
+                            <>
+                              Organul prim sesizat:{" "}
+                              {dosar.prima_institutie_sesizata}
+                            </>
+                          )}
+                        </p>
+                        <p>
+                          {isAc && (
+                            <>
+                              Data primei sesizari:{" "}
+                              {dosar.data_primei_sesizari.split("T")[0]}
+                            </>
+                          )}
+                        </p>
+                        <p>
+                          {isAc && (
+                            <>
+                              Institutia la care se afla:{" "}
+                              <b> {dosar.institutia_curenta}</b>
+                            </>
+                          )}
+                        </p>
+
                         <time
                           style={{ backgroundColor: alertaArest ? "red" : "" }}
                         >
@@ -346,7 +344,12 @@ const DosareList = ({ dosare }) => {
               } else if (
                 dosar &&
                 dosarCautat &&
-                (dosar.numar.toLowerCase().includes(dosarCautat.toLowerCase()) || dosar.numeProcuror.toLowerCase().includes(dosarCautat.toLowerCase()))
+                (dosar.numar
+                  .toLowerCase()
+                  .includes(dosarCautat.toLowerCase()) ||
+                  dosar.numeProcuror
+                    .toLowerCase()
+                    .includes(dosarCautat.toLowerCase()))
               ) {
                 return (
                   <li key={dosar.id} className={classes.item}>
@@ -355,22 +358,63 @@ const DosareList = ({ dosare }) => {
                         <h1>
                           {dosar.numar} - <small>{dosar.numeProcuror}</small>
                         </h1>
-                        {dosar.tip_solutie_propusa !== "UPP" &&(<p>
-                          Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
-                        </p>)}
-                        {dosar.tip_solutie_propusa === "UPP" &&(<p>
-                          <b>{dosar.tip_solutie_propusa}</b>
-                        </p>)}
-                        <p>Data desemnare procuror: {dosar.data_inceperii_la_procuror.split("T")[0]}</p>
-                        
+                        {!isAc && dosar.tip_solutie_propusa !== "UPP" && (
+                          <p>
+                            Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
+                          </p>
+                        )}
+                        {!isAc && dosar.tip_solutie_propusa === "UPP" && (
+                          <p>
+                            <b>{dosar.tip_solutie_propusa}</b>
+                          </p>
+                        )}
+                        {!isAc && (
+                          <p>
+                            Data desemnare procuror:{" "}
+                            {dosar.data_inceperii_la_procuror.split("T")[0]}
+                          </p>
+                        )}
+                        {dosar && dosar.este_solutionat === 1 && (
+                          <p>
+                            Solutie finala: <b>{dosar.tip_solutie}</b>
+                          </p>
+                        )}
                         <p
                           style={{
                             backgroundColor: alertaIntrate ? "red" : "",
                           }}
-                        >  
-                          {dosar.data &&
-                            `Intrare: ${dosar.data.split("T")[0]}, au trecut ${timpRamasIntrate} zile de la intrare`}
+                        >
+                          {!isAc &&
+                            dosar.data &&
+                            `Intrare: ${
+                              dosar.data.split("T")[0]
+                            }, au trecut ${timpRamasIntrate} zile de la intrare`}
                         </p>
+                        <p>
+                          {isAc && (
+                            <>
+                              Organul prim sesizat:{" "}
+                              {dosar.prima_institutie_sesizata}
+                            </>
+                          )}
+                        </p>
+                        <p>
+                          {isAc && (
+                            <>
+                              Data primei sesizari:{" "}
+                              {dosar.data_primei_sesizari.split("T")[0]}
+                            </>
+                          )}
+                        </p>
+                        <p>
+                          {isAc && (
+                            <>
+                              Institutia la care se afla:{" "}
+                              <b> {dosar.institutia_curenta}</b>
+                            </>
+                          )}
+                        </p>
+
                         <time
                           style={{ backgroundColor: alertaArest ? "red" : "" }}
                         >
@@ -409,285 +453,342 @@ const DosareList = ({ dosare }) => {
                 );
               }
             })}
-        </ul>
-      </div>
-      <div className={classes.items}>
-        <h1> Dosare cu masuri </h1>
-        <ul>
-          {cuMasuriAsiguratorii &&
-            dosareFilterCuMasuri.map((dosar) => {
-              if (
-                dosar.isControlJudiciar ||
-                dosar.isArest ||
-                dosar.isSechestru ||
-                dosar.isInterceptari
-              ) {
-                const timpRamasArest = Math.floor(
-                  (new Date(dosar.data_arest).getTime() - dateNow) /
-                    (1000 * 3600 * 24)
-                );
-                const timpRamasCj = Math.floor(
-                  (new Date(dosar.data_cj).getTime() - dateNow) /
-                    (1000 * 3600 * 24)
-                );
-                const timpRamasSechestru = Math.floor(
-                  (new Date(dosar.data_sechestru).getTime() - dateNow) /
-                    (1000 * 3600 * 24)
-                );
-                const timpRamasInterceptari = Math.floor(
-                  (new Date(dosar.data_interceptari).getTime() - dateNow) /
-                    (1000 * 3600 * 24)
-                );
-
-                const alertaArest = timpRamasArest <= 15 ? true : false;
-                const alertaSechestru = timpRamasSechestru <= 30 ? true : false;
-                const alertaCj = parseInt(dosar.days_remaining) <= 15 ? true : false;
-                const alertaInterceptari =
-                  timpRamasInterceptari <= 15 ? true : false;
-
-                if (dosarCautat === null || dosarCautat === "") {
-                  return (
-                    <li key={dosar.id} className={classes.item}>
-                      <Link to={`/dosare/${dosar.id}`}>
-                        <div className={classes.content}>
-                          <h1>
-                            {dosar.numar} - {dosar.numeProcuror}
-                          </h1>
-                          <time>expirare masura preventiva: {dosar.data.split("T")[0]}</time> <br />
-                          <time
-                            style={{
-                              backgroundColor: alertaArest ? "red" : "",
-                            }}
-                          >
-                            {dosar.data_arest &&
-                              `arest: ${dosar.data_arest}, mai sunt ${timpRamasArest} zile pana la expirarea masurii`}
-                          </time>
-                          {dosar.data_arest && <br />}
-                          <time
-                            style={{
-                              backgroundColor: alertaSechestru ? "red" : "",
-                            }}
-                          >
-                            {dosar.data_sechestru &&
-                              `sechestru: ${dosar.data_sechestru}, mai sunt ${timpRamasSechestru} zile pana la expirarea masurii`}
-                          </time>
-                          {dosar.data_sechestru && <br />}
-                          <time
-                            style={{ backgroundColor: alertaCj ? "red" : "" }}
-                          >
-                            {dosar.days_remaining &&
-                              `masura preventiva expira in ${dosar.days_remaining} zile`}
-                          </time>
-                          {dosar.data_cj && <br />}
-                          <time
-                            style={{
-                              backgroundColor: alertaInterceptari ? "red" : "",
-                            }}
-                          >
-                            {dosar.data_interceptari &&
-                              `interceptari: ${dosar.data_interceptari}, mai sunt ${timpRamasInterceptari} zile pana la expirarea masurii`}
-                          </time>
-                          {dosar.data_interceptari && <br />}
-                        </div>
-                      </Link>
-                    </li>
-                  );
-                } else if (
-                  dosar &&
-                  dosarCautat &&
-                  (dosar.numar.toLowerCase().includes(dosarCautat.toLowerCase()) || dosar.numeProcuror.toLowerCase().includes(dosarCautat.toLowerCase()))
+          </ul>
+        </div>
+        <div className={classes.items}>
+          {dosareFilterCuMasuri.length !== 0 && <h1> Dosare cu masuri </h1>}
+          <ul>
+            {cuMasuriAsiguratorii &&
+              dosareFilterCuMasuri.map((dosar) => {
+                if (
+                  dosar.isControlJudiciar ||
+                  dosar.isArest ||
+                  dosar.isSechestru ||
+                  dosar.isInterceptari
                 ) {
-                  return (
-                    <li key={dosar.id} className={classes.item}>
-                      <Link to={`/dosare/${dosar.id}`}>
-                      <div className={classes.content}>
-                          <h1>
-                            {dosar.numar} - {dosar.numeProcuror}
-                          </h1>
-                          <time>expirare masura preventiva: {dosar.data.split("T")[0]}</time> <br />
-                          <time
-                            style={{
-                              backgroundColor: alertaArest ? "red" : "",
-                            }}
-                          >
-                            {dosar.data_arest &&
-                              `arest: ${dosar.data_arest}, mai sunt ${timpRamasArest} zile pana la expirarea masurii`}
-                          </time>
-                          {dosar.data_arest && <br />}
-                          <time
-                            style={{
-                              backgroundColor: alertaSechestru ? "red" : "",
-                            }}
-                          >
-                            {dosar.data_sechestru &&
-                              `sechestru: ${dosar.data_sechestru}, mai sunt ${timpRamasSechestru} zile pana la expirarea masurii`}
-                          </time>
-                          {dosar.data_sechestru && <br />}
-                          <time
-                            style={{ backgroundColor: alertaCj ? "red" : "" }}
-                          >
-                            {dosar.days_remaining &&
-                              `masura preventiva expira in ${dosar.days_remaining} zile`}
-                          </time>
-                          {dosar.data_cj && <br />}
-                          <time
-                            style={{
-                              backgroundColor: alertaInterceptari ? "red" : "",
-                            }}
-                          >
-                            {dosar.data_interceptari &&
-                              `interceptari: ${dosar.data_interceptari}, mai sunt ${timpRamasInterceptari} zile pana la expirarea masurii`}
-                          </time>
-                          {dosar.data_interceptari && <br />}
-                        </div>
-                      </Link>
-                    </li>
+                  const timpRamasArest = Math.floor(
+                    (new Date(dosar.data_arest).getTime() - dateNow) /
+                      (1000 * 3600 * 24)
                   );
-                }
-              }
-            })}
-        </ul>
-      </div>
-      <div className={classes.items}>
-        {dosareFilterCuSechestru.length!==0 && (<><h1> Dosare cu sechestru </h1>
-        <ul>
-          {cuMasuriAsiguratorii &&
-            dosareFilterCuSechestru.map((dosar) => {
-              if (
-                dosar.isControlJudiciar ||
-                dosar.isArest ||
-                dosar.isSechestru ||
-                dosar.isInterceptari
-              ) {
-                const timpRamasArest = Math.floor(
-                  (new Date(dosar.data_arest).getTime() - dateNow) /
-                    (1000 * 3600 * 24)
-                );
-                const timpRamasCj = Math.floor(
-                  (new Date(dosar.data_cj).getTime() - dateNow) /
-                    (1000 * 3600 * 24)
-                );
-                const timpRamasSechestru = Math.floor(
-                  (new Date(dosar.data_sechestru).getTime() - dateNow) /
-                    (1000 * 3600 * 24)
-                );
-                const timpRamasInterceptari = Math.floor(
-                  (new Date(dosar.data_interceptari).getTime() - dateNow) /
-                    (1000 * 3600 * 24)
-                );
+                  const timpRamasCj = Math.floor(
+                    (new Date(dosar.data_cj).getTime() - dateNow) /
+                      (1000 * 3600 * 24)
+                  );
+                  const timpRamasSechestru = Math.floor(
+                    (new Date(dosar.data_sechestru).getTime() - dateNow) /
+                      (1000 * 3600 * 24)
+                  );
+                  const timpRamasInterceptari = Math.floor(
+                    (new Date(dosar.data_interceptari).getTime() - dateNow) /
+                      (1000 * 3600 * 24)
+                  );
 
-                const alertaArest = timpRamasArest <= 15 ? true : false;
-                const alertaSechestru = parseInt(dosar.days_remaining) > 150 ? true : false;
-                const alertaCj = parseInt(dosar.days_remaining) <= 15 ? true : false;
-                const alertaInterceptari =
-                  timpRamasInterceptari <= 15 ? true : false;
+                  const alertaArest = timpRamasArest <= 15 ? true : false;
+                  const alertaSechestru =
+                    timpRamasSechestru <= 30 ? true : false;
+                  const alertaCj =
+                    parseInt(dosar.days_remaining) <= 15 ? true : false;
+                  const alertaInterceptari =
+                    timpRamasInterceptari <= 15 ? true : false;
 
-                if (dosarCautat === null || dosarCautat === "") {
-                  return (
-                    <li key={dosar.id} className={classes.item}>
-                      <Link to={`/dosare/${dosar.id}`}>
-                        <div className={classes.content}>
-                          <h1>
-                            {dosar.numar} - {dosar.numeProcuror}
-                          </h1>
-                          <time>instituire/mentinere: {dosar.data.split("T")[0]}</time> <br />
-                          <time
-                            style={{
-                              backgroundColor: alertaArest ? "red" : "",
-                            }}
-                          >
-                            {dosar.data_arest &&
-                              `arest: ${dosar.data_arest}, mai sunt ${timpRamasArest} zile pana la expirarea masurii`}
-                          </time>
-                          {dosar.data_arest && <br />}
-                          <time
-                            style={{
-                              backgroundColor: alertaSechestru ? "red" : "",
-                            }}
-                          >
-                            {dosar.data_sechestru &&
-                              `sechestru: ${dosar.data_sechestru}, mai sunt ${timpRamasSechestru} zile pana la expirarea masurii`}
-                          </time>
-                          {dosar.data_sechestru && <br />}
-                          <time
-                            style={{ backgroundColor: alertaSechestru ? "red" : "" }}
-                          >
-                            {dosar.days_remaining &&
-                              `de la insituire/mentinere au trecut ${dosar.days_remaining} zile`}
-                          </time>
-                          {dosar.data_cj && <br />}
-                          <time
-                            style={{
-                              backgroundColor: alertaInterceptari ? "red" : "",
-                            }}
-                          >
-                            {dosar.data_interceptari &&
-                              `interceptari: ${dosar.data_interceptari}, mai sunt ${timpRamasInterceptari} zile pana la expirarea masurii`}
-                          </time>
-                          {dosar.data_interceptari && <br />}
-                        </div>
-                      </Link>
-                    </li>
-                  );
-                } else if (
-                  dosar &&
-                  dosarCautat &&
-                  (dosar.numar.toLowerCase().includes(dosarCautat.toLowerCase()) || dosar.numeProcuror.toLowerCase().includes(dosarCautat.toLowerCase()))
-                ) {
-                  return (
-                    <li key={dosar.id} className={classes.item}>
-                      <Link to={`/dosare/${dosar.id}`}>
-                      <div className={classes.content}>
-                          <h1>
-                            {dosar.numar} - {dosar.numeProcuror}
-                          </h1>
-                          <time>instituire/mentinere: {dosar.data.split("T")[0]}</time> <br />
-                          <time
-                            style={{
-                              backgroundColor: alertaArest ? "red" : "",
-                            }}
-                          >
-                            {dosar.data_arest &&
-                              `arest: ${dosar.data_arest}, mai sunt ${timpRamasArest} zile pana la expirarea masurii`}
-                          </time>
-                          {dosar.data_arest && <br />}
-                          <time
-                            style={{
-                              backgroundColor: alertaSechestru ? "red" : "",
-                            }}
-                          >
-                            {dosar.data_sechestru &&
-                              `sechestru: ${dosar.data_sechestru}, mai sunt ${timpRamasSechestru} zile pana la expirarea masurii`}
-                          </time>
-                          {dosar.data_sechestru && <br />}
-                          <time
-                            style={{ backgroundColor: alertaSechestru ? "red" : "" }}
-                          >
-                            {dosar.days_remaining &&
-                              `de la insituire/mentinere au trecut ${dosar.days_remaining} zile`}
-                          </time>
-                          {dosar.data_cj && <br />}
-                          <time
-                            style={{
-                              backgroundColor: alertaInterceptari ? "red" : "",
-                            }}
-                          >
-                            {dosar.data_interceptari &&
-                              `interceptari: ${dosar.data_interceptari}, mai sunt ${timpRamasInterceptari} zile pana la expirarea masurii`}
-                          </time>
-                          {dosar.data_interceptari && <br />}
-                        </div>
-                      </Link>
-                    </li>
-                  );
+                  if (dosarCautat === null || dosarCautat === "") {
+                    return (
+                      <li key={dosar.id} className={classes.item}>
+                        <Link to={`/dosare/${dosar.id}`}>
+                          <div className={classes.content}>
+                            <h1>
+                              {dosar.numar} - {dosar.numeProcuror}
+                            </h1>
+                            <time>
+                              expirare masura preventiva:{" "}
+                              {dosar.data.split("T")[0]}
+                            </time>{" "}
+                            <br />
+                            <time
+                              style={{
+                                backgroundColor: alertaArest ? "red" : "",
+                              }}
+                            >
+                              {dosar.data_arest &&
+                                `arest: ${dosar.data_arest}, mai sunt ${timpRamasArest} zile pana la expirarea masurii`}
+                            </time>
+                            {dosar.data_arest && <br />}
+                            <time
+                              style={{
+                                backgroundColor: alertaSechestru ? "red" : "",
+                              }}
+                            >
+                              {dosar.data_sechestru &&
+                                `sechestru: ${dosar.data_sechestru}, mai sunt ${timpRamasSechestru} zile pana la expirarea masurii`}
+                            </time>
+                            {dosar.data_sechestru && <br />}
+                            <time
+                              style={{ backgroundColor: alertaCj ? "red" : "" }}
+                            >
+                              {dosar.days_remaining &&
+                                `masura preventiva expira in ${dosar.days_remaining} zile`}
+                            </time>
+                            {dosar.data_cj && <br />}
+                            <time
+                              style={{
+                                backgroundColor: alertaInterceptari
+                                  ? "red"
+                                  : "",
+                              }}
+                            >
+                              {dosar.data_interceptari &&
+                                `interceptari: ${dosar.data_interceptari}, mai sunt ${timpRamasInterceptari} zile pana la expirarea masurii`}
+                            </time>
+                            {dosar.data_interceptari && <br />}
+                          </div>
+                        </Link>
+                      </li>
+                    );
+                  } else if (
+                    dosar &&
+                    dosarCautat &&
+                    (dosar.numar
+                      .toLowerCase()
+                      .includes(dosarCautat.toLowerCase()) ||
+                      dosar.numeProcuror
+                        .toLowerCase()
+                        .includes(dosarCautat.toLowerCase()))
+                  ) {
+                    return (
+                      <li key={dosar.id} className={classes.item}>
+                        <Link to={`/dosare/${dosar.id}`}>
+                          <div className={classes.content}>
+                            <h1>
+                              {dosar.numar} - {dosar.numeProcuror}
+                            </h1>
+                            <time>
+                              expirare masura preventiva:{" "}
+                              {dosar.data.split("T")[0]}
+                            </time>{" "}
+                            <br />
+                            <time
+                              style={{
+                                backgroundColor: alertaArest ? "red" : "",
+                              }}
+                            >
+                              {dosar.data_arest &&
+                                `arest: ${dosar.data_arest}, mai sunt ${timpRamasArest} zile pana la expirarea masurii`}
+                            </time>
+                            {dosar.data_arest && <br />}
+                            <time
+                              style={{
+                                backgroundColor: alertaSechestru ? "red" : "",
+                              }}
+                            >
+                              {dosar.data_sechestru &&
+                                `sechestru: ${dosar.data_sechestru}, mai sunt ${timpRamasSechestru} zile pana la expirarea masurii`}
+                            </time>
+                            {dosar.data_sechestru && <br />}
+                            <time
+                              style={{ backgroundColor: alertaCj ? "red" : "" }}
+                            >
+                              {dosar.days_remaining &&
+                                `masura preventiva expira in ${dosar.days_remaining} zile`}
+                            </time>
+                            {dosar.data_cj && <br />}
+                            <time
+                              style={{
+                                backgroundColor: alertaInterceptari
+                                  ? "red"
+                                  : "",
+                              }}
+                            >
+                              {dosar.data_interceptari &&
+                                `interceptari: ${dosar.data_interceptari}, mai sunt ${timpRamasInterceptari} zile pana la expirarea masurii`}
+                            </time>
+                            {dosar.data_interceptari && <br />}
+                          </div>
+                        </Link>
+                      </li>
+                    );
+                  }
                 }
-              }
-            })}
-        </ul></>)}
+              })}
+          </ul>
+        </div>
+        <div className={classes.items}>
+          {dosareFilterCuSechestru.length !== 0 && (
+            <>
+              <h1> Dosare cu sechestru </h1>
+              <ul>
+                {cuMasuriAsiguratorii &&
+                  dosareFilterCuSechestru.map((dosar) => {
+                    if (
+                      dosar.isControlJudiciar ||
+                      dosar.isArest ||
+                      dosar.isSechestru ||
+                      dosar.isInterceptari
+                    ) {
+                      const timpRamasArest = Math.floor(
+                        (new Date(dosar.data_arest).getTime() - dateNow) /
+                          (1000 * 3600 * 24)
+                      );
+                      const timpRamasCj = Math.floor(
+                        (new Date(dosar.data_cj).getTime() - dateNow) /
+                          (1000 * 3600 * 24)
+                      );
+                      let timpRamasSechestru = Math.floor(
+                        (new Date(dosar.data_sechestru).getTime() - dateNow) /
+                          (1000 * 3600 * 24)
+                      );
+                      const timpRamasInterceptari = Math.floor(
+                        (new Date(dosar.data_interceptari).getTime() -
+                          dateNow) /
+                          (1000 * 3600 * 24)
+                      );
+
+
+                      
+
+                      const alertaArest = timpRamasArest <= 15 ? true : false;
+                      const alertaSechestru =
+                        parseInt(dosar.days_remaining) > 150 ? true : false;
+                      const alertaCj =
+                        parseInt(dosar.days_remaining) <= 15 ? true : false;
+                      const alertaInterceptari =
+                        timpRamasInterceptari <= 15 ? true : false;
+
+                      if (dosarCautat === null || dosarCautat === "") {
+                        return (
+                          <li key={dosar.id} className={classes.item}>
+                            <Link to={`/dosare/${dosar.id}`}>
+                              <div className={classes.content}>
+                                <h1>
+                                  {dosar.numar} - {dosar.numeProcuror}
+                                </h1>
+                                <time>
+                                  instituire/mentinere:{" "}
+                                  {dosar.data.split("T")[0]}
+                                </time>{" "}
+                                <br />
+                                <time
+                                  style={{
+                                    backgroundColor: alertaArest ? "red" : "",
+                                  }}
+                                >
+                                  {dosar.data_arest &&
+                                    `arest: ${dosar.data_arest}, mai sunt ${timpRamasArest} zile pana la expirarea masurii`}
+                                </time>
+                                {dosar.data_arest && <br />}
+                                <time
+                                  style={{
+                                    backgroundColor: alertaSechestru
+                                      ? "red"
+                                      : "",
+                                  }}
+                                >
+                                  {dosar.data_sechestru &&
+                                    `sechestru: ${dosar.data_sechestru}, mai sunt ${timpRamasSechestru} zile pana la expirarea masurii`}
+                                </time>
+                                {dosar.data_sechestru && <br />}
+                                <time
+                                  style={{
+                                    backgroundColor: alertaSechestru
+                                      ? "red"
+                                      : "",
+                                  }}
+                                >
+                                  {dosar.days_remaining &&
+                                    `de la insituire/mentinere au trecut ${dosar.days_remaining} zile`}
+                                </time>
+                                {dosar.data_cj && <br />}
+                                <time
+                                  style={{
+                                    backgroundColor: alertaInterceptari
+                                      ? "red"
+                                      : "",
+                                  }}
+                                >
+                                  {dosar.data_interceptari &&
+                                    `interceptari: ${dosar.data_interceptari}, mai sunt ${timpRamasInterceptari} zile pana la expirarea masurii`}
+                                </time>
+                                {dosar.data_interceptari && <br />}
+                              </div>
+                            </Link>
+                          </li>
+                        );
+                      } else if (
+                        dosar &&
+                        dosarCautat &&
+                        (dosar.numar
+                          .toLowerCase()
+                          .includes(dosarCautat.toLowerCase()) ||
+                          dosar.numeProcuror
+                            .toLowerCase()
+                            .includes(dosarCautat.toLowerCase()))
+                      ) {
+                        return (
+                          <li key={dosar.id} className={classes.item}>
+                            <Link to={`/dosare/${dosar.id}`}>
+                              <div className={classes.content}>
+                                <h1>
+                                  {dosar.numar} - {dosar.numeProcuror}
+                                </h1>
+                                <time>
+                                  instituire/mentinere:{" "}
+                                  {dosar.data.split("T")[0]}
+                                </time>{" "}
+                                <br />
+                                <time
+                                  style={{
+                                    backgroundColor: alertaArest ? "red" : "",
+                                  }}
+                                >
+                                  {dosar.data_arest &&
+                                    `arest: ${dosar.data_arest}, mai sunt ${timpRamasArest} zile pana la expirarea masurii`}
+                                </time>
+                                {dosar.data_arest && <br />}
+                                <time
+                                  style={{
+                                    backgroundColor: alertaSechestru
+                                      ? "red"
+                                      : "",
+                                  }}
+                                >
+                                  {dosar.data_sechestru &&
+                                    `sechestru: ${dosar.data_sechestru}, mai sunt ${timpRamasSechestru} zile pana la expirarea masurii`}
+                                </time>
+                                {dosar.data_sechestru && <br />}
+                                <time
+                                  style={{
+                                    backgroundColor: alertaSechestru
+                                      ? "red"
+                                      : "",
+                                  }}
+                                >
+                                  {dosar.days_remaining &&
+                                    `de la insituire/mentinere au trecut ${dosar.days_remaining} zile`}
+                                </time>
+                                {dosar.data_cj && <br />}
+                                <time
+                                  style={{
+                                    backgroundColor: alertaInterceptari
+                                      ? "red"
+                                      : "",
+                                  }}
+                                >
+                                  {dosar.data_interceptari &&
+                                    `interceptari: ${dosar.data_interceptari}, mai sunt ${timpRamasInterceptari} zile pana la expirarea masurii`}
+                                </time>
+                                {dosar.data_interceptari && <br />}
+                              </div>
+                            </Link>
+                          </li>
+                        );
+                      }
+                    }
+                  })}
+              </ul>
+            </>
+          )}
+        </div>
       </div>
-    </div>
     </>
-
   );
 };
 

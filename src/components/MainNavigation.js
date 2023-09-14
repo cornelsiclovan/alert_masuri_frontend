@@ -38,8 +38,21 @@ const MainNavigation = () => {
                   className={({ isActive }) =>
                     isActive ? classes.active : undefined
                   }
+                  end
                 >
                   Dosare
+                </NavLink>
+              </li>
+            )}
+             {token && (
+              <li>
+                <NavLink
+                  to="/dosare/dosareCuAc"
+                  className={({ isActive }) =>
+                    isActive ? classes.active : undefined
+                  }
+                >
+                  Dosare cu AC
                 </NavLink>
               </li>
             )}

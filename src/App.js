@@ -20,6 +20,9 @@ import EditDosarPage, {
 import DosareSolutionatePage, {
   loader as dosareSolutionateLoader,
 } from "./pages/DosareSolutionate";
+import DosareCuAcPage, {loader as dosareCuAcLoader} from "./pages/DosareAC";
+
+
 
 const { createBrowserRouter, RouterProvider } = require("react-router-dom");
 
@@ -68,6 +71,11 @@ const router = createBrowserRouter([
             loader: formDataLoader,
             action: manipulateDosarAction,
           },
+          {
+            path: "dosareCuAc",
+            element: <DosareCuAcPage />,
+            loader: dosareCuAcLoader,
+          }
         ],
       },
       {

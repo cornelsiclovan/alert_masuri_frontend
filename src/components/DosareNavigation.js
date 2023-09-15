@@ -7,35 +7,36 @@ const DosareNavigation = () => {
   const isProcuror = getIsProcuror();
 
   return (
-    <header className={classes.header}>
-      <nav>
-        <ul className={classes.list}>
-          <li>
-            <NavLink
-              to="/dosare"
-              className={({ isActive }) =>
-                isActive ? classes.active : undefined
-              }
-              end
-            >
-              Dosare nesolutionate
-            </NavLink>
-          </li>
-          {isProcuror === "false" && <li>
-            <NavLink
-              to="/dosare/nou"
-              className={({ isActive }) =>
-                isActive ? classes.active : undefined
-              }
-              end
-            >
-              Adauga dosar
-            </NavLink>
-          </li>}
-        </ul>
+    <></>
+    // <header className={classes.header}>
+    //   <nav>
+    //     <ul className={classes.list}>
+    //       <li>
+    //         <NavLink
+    //           to="/dosare"
+    //           className={({ isActive }) =>
+    //             isActive ? classes.active : undefined
+    //           }
+    //           end
+    //         >
+    //           Dosare nesolutionate
+    //         </NavLink>
+    //       </li>
+    //       {isProcuror === "false" && <li>
+    //         <NavLink
+    //           to="/dosare/nou"
+    //           className={({ isActive }) =>
+    //             isActive ? classes.active : undefined
+    //           }
+    //           end
+    //         >
+    //           Adauga dosar
+    //         </NavLink>
+    //       </li>}
+    //     </ul>
 
-      </nav>
-    </header>
+    //   </nav>
+    // </header>
   );
 };
 

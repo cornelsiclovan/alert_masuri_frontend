@@ -54,9 +54,6 @@ const DosareList = ({ dosare, isAc }) => {
     );
   }
 
-
- 
-
   const [numarDosare, setNumarDosare] = useState(dosareFilterFaraMasuri.length);
 
   const [dosSaseLuni, setDosSaseLuni] = useState(
@@ -66,24 +63,22 @@ const DosareList = ({ dosare, isAc }) => {
   const handleCheck = (event) => {};
 
   const onChangeDosarInput = (event) => {
-
-      setDosarCautat(event.target.value);
-      dosareFilterFaraMasuri = dosareFilterFaraMasuri.filter(
-        (dosar) =>
-          dosar.numeProcuror
-            .toLowerCase()
-            .includes(event.target.value.toLowerCase()) ||
-          dosar.numar.includes(event.target.value)
-      );
-      setNumarDosare(dosareFilterFaraMasuri.length);
-      const dosareMaiVechiDeSaseLuni = dosareFilterFaraMasuri.filter(
-        (dosar) =>
-          ((new Date(dosar.data).getTime() - new Date()) / (1000 * 3600 * 24)) *
-            -1 >
-          180
-      );
-      setDosSaseLuni(dosareMaiVechiDeSaseLuni.length);
-    
+    setDosarCautat(event.target.value);
+    dosareFilterFaraMasuri = dosareFilterFaraMasuri.filter(
+      (dosar) =>
+        dosar.numeProcuror
+          .toLowerCase()
+          .includes(event.target.value.toLowerCase()) ||
+        dosar.numar.includes(event.target.value)
+    );
+    setNumarDosare(dosareFilterFaraMasuri.length);
+    const dosareMaiVechiDeSaseLuni = dosareFilterFaraMasuri.filter(
+      (dosar) =>
+        ((new Date(dosar.data).getTime() - new Date()) / (1000 * 3600 * 24)) *
+          -1 >
+        180
+    );
+    setDosSaseLuni(dosareMaiVechiDeSaseLuni.length);
   };
 
   //console.log(dosare);
@@ -113,7 +108,6 @@ const DosareList = ({ dosare, isAc }) => {
               type="text"
               placeholder="Numar de dosar / Nume procuror"
               onChange={onChangeDosarInput}
-             
             ></input>
           </div>
           {/* {cuMasuriAsiguratorii && (
@@ -210,8 +204,6 @@ const DosareList = ({ dosare, isAc }) => {
               const luniRamasIntrate = Math.floor(restZile / 30);
               const zileRamasIntrate = restZile % 30;
 
-
-
               const alertaArest = timpRamasArest <= 15 ? true : false;
               const alertaSechestru = timpRamasSechestru <= 30 ? true : false;
               const alertaCj =
@@ -219,21 +211,20 @@ const DosareList = ({ dosare, isAc }) => {
               const alertaInterceptari =
                 timpRamasInterceptari <= 15 ? true : false;
               const alertaIntrate = timpRamasIntrate >= 90 ? true : false;
-              
+
               timpRamasIntrate = "";
 
-              if(aniTimpRamasIntrate !== 0) {
+              if (aniTimpRamasIntrate !== 0) {
                 timpRamasIntrate += aniTimpRamasIntrate + " ani ";
               }
 
-              if(luniRamasIntrate !== 0) {
+              if (luniRamasIntrate !== 0) {
                 timpRamasIntrate += luniRamasIntrate + " luni ";
               }
 
-              if(zileRamasIntrate !== 0) {
-                timpRamasIntrate += zileRamasIntrate + " zile" 
+              if (zileRamasIntrate !== 0) {
+                timpRamasIntrate += zileRamasIntrate + " zile";
               }
-             
 
               // if (dosarCautat) {
               //   console.log("dosarCautat", dosarCautat);
@@ -642,8 +633,12 @@ const DosareList = ({ dosare, isAc }) => {
                           (1000 * 3600 * 24)
                       );
 
-
-                      
+                      const aniTimpRamasSechestru = Math.floor(
+                        dosar.days_remaining / 360
+                      );
+                      const restZileSech = dosar.days_remaining % 360;
+                      const luniRamasSechestru = Math.floor(restZileSech / 30);
+                      const zileRamaseSechestru = restZileSech % 30;
 
                       const alertaArest = timpRamasArest <= 15 ? true : false;
                       const alertaSechestru =
@@ -652,6 +647,20 @@ const DosareList = ({ dosare, isAc }) => {
                         parseInt(dosar.days_remaining) <= 15 ? true : false;
                       const alertaInterceptari =
                         timpRamasInterceptari <= 15 ? true : false;
+
+                      timpRamasSechestru = "";
+
+                      if (aniTimpRamasSechestru !== 0) {
+                        timpRamasSechestru += aniTimpRamasSechestru + " ani ";
+                      }
+
+                      if (luniRamasSechestru !== 0) {
+                        timpRamasSechestru += luniRamasSechestru + " luni ";
+                      }
+
+                      if (zileRamaseSechestru !== 0) {
+                        timpRamasSechestru += zileRamaseSechestru + " zile";
+                      }
 
                       if (dosarCautat === null || dosarCautat === "") {
                         return (
@@ -694,7 +703,7 @@ const DosareList = ({ dosare, isAc }) => {
                                   }}
                                 >
                                   {dosar.days_remaining &&
-                                    `de la insituire/mentinere au trecut ${dosar.days_remaining} zile`}
+                                    `de la insituire/mentinere au trecut ${timpRamasSechestru} zile`}
                                 </time>
                                 {dosar.data_cj && <br />}
                                 <time

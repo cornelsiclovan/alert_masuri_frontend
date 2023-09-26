@@ -1,41 +1,43 @@
 import { Suspense } from "react";
 import { Await, defer, json, redirect, useLoaderData } from "react-router-dom";
 import DosareList from "../components/DosareList";
-import { getAuthToken, getIsAdmin, getIsProcuror } from "../util/auth";
+import { getAuthToken, getIsAdmin, getIsProcuror, getUserId } from "../util/auth";
+import SolutiiList from "../components/SolutiiList";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const DosareSolutionatePage = () => {
-    const { dosare } = useLoaderData();
+    const { solutii } = useLoaderData();
 
     
 
     return (
         <>
         <Suspense fallback={<p style={{ textAlign: "center" }}>Loading...</p>}>
-          <Await resolve={dosare}>
-            {(loadedDosare) => <DosareList dosare={loadedDosare} />}
+          <Await resolve={solutii}>
+            {(loadedSolutii) => <SolutiiList solutii={loadedSolutii} />}
           </Await>
         </Suspense>
         </>
       );
 }
 
-const loadDosare = async () => {
+const loadSolutii = async () => {
     const token = getAuthToken();
     const isAdmin = getIsAdmin();
     const isProcuror = getIsProcuror();
+    const userId = getUserId();
   
  
 
-    let url = BASE_URL + "/dosar?este_solutionat=1"
+    let url = BASE_URL + "/dateDosareSolutionate"
   
     if(isAdmin === "true") {
-      url = BASE_URL + "/dosar?isAdmin=1&este_solutionat=1"; 
+      url = BASE_URL + "/dateDosareSolutionate?isAdmin=1"; 
     }
   
     if(isProcuror==="true" && isAdmin === "false") {
-      url = BASE_URL + "/dosar?procurorId=1&este_solutionat=1"; 
+      url = BASE_URL + `/dateDosareSolutionate?procurorId=1`; 
     }
   
     const response = await fetch(url, {
@@ -63,7 +65,7 @@ const loadDosare = async () => {
     }
     console.log("test");
     return defer({
-      dosare: loadDosare(),
+      solutii: loadSolutii(),
     });
   }
   

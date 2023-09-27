@@ -81,7 +81,55 @@ const DosareList = ({ dosare, isAc }) => {
     setDosSaseLuni(dosareMaiVechiDeSaseLuni.length);
   };
 
-  //console.log(dosare);
+  const exportToExcel = () => {
+    var csvString =
+      "numar dosar, nume procuror, data primei sesizari, organul prim sesizat, institutia la care se afla dosarul,";
+
+    csvString += "\r\n";
+
+    dosare.forEach((rowItem, rowIndex) => {
+      console.log(rowItem);
+
+      for (const [key, value] of Object.entries(rowItem)) {
+        if (
+          key === "isControlJudiciar" ||
+          key === "isArest" ||
+          key === "isSechesctru" ||
+          key === "data_arest" ||
+          key === "data_cj" ||
+          key === "data_interceptari" ||
+          key === "data_sechestru" ||
+          key === "days_remaining" ||
+          key === "este_solutionat" ||
+          key === "id" ||
+          key === "isInterceptari" ||
+          key === "tip_solutie" ||
+          key === "tip_solutie_propusa" ||
+          key === "userId" ||
+          key === "data_inceperii_la_procuror" ||
+          key === "isSechestru" ||
+          key === "procurorId" ||
+          key === "data"
+        ) {
+        } else {
+          let myValue = value;
+          if(key === "data_primei_sesizari") {
+            myValue = value.split("T")[0];
+          }
+
+          csvString += myValue + ",";
+        }
+      }
+      csvString += "\r\n";
+    });
+
+    csvString = "data:text/csv;charset=utf-8,%EF%BB%BF" + encodeURIComponent(csvString);
+    const x = document.createElement("A");
+    x.setAttribute("href", csvString);
+    x.setAttribute("download", "somedata.csv");
+    document.body.appendChild(x);
+    x.click();
+  };
 
   return (
     <>
@@ -97,6 +145,12 @@ const DosareList = ({ dosare, isAc }) => {
                 </h1>
               )}
               {!isAc && <>- Mai vechi de 6 luni ({dosSaseLuni})</>}
+              <button
+                style={{ backgroundColor: "greenyellow" }}
+                onClick={exportToExcel}
+              >
+                Export
+              </button>
             </div>
             <input
               style={{

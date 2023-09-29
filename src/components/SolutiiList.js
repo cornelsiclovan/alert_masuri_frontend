@@ -10,15 +10,24 @@ const SolutiiList = ({ solutii }) => {
   const [anSolutie, setAnSolutie] = useState("");
   const [numeProcuror, setNumeProcuror] = useState("");
 
+  let totalSolutii = 0;
+
   const onChangeNumeProcurorInput = (event) => {
+    totalSolutii = 0;
     setNumeProcuror(event.target.value);
   };
 
   const onChangeAnInput = (event) => {
+    totalSolutii  = 0
     setAnSolutie(event.target.value);
   };
 
+  
+
+
   const onChangeSolutieInput = (event) => {
+
+
     if (event.target.value === "rechizitoriu") {
       setRechIsChecked(!rechIsChecked);
     }
@@ -68,18 +77,19 @@ const SolutiiList = ({ solutii }) => {
       solutie.nume_pe_scurt_solutie === "Renuntare"
     );
 
-    console.log(condition);
 
     return condition;
   });
 
-  console.log(anSolutie, numeProcuror);
+
+
 
   solutiiFiltrate = solutiiFiltrate.filter((solutie) => {
     if (numeProcuror === "") {
       return true;
     } else {
-      return solutie.numeProcuror.includes(numeProcuror);
+      
+      return solutie.numeProcuror.toLowerCase().includes(numeProcuror.toLowerCase());
     }
   });
 
@@ -87,11 +97,20 @@ const SolutiiList = ({ solutii }) => {
     if(anSolutie ==="") {
       return true;
     } else {
+ 
       return solutie.an_solutie.includes(anSolutie)
     }
   })
 
   let i = 0;
+
+   
+  solutiiFiltrate.forEach(element => {
+    totalSolutii += element.numar_solutii;
+  });
+
+
+  console.log("dupa filtru", totalSolutii);
 
   return (
     <>
@@ -186,6 +205,13 @@ const SolutiiList = ({ solutii }) => {
             </div>
           );
         })}
+          <div className={classes.th}>
+          <div className={classes.td}>Total Solutii</div>
+          <div className={classes.td}>{totalSolutii}</div>
+          <div className={classes.td}></div>
+          <div className={classes.td}></div>
+          <div className={classes.td}></div>
+        </div>
       </div>
     </>
   );

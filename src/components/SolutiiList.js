@@ -6,6 +6,7 @@ const SolutiiList = ({ solutii }) => {
   const [declIsChecked, setDeclIsChecked] = useState(true);
   const [renuIsChecked, setRenuIsChecked] = useState(true);
   const [clasIsChecked, setClasIsChecked] = useState(true);
+  const [acordIsChecked, setAcordIsChecked] = useState(true);
 
   const [anSolutie, setAnSolutie] = useState("");
   const [numeProcuror, setNumeProcuror] = useState("");
@@ -43,11 +44,15 @@ const SolutiiList = ({ solutii }) => {
     if (event.target.value === "renuntare") {
       setRenuIsChecked(!renuIsChecked);
     }
+
+    if(event.target.value === "acord") {
+      setAcordIsChecked(!acordIsChecked);
+    }
   };
 
   let solutiiFiltrate = solutii;
 
-  const getCondition = (isRech, isClas, isDecl, isRenu) => {
+  const getCondition = (isRech, isClas, isDecl, isRenu, isAcord) => {
     let condition = false;
 
     if (isRech && rechIsChecked) {
@@ -66,6 +71,10 @@ const SolutiiList = ({ solutii }) => {
       condition = condition || isDecl;
     }
 
+    if(isAcord && acordIsChecked) {
+      condition = condition || isAcord
+    }
+
     return condition;
   };
 
@@ -74,7 +83,8 @@ const SolutiiList = ({ solutii }) => {
       solutie.nume_pe_scurt_solutie === "Rechizitoriu",
       solutie.nume_pe_scurt_solutie === "Clasare",
       solutie.nume_pe_scurt_solutie === "Declinare",
-      solutie.nume_pe_scurt_solutie === "Renuntare"
+      solutie.nume_pe_scurt_solutie === "Renuntare",
+      solutie.nume_pe_scurt_solutie === "Acord de recunoastere"
     );
 
 
@@ -148,7 +158,7 @@ const SolutiiList = ({ solutii }) => {
                 value="rechizitoriu"
                 onChange={onChangeSolutieInput}
               ></input>
-              <label style={{ marginLeft: "-100px" }}>Rechizitoriu</label>
+              <label style={{ marginLeft: "-200px" }}>Rechizitoriu</label>
             </div>
             <div className={classes.li}>
               <input
@@ -158,7 +168,7 @@ const SolutiiList = ({ solutii }) => {
                 type="checkbox"
                 onChange={onChangeSolutieInput}
               ></input>
-              <label style={{ marginLeft: "-100px" }}>Clasare</label>
+              <label style={{ marginLeft: "-200px" }}>Clasare</label>
             </div>
             <div className={classes.li}>
               <input
@@ -168,7 +178,7 @@ const SolutiiList = ({ solutii }) => {
                 value="renuntare"
                 onChange={onChangeSolutieInput}
               ></input>
-              <label style={{ marginLeft: "-100px" }}>Renuntare</label>
+              <label style={{ marginLeft: "-200px" }}>Renuntare</label>
             </div>
             <div className={classes.li}>
               <input
@@ -179,7 +189,18 @@ const SolutiiList = ({ solutii }) => {
                 placeholder="Tip solutie"
                 onChange={onChangeSolutieInput}
               ></input>
-              <label style={{ marginLeft: "-100px" }}>Declinare</label>
+              <label style={{ marginLeft: "-200px" }}>Declinare</label>
+            </div>
+            <div className={classes.li}>
+              <input
+                checked={acordIsChecked}
+                type="checkbox"
+                id="acord"
+                value="acord"
+                placeholder="Tip solutie"
+                onChange={onChangeSolutieInput}
+              ></input>
+              <label style={{ marginLeft: "-200px" }}>Acord de recunoastere</label>
             </div>
           </div>
         </div>

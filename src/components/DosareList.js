@@ -1,40 +1,24 @@
-import { Form, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import classes from "./DosareList.module.css";
 import { useEffect, useState } from "react";
-import ProcurorList from "./ProcurorList";
+
 
 const DosareList = ({ dosare, isAc }) => {
   const [cuMasuriAsiguratorii, setCuMasuriAsiguratorii] = useState(true);
   const [dateNow, setDate] = useState(Date.now());
+  const [searchName, setSearchName] = useState("");
+  const [numarDosare, setNumarDosare] = useState(dosare.length);
+  const [dosSaseLuni, setDosSaseLuni] = useState(0);
   const changeCuMasuriAsiguratorii = () => {
     setCuMasuriAsiguratorii(true);
   };
-  const [isArest, setIsArest] = useState(false);
-  const [isCj, setIsCj] = useState(false);
-  const [isSechestru, setIsSechestru] = useState(false);
-  const [isInterceptari, setIsInterceptari] = useState(false);
 
-  const [dosareCuAc, setDosareCuAc] = useState(false);
-
-  const [dosarCautat, setDosarCautat] = useState(null);
-
-  const [dosareCuMasuri, setDosareCuMasuri] = useState(dosare);
-
-  let dosareSortate;
-
-  let i = 0;
-
-  let procurori = [];
 
   let dosareFilterFaraMasuri = [];
   let dosareFilterCuSechestru = [];
 
   let dosareMaiVechiDeSaseLuni = [];
   let dosareFilterCuMasuri = [];
-
-  if (isAc) {
-    dosareFilterFaraMasuri = dosare;
-  }
 
   if (!isAc) {
     dosareFilterCuSechestru = dosare.filter(
@@ -54,32 +38,137 @@ const DosareList = ({ dosare, isAc }) => {
     );
   }
 
-  const [numarDosare, setNumarDosare] = useState(dosareFilterFaraMasuri.length);
 
-  const [dosSaseLuni, setDosSaseLuni] = useState(
-    dosareMaiVechiDeSaseLuni.length
-  );
+  useEffect(() => {
+    console.log(dosareMaiVechiDeSaseLuni);
 
-  const handleCheck = (event) => {};
+    setNumarDosare(dosareFilterFaraMasuri.length);
+    setDosSaseLuni(dosareMaiVechiDeSaseLuni.length);
+  }, 
+  [dosareFilterFaraMasuri, dosareMaiVechiDeSaseLuni]);
+
+
+  const [rechIsChecked, setRechIsChecked] = useState(false);
+  const [renuIsChecked, setRenuIsChecked] = useState(false);
+  const [clasIsChecked, setClasIsChecked] = useState(false);
+  const [toate, setToate] = useState(true);
+
+  const onChangeSolutieInput = (event) => {
+
+    
+    if (event.target.value.includes("rechizitoriu")) {
+      checkToate("rech", rechIsChecked);
+      setRechIsChecked(!rechIsChecked);
+    }
+
+    if (event.target.value === "clasare") {
+      checkToate("clas", clasIsChecked);
+      setClasIsChecked(!clasIsChecked);
+    }
+
+    if (event.target.value === "renuntare") {
+      checkToate("renu", renuIsChecked);
+      setRenuIsChecked(!renuIsChecked);
+    }
+    
+    
+  };
+
+  const checkToate = (tipSol, value) => {
+    if(tipSol === "rech") {
+      setToate(!(!rechIsChecked || clasIsChecked || renuIsChecked));
+    }
+    if(tipSol === "clas") {
+      setToate(!(rechIsChecked || !clasIsChecked || renuIsChecked));
+    }
+    if(tipSol === "renu") {
+      setToate(!(rechIsChecked || clasIsChecked || !renuIsChecked));
+    }
+    
+  }
+
+  console.log("rech", rechIsChecked, "renu", renuIsChecked, "clas", clasIsChecked, "toate", toate);
+
+
+  const getCondition = (isRech, isRenu, isClas) => {
+    let condition = false;
+
+    if (isRech && rechIsChecked) {
+      condition = condition || isRech;
+    }
+
+    if (isClas && clasIsChecked) {
+      condition = condition || isClas;
+    }
+
+    if (isRenu && renuIsChecked) {
+      condition = condition || isRenu;
+    }
+  
+    return condition;
+  };
+
+
+  const [dosarCautat, setDosarCautat] = useState(null);
+
+  let i = 0;
+
+
+  if (isAc) {
+    dosareFilterFaraMasuri = dosare;
+  }
+
+ 
+
+  
+
+
 
   const onChangeDosarInput = (event) => {
+    setSearchName(event.target.value);
+    
     setDosarCautat(event.target.value);
-    dosareFilterFaraMasuri = dosareFilterFaraMasuri.filter(
-      (dosar) =>
-        dosar.numeProcuror
-          .toLowerCase()
-          .includes(event.target.value.toLowerCase()) ||
-        dosar.numar.includes(event.target.value)
-    );
-    setNumarDosare(dosareFilterFaraMasuri.length);
-    const dosareMaiVechiDeSaseLuni = dosareFilterFaraMasuri.filter(
-      (dosar) =>
-        ((new Date(dosar.data).getTime() - new Date()) / (1000 * 3600 * 24)) *
-          -1 >
-        180
-    );
-    setDosSaseLuni(dosareMaiVechiDeSaseLuni.length);
+    
+    // dosareFilterFaraMasuri = dosareFilterFaraMasuri.filter(
+    //   (dosar) =>
+    //     dosar.numeProcuror
+    //       .toLowerCase()
+    //       .includes(event.target.value.toLowerCase()) ||
+    //     dosar.numar.includes(event.target.value)
+    // );
+   
   };
+
+ 
+
+
+  if(!toate) {
+    dosareFilterFaraMasuri = dosareFilterFaraMasuri.filter((dosar) => {
+      let condition = getCondition(
+        dosar.tip_solutie_propusa.includes("TERMINARE"),
+        dosar.tip_solutie_propusa.includes("R.U.P."),    
+        dosar.tip_solutie_propusa.includes("CLASARE")
+      )
+
+      return condition;
+    }) 
+  }
+
+  dosareFilterFaraMasuri = dosareFilterFaraMasuri.filter(
+    (dosar) =>
+      dosar.numeProcuror
+        .toLowerCase()
+        .includes(searchName) ||
+        dosar.numar.includes(dosarCautat)
+  );
+
+  dosareMaiVechiDeSaseLuni = dosareFilterFaraMasuri.filter(
+    (dosar) =>
+      ((new Date(dosar.data).getTime() - new Date()) / (1000 * 3600 * 24)) *
+        -1 >
+      180
+  );
+
 
   const exportToExcel = () => {
     var csvString =
@@ -133,11 +222,59 @@ const DosareList = ({ dosare, isAc }) => {
 
   return (
     <>
+      <div className={classes.sort}>
+        <div className={classes.checkbox}>
+          <div className={classes.ul}>
+          <div className={classes.li}>
+              <input
+                checked={toate}
+                type="checkbox"
+                id="toate"
+                value="toate"
+                onChange={onChangeSolutieInput}
+              ></input>
+              <label style={{ marginLeft: "-200px" }}>Toate</label>
+            </div>
+            <div className={classes.li}>
+              <input
+                checked={rechIsChecked}
+                type="checkbox"
+                id="rechizitoriu"
+                value="rechizitoriu"
+                onChange={onChangeSolutieInput}
+              ></input>
+              <label style={{ marginLeft: "-200px" }}>Rechizitoriu</label>
+            </div>
+            <div className={classes.li}>
+              <input
+                checked={clasIsChecked}
+                id="clasare"
+                value="clasare"
+                type="checkbox"
+                onChange={onChangeSolutieInput}
+              ></input>
+              <label style={{ marginLeft: "-200px" }}>Clasare</label>
+            </div>
+            <div className={classes.li}>
+              <input
+                checked={renuIsChecked}
+                type="checkbox"
+                id="renuntare"
+                value="renuntare"
+                onChange={onChangeSolutieInput}
+              ></input>
+              <label style={{ marginLeft: "-200px" }}>Renuntare</label>
+            </div>
+      
+           
+          </div>
+        </div>
+      </div>
       <div className={classes.group}>
         <div className={classes.items}>
           <div style={{ display: "flex" }}>
             <div>
-              {!isAc && <h1> Dosare intrate({numarDosare}) </h1>}
+              {!isAc && <h1> Dosare intrate({numarDosare }) </h1>}
               {isAc && (
                 <h1 style={{ width: "400px" }}>
                   {" "}
@@ -164,67 +301,6 @@ const DosareList = ({ dosare, isAc }) => {
               onChange={onChangeDosarInput}
             ></input>
           </div>
-          {/* {cuMasuriAsiguratorii && (
-          <div style={{ display: "flex", justifyContent: "space-around" }}>
-            <li style={{ listStyle: "none" }}> Sorteaza dupa: </li>
-            <li style={{ listStyle: "none" }}>
-              <label htmlFor="este_solutionat" style={{ width: "10%" }}>
-                {" "}
-                Arest{" "}
-              </label>
-              <input
-                type="checkbox"
-                id="arest"
-                name="arest"
-                value={isArest}
-                checked={isArest}
-                onChange={handleCheck}
-              />
-            </li>
-            <li style={{ listStyle: "none" }}>
-              <label htmlFor="este_solutionat" style={{ width: "10%" }}>
-                {" "}
-                Control judiciar{" "}
-              </label>
-              <input
-                type="checkbox"
-                id="cj"
-                name="cj"
-                value={isCj}
-                checked={isCj}
-                onChange={handleCheck}
-              />
-            </li>
-            <li style={{ listStyle: "none" }}>
-              <label htmlFor="este_solutionat" style={{ width: "10%" }}>
-                {" "}
-                Sechestru{" "}
-              </label>
-              <input
-                type="checkbox"
-                id="sechestru"
-                name="sechestru"
-                value={isSechestru}
-                checked={isSechestru}
-                onChange={handleCheck}
-              />
-            </li>
-            <li style={{ listStyle: "none" }}>
-              <label htmlFor="este_solutionat" style={{ width: "10%" }}>
-                {" "}
-                Interceptari{" "}
-              </label>
-              <input
-                type="checkbox"
-                id="interceptari"
-                name="interceptari"
-                value={isInterceptari}
-                checked={isInterceptari}
-                onChange={handleCheck}
-              />
-            </li>
-          </div>
-        )} */}
           <br />
           <ul className={classes.list}>
             {dosareFilterFaraMasuri.map((dosar) => {

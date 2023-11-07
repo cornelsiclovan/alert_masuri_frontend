@@ -243,7 +243,7 @@ const DosareList = ({ dosare, isAc }) => {
                 value="rechizitoriu"
                 onChange={onChangeSolutieInput}
               ></input>
-              <label style={{ marginLeft: "-200px" }}>Rechizitoriu</label>
+              <label style={{ marginLeft: "-200px" }}>R.T.U.P.</label>
             </div>
             <div className={classes.li}>
               <input
@@ -253,7 +253,7 @@ const DosareList = ({ dosare, isAc }) => {
                 type="checkbox"
                 onChange={onChangeSolutieInput}
               ></input>
-              <label style={{ marginLeft: "-200px" }}>Clasare</label>
+              <label style={{ marginLeft: "-200px" }}>Ref. clasare</label>
             </div>
             <div className={classes.li}>
               <input
@@ -263,10 +263,8 @@ const DosareList = ({ dosare, isAc }) => {
                 value="renuntare"
                 onChange={onChangeSolutieInput}
               ></input>
-              <label style={{ marginLeft: "-200px" }}>Renuntare</label>
+              <label style={{ marginLeft: "-200px" }}>Ref. renuntare</label>
             </div>
-      
-           
           </div>
         </div>
       </div>

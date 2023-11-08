@@ -176,7 +176,7 @@ const DosareList = ({ dosare, isAc }) => {
 
     csvString += "\r\n";
 
-    dosare.forEach((rowItem, rowIndex) => {
+    dosareFilterFaraMasuri.forEach((rowItem, rowIndex) => {
       console.log(rowItem);
 
       for (const [key, value] of Object.entries(rowItem)) {

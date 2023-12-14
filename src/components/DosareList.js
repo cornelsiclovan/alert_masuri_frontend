@@ -40,7 +40,7 @@ const DosareList = ({ dosare, isAc }) => {
 
 
   useEffect(() => {
-    console.log(dosareMaiVechiDeSaseLuni);
+    
 
     setNumarDosare(dosareFilterFaraMasuri.length);
     setDosSaseLuni(dosareMaiVechiDeSaseLuni.length);
@@ -87,7 +87,7 @@ const DosareList = ({ dosare, isAc }) => {
     
   }
 
-  console.log("rech", rechIsChecked, "renu", renuIsChecked, "clas", clasIsChecked, "toate", toate);
+
 
 
   const getCondition = (isRech, isRenu, isClas) => {
@@ -118,12 +118,6 @@ const DosareList = ({ dosare, isAc }) => {
     dosareFilterFaraMasuri = dosare;
   }
 
- 
-
-  
-
-
-
   const onChangeDosarInput = (event) => {
     setSearchName(event.target.value);
     
@@ -138,9 +132,6 @@ const DosareList = ({ dosare, isAc }) => {
     // );
    
   };
-
- 
-
 
   if(!toate) {
     dosareFilterFaraMasuri = dosareFilterFaraMasuri.filter((dosar) => {
@@ -158,7 +149,7 @@ const DosareList = ({ dosare, isAc }) => {
     (dosar) =>
       dosar.numeProcuror
         .toLowerCase()
-        .includes(searchName) ||
+        .includes(searchName) || dosar.numeProcuror.includes(searchName) || dosar.numeProcuror.toUpperCase().includes(searchName) ||
         dosar.numar.includes(dosarCautat)
   );
 
@@ -177,7 +168,7 @@ const DosareList = ({ dosare, isAc }) => {
     csvString += "\r\n";
 
     dosareFilterFaraMasuri.forEach((rowItem, rowIndex) => {
-      console.log(rowItem);
+   
 
       for (const [key, value] of Object.entries(rowItem)) {
         if (
@@ -222,7 +213,7 @@ const DosareList = ({ dosare, isAc }) => {
 
   return (
     <>
-      <div className={classes.sort}>
+      {!isAc && <div className={classes.sort}>
         <div className={classes.checkbox}>
           <div className={classes.ul}>
           <div className={classes.li}>
@@ -267,7 +258,7 @@ const DosareList = ({ dosare, isAc }) => {
             </div>
           </div>
         </div>
-      </div>
+      </div>}
       <div className={classes.group}>
         <div className={classes.items}>
           <div style={{ display: "flex" }}>
@@ -619,7 +610,7 @@ const DosareList = ({ dosare, isAc }) => {
                               {dosar.numar} - {dosar.numeProcuror}
                             </h1>
                             <time>
-                              expirare masura preventiva:{" "}
+                              expirare {dosar.isArest && 'arest'} {dosar.isControlJudiciar && 'control judiciar'} :{" "}
                               {dosar.data.split("T")[0]}
                             </time>{" "}
                             <br />
@@ -629,7 +620,7 @@ const DosareList = ({ dosare, isAc }) => {
                               }}
                             >
                               {dosar.data_arest &&
-                                `arest: ${dosar.data_arest}, mai sunt ${timpRamasArest} zile pana la expirarea masurii`}
+                                `arest: ${dosar.data_arest}, mai sunt ${timpRamasArest} zile pana la expirarea masurii` }
                             </time>
                             {dosar.data_arest && <br />}
                             <time

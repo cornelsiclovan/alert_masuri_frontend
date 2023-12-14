@@ -62,6 +62,8 @@ const loadDosare = async () => {
     url = BASE_URL + "/dosar?isAdmin=1&este_solutionat=0";
   }
 
+  
+
   if (isProcuror === "true" && isAdmin === "false") {
     url = BASE_URL + "/dosar?procurorId=1&este_solutionat=0";
   }

@@ -35,11 +35,7 @@ const router = createBrowserRouter([
     loader: tokenLoader,
     children: [
       {
-        index: true,
-        element: <HomePage />,
-      },
-      {
-        path: "dosare",
+        path: "",
         element: <DosareRootLayout />,
         children: [
           {
@@ -48,7 +44,7 @@ const router = createBrowserRouter([
             loader: dosareLoader,
           },
           {
-            path: ":dosarId",
+            path: "/dosare/:dosarId",
             id: "dosar-detail",
             loader: dosarDetailLoader,
             children: [

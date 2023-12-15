@@ -570,11 +570,12 @@ const DosareList = ({ dosare, isAc }) => {
           <ul>
             {cuMasuriAsiguratorii &&
               dosareFilterCuMasuri.map((dosar) => {
-                if (
-                  dosar.isControlJudiciar ||
+                console.log("trimis cu mas la inst", dosar.numar, dosar.trimis_masura_la_instanta);
+                if ( dosar.trimis_masura_la_instanta !== 1 &&
+                 ( dosar.isControlJudiciar ||
                   dosar.isArest ||
                   dosar.isSechestru ||
-                  dosar.isInterceptari
+                  dosar.isInterceptari)
                 ) {
                   const timpRamasArest = Math.floor(
                     (new Date(dosar.data_arest).getTime() - dateNow) /

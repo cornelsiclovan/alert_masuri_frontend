@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import classes from "./DosareList.module.css";
 import { useEffect, useState } from "react";
 
-
 const DosareList = ({ dosare, isAc }) => {
   const [cuMasuriAsiguratorii, setCuMasuriAsiguratorii] = useState(true);
   const [dateNow, setDate] = useState(Date.now());
@@ -13,22 +12,26 @@ const DosareList = ({ dosare, isAc }) => {
     setCuMasuriAsiguratorii(true);
   };
 
-
   let dosareFilterFaraMasuri = [];
   let dosareFilterCuSechestru = [];
 
   let dosareMaiVechiDeSaseLuni = [];
   let dosareFilterCuMasuri = [];
 
+  let dosareContestatii = [];
+
   if (!isAc) {
     dosareFilterCuSechestru = dosare.filter(
       (dosar) => dosar.isSechestru === true
     );
     dosareFilterFaraMasuri = dosare.filter(
-      (dosar) => dosar.days_remaining === null
+      (dosar) => dosar.days_remaining === null && !dosar.admitere_contestatie
     );
     dosareFilterCuMasuri = dosare.filter(
       (dosar) => dosar.days_remaining !== null && dosar.isSechestru !== true
+    );
+    dosareContestatii = dosare.filter(
+      (dosar) => dosar.admitere_contestatie === 1
     );
     dosareMaiVechiDeSaseLuni = dosare.filter(
       (dosar) =>
@@ -38,15 +41,10 @@ const DosareList = ({ dosare, isAc }) => {
     );
   }
 
-
   useEffect(() => {
-    
-
     setNumarDosare(dosareFilterFaraMasuri.length);
     setDosSaseLuni(dosareMaiVechiDeSaseLuni.length);
-  }, 
-  [dosareFilterFaraMasuri, dosareMaiVechiDeSaseLuni]);
-
+  }, [dosareFilterFaraMasuri, dosareMaiVechiDeSaseLuni]);
 
   const [rechIsChecked, setRechIsChecked] = useState(false);
   const [renuIsChecked, setRenuIsChecked] = useState(false);
@@ -54,8 +52,6 @@ const DosareList = ({ dosare, isAc }) => {
   const [toate, setToate] = useState(true);
 
   const onChangeSolutieInput = (event) => {
-
-    
     if (event.target.value.includes("rechizitoriu")) {
       checkToate("rech", rechIsChecked);
       setRechIsChecked(!rechIsChecked);
@@ -70,25 +66,19 @@ const DosareList = ({ dosare, isAc }) => {
       checkToate("renu", renuIsChecked);
       setRenuIsChecked(!renuIsChecked);
     }
-    
-    
   };
 
   const checkToate = (tipSol, value) => {
-    if(tipSol === "rech") {
+    if (tipSol === "rech") {
       setToate(!(!rechIsChecked || clasIsChecked || renuIsChecked));
     }
-    if(tipSol === "clas") {
+    if (tipSol === "clas") {
       setToate(!(rechIsChecked || !clasIsChecked || renuIsChecked));
     }
-    if(tipSol === "renu") {
+    if (tipSol === "renu") {
       setToate(!(rechIsChecked || clasIsChecked || !renuIsChecked));
     }
-    
-  }
-
-
-
+  };
 
   const getCondition = (isRech, isRenu, isClas) => {
     let condition = false;
@@ -104,15 +94,13 @@ const DosareList = ({ dosare, isAc }) => {
     if (isRenu && renuIsChecked) {
       condition = condition || isRenu;
     }
-  
+
     return condition;
   };
-
 
   const [dosarCautat, setDosarCautat] = useState(null);
 
   let i = 0;
-
 
   if (isAc) {
     dosareFilterFaraMasuri = dosare;
@@ -120,9 +108,9 @@ const DosareList = ({ dosare, isAc }) => {
 
   const onChangeDosarInput = (event) => {
     setSearchName(event.target.value);
-    
+
     setDosarCautat(event.target.value);
-    
+
     // dosareFilterFaraMasuri = dosareFilterFaraMasuri.filter(
     //   (dosar) =>
     //     dosar.numeProcuror
@@ -130,27 +118,26 @@ const DosareList = ({ dosare, isAc }) => {
     //       .includes(event.target.value.toLowerCase()) ||
     //     dosar.numar.includes(event.target.value)
     // );
-   
   };
 
-  if(!toate) {
+  if (!toate) {
     dosareFilterFaraMasuri = dosareFilterFaraMasuri.filter((dosar) => {
       let condition = getCondition(
         dosar.tip_solutie_propusa.includes("TERMINARE"),
-        dosar.tip_solutie_propusa.includes("R.U.P."),    
+        dosar.tip_solutie_propusa.includes("R.U.P."),
         dosar.tip_solutie_propusa.includes("CLASARE")
-      )
+      );
 
       return condition;
-    }) 
+    });
   }
 
   dosareFilterFaraMasuri = dosareFilterFaraMasuri.filter(
     (dosar) =>
-      dosar.numeProcuror
-        .toLowerCase()
-        .includes(searchName) || dosar.numeProcuror.includes(searchName) || dosar.numeProcuror.toUpperCase().includes(searchName) ||
-        dosar.numar.includes(dosarCautat)
+      dosar.numeProcuror.toLowerCase().includes(searchName) ||
+      dosar.numeProcuror.includes(searchName) ||
+      dosar.numeProcuror.toUpperCase().includes(searchName) ||
+      dosar.numar.includes(dosarCautat)
   );
 
   dosareMaiVechiDeSaseLuni = dosareFilterFaraMasuri.filter(
@@ -160,7 +147,6 @@ const DosareList = ({ dosare, isAc }) => {
       180
   );
 
-
   const exportToExcel = () => {
     var csvString =
       "numar dosar, nume procuror, data primei sesizari, organul prim sesizat, institutia la care se afla dosarul,";
@@ -168,8 +154,6 @@ const DosareList = ({ dosare, isAc }) => {
     csvString += "\r\n";
 
     dosareFilterFaraMasuri.forEach((rowItem, rowIndex) => {
-   
-
       for (const [key, value] of Object.entries(rowItem)) {
         if (
           key === "isControlJudiciar" ||
@@ -193,7 +177,7 @@ const DosareList = ({ dosare, isAc }) => {
         ) {
         } else {
           let myValue = value;
-          if(key === "data_primei_sesizari") {
+          if (key === "data_primei_sesizari") {
             myValue = value.split("T")[0];
           }
 
@@ -203,7 +187,8 @@ const DosareList = ({ dosare, isAc }) => {
       csvString += "\r\n";
     });
 
-    csvString = "data:text/csv;charset=utf-8,%EF%BB%BF" + encodeURIComponent(csvString);
+    csvString =
+      "data:text/csv;charset=utf-8,%EF%BB%BF" + encodeURIComponent(csvString);
     const x = document.createElement("A");
     x.setAttribute("href", csvString);
     x.setAttribute("download", "somedata.csv");
@@ -213,57 +198,59 @@ const DosareList = ({ dosare, isAc }) => {
 
   return (
     <>
-      {!isAc && <div className={classes.sort}>
-        <div className={classes.checkbox}>
-          <div className={classes.ul}>
-          <div className={classes.li}>
-              <input
-                checked={toate}
-                type="checkbox"
-                id="toate"
-                value="toate"
-                onChange={onChangeSolutieInput}
-              ></input>
-              <label style={{ marginLeft: "-200px" }}>Toate</label>
-            </div>
-            <div className={classes.li}>
-              <input
-                checked={rechIsChecked}
-                type="checkbox"
-                id="rechizitoriu"
-                value="rechizitoriu"
-                onChange={onChangeSolutieInput}
-              ></input>
-              <label style={{ marginLeft: "-200px" }}>R.T.U.P.</label>
-            </div>
-            <div className={classes.li}>
-              <input
-                checked={clasIsChecked}
-                id="clasare"
-                value="clasare"
-                type="checkbox"
-                onChange={onChangeSolutieInput}
-              ></input>
-              <label style={{ marginLeft: "-200px" }}>Ref. clasare</label>
-            </div>
-            <div className={classes.li}>
-              <input
-                checked={renuIsChecked}
-                type="checkbox"
-                id="renuntare"
-                value="renuntare"
-                onChange={onChangeSolutieInput}
-              ></input>
-              <label style={{ marginLeft: "-200px" }}>Ref. renuntare</label>
+      {!isAc && (
+        <div className={classes.sort}>
+          <div className={classes.checkbox}>
+            <div className={classes.ul}>
+              <div className={classes.li}>
+                <input
+                  checked={toate}
+                  type="checkbox"
+                  id="toate"
+                  value="toate"
+                  onChange={onChangeSolutieInput}
+                ></input>
+                <label style={{ marginLeft: "-200px" }}>Toate</label>
+              </div>
+              <div className={classes.li}>
+                <input
+                  checked={rechIsChecked}
+                  type="checkbox"
+                  id="rechizitoriu"
+                  value="rechizitoriu"
+                  onChange={onChangeSolutieInput}
+                ></input>
+                <label style={{ marginLeft: "-200px" }}>R.T.U.P.</label>
+              </div>
+              <div className={classes.li}>
+                <input
+                  checked={clasIsChecked}
+                  id="clasare"
+                  value="clasare"
+                  type="checkbox"
+                  onChange={onChangeSolutieInput}
+                ></input>
+                <label style={{ marginLeft: "-200px" }}>Ref. clasare</label>
+              </div>
+              <div className={classes.li}>
+                <input
+                  checked={renuIsChecked}
+                  type="checkbox"
+                  id="renuntare"
+                  value="renuntare"
+                  onChange={onChangeSolutieInput}
+                ></input>
+                <label style={{ marginLeft: "-200px" }}>Ref. renuntare</label>
+              </div>
             </div>
           </div>
         </div>
-      </div>}
+      )}
       <div className={classes.group}>
         <div className={classes.items}>
           <div style={{ display: "flex" }}>
             <div>
-              {!isAc && <h1> Dosare intrate({numarDosare }) </h1>}
+              {!isAc && <h1> Dosare intrate({numarDosare}) </h1>}
               {isAc && (
                 <h1 style={{ width: "400px" }}>
                   {" "}
@@ -354,9 +341,9 @@ const DosareList = ({ dosare, isAc }) => {
                   <li key={dosar.id} className={classes.item}>
                     <Link to={`/dosare/${dosar.id}`}>
                       <div className={classes.content}>
-                        <h1>
+                        <h2>
                           {dosar.numar} - <small>{dosar.numeProcuror}</small>
-                        </h1>
+                        </h2>
                         {!isAc && dosar.tip_solutie_propusa !== "UPP" && (
                           <p>
                             Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
@@ -370,7 +357,8 @@ const DosareList = ({ dosare, isAc }) => {
                         {!isAc && (
                           <p>
                             Data desemnare procuror:{" "}
-                            {dosar.data_inceperii_la_procuror.split("T")[0]}
+                            {dosar.data_inceperii_la_procuror &&
+                              dosar.data_inceperii_la_procuror.split("T")[0]}
                           </p>
                         )}
                         {dosar && dosar.este_solutionat === 1 && (
@@ -465,9 +453,9 @@ const DosareList = ({ dosare, isAc }) => {
                   <li key={dosar.id} className={classes.item}>
                     <Link to={`/dosare/${dosar.id}`}>
                       <div className={classes.content}>
-                        <h1>
+                        <h2>
                           {dosar.numar} - <small>{dosar.numeProcuror}</small>
-                        </h1>
+                        </h2>
                         {!isAc && dosar.tip_solutie_propusa !== "UPP" && (
                           <p>
                             Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
@@ -481,7 +469,8 @@ const DosareList = ({ dosare, isAc }) => {
                         {!isAc && (
                           <p>
                             Data desemnare procuror:{" "}
-                            {dosar.data_inceperii_la_procuror.split("T")[0]}
+                            {dosar.data_inceperii_la_procuror &&
+                              dosar.data_inceperii_la_procuror.split("T")[0]}
                           </p>
                         )}
                         {dosar && dosar.este_solutionat === 1 && (
@@ -567,15 +556,20 @@ const DosareList = ({ dosare, isAc }) => {
         </div>
         <div className={classes.items}>
           {dosareFilterCuMasuri.length !== 0 && <h1> Dosare cu masuri </h1>}
-          <ul>
+          <ul className={classes.list}>
             {cuMasuriAsiguratorii &&
               dosareFilterCuMasuri.map((dosar) => {
-                console.log("trimis cu mas la inst", dosar.numar, dosar.trimis_masura_la_instanta);
-                if ( dosar.trimis_masura_la_instanta !== 1 &&
-                 ( dosar.isControlJudiciar ||
-                  dosar.isArest ||
-                  dosar.isSechestru ||
-                  dosar.isInterceptari)
+                console.log(
+                  "trimis cu mas la inst",
+                  dosar.numar,
+                  dosar.trimis_masura_la_instanta
+                );
+                if (
+                  dosar.trimis_masura_la_instanta !== 1 &&
+                  (dosar.isControlJudiciar ||
+                    dosar.isArest ||
+                    dosar.isSechestru ||
+                    dosar.isInterceptari)
                 ) {
                   const timpRamasArest = Math.floor(
                     (new Date(dosar.data_arest).getTime() - dateNow) /
@@ -607,11 +601,12 @@ const DosareList = ({ dosare, isAc }) => {
                       <li key={dosar.id} className={classes.item}>
                         <Link to={`/dosare/${dosar.id}`}>
                           <div className={classes.content}>
-                            <h1>
+                            <h2>
                               {dosar.numar} - {dosar.numeProcuror}
-                            </h1>
+                            </h2>
                             <time>
-                              expirare {dosar.isArest && 'arest'} {dosar.isControlJudiciar && 'control judiciar'} :{" "}
+                              expirare {dosar.isArest && "arest"}{" "}
+                              {dosar.isControlJudiciar && "control judiciar"} :{" "}
                               {dosar.data.split("T")[0]}
                             </time>{" "}
                             <br />
@@ -621,7 +616,7 @@ const DosareList = ({ dosare, isAc }) => {
                               }}
                             >
                               {dosar.data_arest &&
-                                `arest: ${dosar.data_arest}, mai sunt ${timpRamasArest} zile pana la expirarea masurii` }
+                                `arest: ${dosar.data_arest}, mai sunt ${timpRamasArest} zile pana la expirarea masurii`}
                             </time>
                             {dosar.data_arest && <br />}
                             <time
@@ -669,9 +664,9 @@ const DosareList = ({ dosare, isAc }) => {
                       <li key={dosar.id} className={classes.item}>
                         <Link to={`/dosare/${dosar.id}`}>
                           <div className={classes.content}>
-                            <h1>
+                            <h2>
                               {dosar.numar} - {dosar.numeProcuror}
-                            </h1>
+                            </h2>
                             <time>
                               expirare masura preventiva:{" "}
                               {dosar.data.split("T")[0]}
@@ -726,7 +721,7 @@ const DosareList = ({ dosare, isAc }) => {
           {dosareFilterCuSechestru.length !== 0 && (
             <>
               <h1> Dosare cu sechestru </h1>
-              <ul>
+              <ul className={classes.list}>
                 {cuMasuriAsiguratorii &&
                   dosareFilterCuSechestru.map((dosar) => {
                     if (
@@ -787,9 +782,9 @@ const DosareList = ({ dosare, isAc }) => {
                           <li key={dosar.id} className={classes.item}>
                             <Link to={`/dosare/${dosar.id}`}>
                               <div className={classes.content}>
-                                <h1>
+                                <h2>
                                   {dosar.numar} - {dosar.numeProcuror}
-                                </h1>
+                                </h2>
                                 <time>
                                   instituire/mentinere:{" "}
                                   {dosar.data.split("T")[0]}
@@ -823,7 +818,7 @@ const DosareList = ({ dosare, isAc }) => {
                                   }}
                                 >
                                   {dosar.days_remaining &&
-                                    `de la insituire/mentinere au trecut ${timpRamasSechestru} zile`}
+                                    `de la insituire/mentinere au trecut ${timpRamasSechestru}`}
                                 </time>
                                 {dosar.data_cj && <br />}
                                 <time
@@ -855,9 +850,9 @@ const DosareList = ({ dosare, isAc }) => {
                           <li key={dosar.id} className={classes.item}>
                             <Link to={`/dosare/${dosar.id}`}>
                               <div className={classes.content}>
-                                <h1>
+                                <h2>
                                   {dosar.numar} - {dosar.numeProcuror}
-                                </h1>
+                                </h2>
                                 <time>
                                   instituire/mentinere:{" "}
                                   {dosar.data.split("T")[0]}
@@ -912,6 +907,155 @@ const DosareList = ({ dosare, isAc }) => {
                       }
                     }
                   })}
+              </ul>
+            </>
+          )}
+        </div>
+        <div className={classes.items}>
+          {dosareFilterCuSechestru.length !== 0 && (
+            <>
+              <h1> Contestatii </h1>
+              <ul className={classes.list}>
+                {dosareContestatii.map((dosar) => {
+                  console.log(dosar);
+                  if (dosar.admitere_contestatie === 1) {
+                    if (dosarCautat === null || dosarCautat === "") {
+                      const timpRamasContestatie = Math.floor(
+                        (new Date(dosar.termen_contestatie).getTime() -
+                          dateNow) /
+                          (1000 * 3600 * 24)
+                      );
+
+                      let alertaContestatie = false;
+
+                      if (timpRamasContestatie < 30) {
+                        alertaContestatie = true;
+                      }
+
+                      let textRamasContestatie = "";
+
+                      const aniTimpRamasContestatie = Math.floor(
+                        timpRamasContestatie / 360
+                      );
+                      const restZileContestatie = timpRamasContestatie % 360;
+                      const luniRamasContestatie = Math.floor(
+                        restZileContestatie / 30
+                      );
+                      const zileRamaseContestatie = restZileContestatie % 30;
+
+                      if (aniTimpRamasContestatie !== 0) {
+                        textRamasContestatie +=
+                          aniTimpRamasContestatie + " ani ";
+                      }
+
+                      if (luniRamasContestatie !== 0) {
+                        textRamasContestatie += luniRamasContestatie + " luni ";
+                      }
+
+                      if (zileRamaseContestatie !== 0) {
+                        textRamasContestatie += zileRamaseContestatie + " zile";
+                      }
+
+                      return (
+                        <li key={dosar.id} className={classes.item}>
+                          <Link to={`/dosare/${dosar.id}`}>
+                            <div className={classes.content}>
+                              <h2>
+                                {dosar.numar} - {dosar.numeProcuror}
+                              </h2>
+                              <time>
+                                termen: {dosar.termen_contestatie.split("T")[0]}
+                              </time>{" "}
+                              <div>
+                                <time
+                                  style={{
+                                    backgroundColor: alertaContestatie
+                                      ? "red"
+                                      : "",
+                                  }}
+                                >
+                                  {dosar.termen_contestatie &&
+                                    `mai sunt ${textRamasContestatie} pana la termen`}
+                                </time>
+                              </div>
+                            </div>
+                          </Link>
+                        </li>
+                      );
+                    } else if (
+                      dosar &&
+                      dosarCautat &&
+                      (dosar.numar
+                        .toLowerCase()
+                        .includes(dosarCautat.toLowerCase()) ||
+                        dosar.numeProcuror
+                          .toLowerCase()
+                          .includes(dosarCautat.toLowerCase()))
+                    ) {
+                      const timpRamasContestatie = Math.floor(
+                        (new Date(dosar.termen_contestatie).getTime() -
+                          dateNow) /
+                          (1000 * 3600 * 24)
+                      );
+
+                      let alertaContestatie = false;
+
+                      if (timpRamasContestatie < 30) {
+                        alertaContestatie = true;
+                      }
+
+                      let textRamasContestatie = "";
+
+                      const aniTimpRamasContestatie = Math.floor(
+                        timpRamasContestatie / 360
+                      );
+                      const restZileContestatie = timpRamasContestatie % 360;
+                      const luniRamasContestatie = Math.floor(
+                        restZileContestatie / 30
+                      );
+                      const zileRamaseContestatie = restZileContestatie % 30;
+
+                      if (aniTimpRamasContestatie !== 0) {
+                        textRamasContestatie +=
+                          aniTimpRamasContestatie + " ani ";
+                      }
+
+                      if (luniRamasContestatie !== 0) {
+                        textRamasContestatie += luniRamasContestatie + " luni ";
+                      }
+
+                      if (zileRamaseContestatie !== 0) {
+                        textRamasContestatie += zileRamaseContestatie + " zile";
+                      }
+                      return (
+                        <li key={dosar.id} className={classes.item}>
+                          <Link to={`/dosare/${dosar.id}`}>
+                            <div className={classes.content}>
+                              <h2>
+                                {dosar.numar} - {dosar.numeProcuror}
+                              </h2>
+                              <time>
+                                termen: {dosar.termen_contestatie.split("T")[0]}
+                              </time>{" "}
+                              <div>
+                                <time
+                                  style={{
+                                    backgroundColor: alertaContestatie
+                                      ? "red"
+                                      : "",
+                                  }}
+                                >
+                                  {dosar.termen_contestatie &&
+                                    `mai sunt ${textRamasContestatie} pana la termen`}
+                                </time>
+                              </div>
+                            </div>
+                          </Link>
+                        </li>
+                      );
+                    }
+                  }
+                })}
               </ul>
             </>
           )}

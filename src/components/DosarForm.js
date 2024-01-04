@@ -437,7 +437,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
         </p>
       )}
 
-      {dosar && isRup && (
+      {dosar && (isRup || isRechizitoriu) &&(
         <p style={{ display: "flex" }}>
           <label htmlFor="autorul-faptei" style={{ width: "20%" }}>
             {" "}
@@ -485,7 +485,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
         </p>
       )}
 
-      {dosar && isRup && (
+      {dosar && ( isRup || isRechizitoriu) && (
         <p style={{ display: "flex" }}>
           <label htmlFor="starea_de_fapt" style={{ width: "20%" }}>
             {" "}
@@ -619,6 +619,10 @@ export const action = async ({ request, params }) => {
     url += "/rup";
   }
 
+  if(data.get("tip_solutie") === "RECHIZITORIU") {
+    url += "/rech";
+  }
+
   console.log(url);
 
   // if (method === "PATCH") {
@@ -678,5 +682,5 @@ export const action = async ({ request, params }) => {
     //saveAs(responseFileRequest, _);
   }
 
-  return redirect("/dosare");
+  return redirect("/");
 };

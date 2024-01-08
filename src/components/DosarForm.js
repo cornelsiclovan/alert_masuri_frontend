@@ -61,6 +61,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
   let firstAutor = true;
 
   if (dosar && dosar.parte) {
+
     dosar.parte.map((p) => {
       if (firstParte && p.ordine === "2") {
         parti_vatamate += p.nume;
@@ -77,12 +78,22 @@ const DosarForm = ({ method, dosar, procurori }) => {
   }
 
   let fapte = [];
+  let fapteString = "";
 
   if (dosar && dosar.fapta) {
     dosar.fapta.map((f) => {
       fapte.push(f);
     });
+
+    fapteString = fapte[fapte.length - 1].nume_infractiune;
+
+    if(fapteString.includes("Furtul")) {
+      fapteString = fapteString + " " +  fapte[0].nume_temei.split("alin")[0].slice(0,-1) + ", " + fapte[fapte.length-1].nume_temei.split("NCP")[0] + "C.pen";
+    }
   }
+
+ 
+  
 
   const [isSolutionat, setIsSolutionat] = useState(helper);
 
@@ -452,7 +463,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
         </p>
       )}
 
-      {dosar && (
+      {dosar && fapteString && (
         <p style={{ display: "flex" }}>
           <label htmlFor="fapta" style={{ width: "20%" }}>
             {" "}
@@ -463,12 +474,26 @@ const DosarForm = ({ method, dosar, procurori }) => {
             name="fapta"
             id="fapta"
             value={
-              fapte[0] &&
-              fapte[0].nume_infractiune + ", prev de " + fapte[0].nume_temei
+             fapteString
             }
           />
         </p>
       )}
+
+    {dosar && isRup &&(
+        <p style={{ display: "flex" }}>
+          <label htmlFor="litera_infr" style={{ width: "20%" }}>
+            {" "}
+            Litera Infractiune
+          </label>
+          <input
+          style={{width:"5%"}}
+            type="text"
+            name="litera_infr"
+            id="litera_infr"
+          />
+        </p>
+      )}      
 
       {dosar && (
         <p style={{ display: "flex" }}>
@@ -603,7 +628,8 @@ export const action = async ({ request, params }) => {
     fapta: data.get("fapta"),
     autorul_faptei: data.get("autorul-faptei") || null,
     situatie: data.get("starea_de_fapt") || null,
-    pedeapsa: data.get("pedeapsa") || null
+    pedeapsa: data.get("pedeapsa") || null,
+    litera: data.get("litera_infr") || null
   };
 
   console.log(dosarData);

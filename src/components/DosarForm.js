@@ -85,7 +85,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
       fapte.push(f);
     });
 
-    fapteString = fapte[fapte.length - 1].nume_infractiune;
+    fapteString = fapte[fapte.length - 1].nume_temei;
 
     if(fapteString.includes("Furtul")) {
       fapteString = fapteString + " " +  fapte[0].nume_temei.split("alin")[0].slice(0,-1) + ", " + fapte[fapte.length-1].nume_temei.split("NCP")[0] + "C.pen";
@@ -615,7 +615,7 @@ export const action = async ({ request, params }) => {
     return redirect(".");
   }
 
-  console.log("action");
+  console.log(data.get("nume_procuror"));
 
   const dosarData = {
     este_solutionat: data.get("este_solutionat"),

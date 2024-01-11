@@ -87,8 +87,10 @@ const DosarForm = ({ method, dosar, procurori }) => {
 
     fapteString = fapte[fapte.length - 1].nume_temei;
 
-    if(fapteString.includes("Furtul")) {
-      fapteString = fapteString + " " +  fapte[0].nume_temei.split("alin")[0].slice(0,-1) + ", " + fapte[fapte.length-1].nume_temei.split("NCP")[0] + "C.pen";
+    if(fapte[fapte.length - 1].nume_temei.includes("229")) {
+      fapteString = "";
+
+      fapteString = fapteString + " " + "Art. 228" + ", " + fapte[fapte.length-1].nume_temei.split("NCP")[0] + "C. pen.";
     }
   }
 

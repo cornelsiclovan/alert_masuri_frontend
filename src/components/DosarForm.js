@@ -47,9 +47,25 @@ const DosarForm = ({ method, dosar, procurori }) => {
 
   const [showSolutionType, setShowSolutionType] = useState(false);
 
-  const [isClasare, setIsClasare] = useState(true);
-  const [isRechizitoriu, setIsRechizitoriu] = useState(false);
-  const [isRup, setIsRup] = useState(false);
+  let isRechi = false;
+  let isClas = false;
+  let isRen  = false
+
+  if(dosar.tip_solutie_propusa.includes("TERMINARE")) {
+    isRechi = true
+  }
+
+  if(dosar.tip_solutie_propusa === "CLASARE") {
+    isClas = true;
+  }
+
+  if(dosar.tip_solutie_propusa.includes("R.")) {
+    isRen = true;
+  }
+
+  const [isClasare, setIsClasare] = useState(isClas);
+  const [isRechizitoriu, setIsRechizitoriu] = useState(isRechi);
+  const [isRup, setIsRup] = useState(isRen);
 
   let helper = false;
 
@@ -187,10 +203,10 @@ const DosarForm = ({ method, dosar, procurori }) => {
             <option key="clasare" value="CLASARE">
               CLASARE
             </option>
-            <option key="rech" value="RECHIZITORIU">
+            <option key="rech" value="RECHIZITORIU" selected={isRechi}>
               RECHIZITORIU
             </option>
-            <option key="rup" value="RUP">
+            <option key="rup" value="RUP" selected={isRen}>
               RUP
             </option>
 
@@ -439,7 +455,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
         <p style={{ display: "flex" }}>
           <label htmlFor="parti-vatamate" style={{ width: "20%" }}>
             {" "}
-            Parti vatamate
+            Persoane vatamate
           </label>
           <input
             type="text"

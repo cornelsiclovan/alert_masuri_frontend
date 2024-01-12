@@ -106,12 +106,12 @@ const DosarForm = ({ method, dosar, procurori }) => {
     if(fapte[fapte.length - 1].nume_temei.includes("229")) {
       fapteString = "";
 
-      fapteString = fapteString + " " + "Art. 228" + ", " + fapte[fapte.length-1].nume_temei.split("NCP")[0] + "C. pen.";
+      fapteString = fapteString.toLowerCase() + " " + "Art. 228" + ", " + fapte[fapte.length-1].nume_temei.split("NCP")[0] + "C. pen.";
     }
   }
 
   if(isClasare) {
-    fapteString = fapte[0].nume_infractiune + " prev. de " + fapte[0].nume_temei.split("NCP")[0].toLowerCase() + "C. pen.";
+    fapteString = fapte[0].nume_infractiune.toLowerCase() + " prev. de " + fapte[0].nume_temei.split("NCP")[0].toLowerCase() + "C. pen.";
   }
  
   

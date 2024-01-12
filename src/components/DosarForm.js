@@ -55,7 +55,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
     isRechi = true
   }
 
-  if(dosar.tip_solutie_propusa === "CLASARE") {
+  if(dosar.tip_solutie_propusa.includes("CLASARE")) {
     isClas = true;
   }
 
@@ -110,6 +110,9 @@ const DosarForm = ({ method, dosar, procurori }) => {
     }
   }
 
+  if(isClasare) {
+    fapteString = fapte[0].nume_infractiune;
+  }
  
   
 

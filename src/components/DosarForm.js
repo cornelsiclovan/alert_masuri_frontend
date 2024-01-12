@@ -67,6 +67,8 @@ const DosarForm = ({ method, dosar, procurori }) => {
   const [isRechizitoriu, setIsRechizitoriu] = useState(isRechi);
   const [isRup, setIsRup] = useState(isRen);
 
+  console.log(isClasare);
+
   let helper = false;
 
   if (dosar) {
@@ -104,17 +106,22 @@ const DosarForm = ({ method, dosar, procurori }) => {
     fapteString = fapte[fapte.length - 1].nume_temei;
 
     if(fapte[fapte.length - 1].nume_temei.includes("229")) {
+      
       fapteString = "";
 
-      fapteString = fapteString.toLowerCase() + " " + "Art. 228" + ", " + fapte[fapte.length-1].nume_temei.split("NCP")[0] + "C. pen.";
+      fapteString = fapteString.toLowerCase() + " " + "art. 228" + ", " + fapte[fapte.length-1].nume_temei.split("NCP")[0] + "C. pen.";
+    }
+
+    if(fapte[fapte.length - 1].nume_temei.includes("199")) {
+      fapteString = "";
+
+      fapteString = fapte[fapte.length-1].nume_infractiune.toLowerCase() + " prev de." + fapte[fapte.length-1].nume_temei.split("NCP")[0].toLowerCase() + "rap. la " + "art. 193 alin. 1 C. pen.";
+    }
+
+    if(isClasare) {
+      fapteString = fapte[0].nume_infractiune.toLowerCase() + " prev. de " + fapte[0].nume_temei.split("NCP")[0].toLowerCase() + "C. pen.";
     }
   }
-
-  if(isClasare) {
-    fapteString = fapte[0].nume_infractiune.toLowerCase() + " prev. de " + fapte[0].nume_temei.split("NCP")[0].toLowerCase() + "C. pen.";
-  }
- 
-  
 
   const [isSolutionat, setIsSolutionat] = useState(helper);
 
@@ -135,7 +142,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
   }
 
   const handleCheck = () => {
-    if (!isClasare && !isSolutionat) setIsClasare(true);
+   
     setShowSolutionType(!showSolutionType);
 
     setIsSolutionat(!isSolutionat);

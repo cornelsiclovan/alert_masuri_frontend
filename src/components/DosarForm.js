@@ -111,7 +111,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
   }
 
   if(isClasare) {
-    fapteString = fapte[0].nume_infractiune;
+    fapteString = fapte[0].nume_infractiune + " prev. de " + fapte[0].nume_temei.split("NCP")[0].toLowerCase() + "C. pen.";
   }
  
   

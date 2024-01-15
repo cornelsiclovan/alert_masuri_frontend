@@ -67,7 +67,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
   const [isRechizitoriu, setIsRechizitoriu] = useState(isRechi);
   const [isRup, setIsRup] = useState(isRen);
 
-  console.log(isClasare);
+
 
   let helper = false;
 
@@ -153,7 +153,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
   };
 
   const onSelectTipSolutie = (event) => {
-    console.log(isClasare);
+    
     if (event.target.value === "CLASARE") {
       setIsClasare(true);
       setIsRechizitoriu(false);
@@ -635,18 +635,15 @@ export const action = async ({ request, params }) => {
   const method = request.method;
   const data = await request.formData();
 
-  console.log(data.get("tip-solutie"));
 
   if (
     data.get("litera_articol_id") === null &&
     data.get("tip_solutie") === "CLASARE"
   ) {
-    console.log("no litere")
     window.alert("selectati cel putin o litera pentru articol");
     return redirect(".");
   }
 
-  console.log(data.get("nume_procuror"));
 
   const dosarData = {
     este_solutionat: data.get("este_solutionat"),
@@ -663,7 +660,6 @@ export const action = async ({ request, params }) => {
     litera: data.get("litera_infr") || null
   };
 
-  console.log(dosarData);
 
   let url = BASE_URL + "/genereaza-documente";
   let urlFile = BASE_URL + "/file";
@@ -680,8 +676,6 @@ export const action = async ({ request, params }) => {
   if(data.get("tip_solutie") === "RECHIZITORIU") {
     url += "/rech";
   }
-
-  console.log(url);
 
   // if (method === "PATCH") {
   //   const dosarId = params.dosarId;
@@ -732,7 +726,7 @@ export const action = async ({ request, params }) => {
       const newFile = new File([file], "test.docx", {
         type: "application/docx",
       });
-      console.log(newFile);
+
       saveAs(newFile, numarDosarFormatat + ".docx");
     });
     const myFileData = await response.json();

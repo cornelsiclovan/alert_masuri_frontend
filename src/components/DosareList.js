@@ -332,10 +332,7 @@ const DosareList = ({ dosare, isAc }) => {
                 timpRamasIntrate += zileRamasIntrate + " zile";
               }
 
-              // if (dosarCautat) {
-              //   console.log("dosarCautat", dosarCautat);
-              // }
-
+   
               if (dosarCautat === null || dosarCautat === "") {
                 return (
                   <li key={dosar.id} className={classes.item}>
@@ -559,11 +556,7 @@ const DosareList = ({ dosare, isAc }) => {
           <ul className={classes.list}>
             {cuMasuriAsiguratorii &&
               dosareFilterCuMasuri.map((dosar) => {
-                console.log(
-                  "trimis cu mas la inst",
-                  dosar.numar,
-                  dosar.trimis_masura_la_instanta
-                );
+            
                 if (
                   dosar.trimis_masura_la_instanta !== 1 &&
                   (dosar.isControlJudiciar ||
@@ -917,7 +910,7 @@ const DosareList = ({ dosare, isAc }) => {
               <h1> Contestatii </h1>
               <ul className={classes.list}>
                 {dosareContestatii.map((dosar) => {
-                  console.log(dosar);
+           
                   if (dosar.admitere_contestatie === 1) {
                     if (dosarCautat === null || dosarCautat === "") {
                       const timpRamasContestatie = Math.floor(

@@ -109,7 +109,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
       
       fapteString = "";
 
-      fapteString = fapteString.toLowerCase() + " " + "art. 228" + ", " + fapte[fapte.length-1].nume_temei.split("NCP")[0] + "C. pen.";
+      fapteString = "furt calificat prev. de "+ " " + "art. 228" + ", " + fapte[fapte.length-1].nume_temei.split("NCP")[0] + "C. pen.";
     }
 
     if(fapte[fapte.length - 1].nume_temei.includes("199")) {
@@ -476,7 +476,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
         </p>
       )}
 
-      {dosar && (isRup || isRechizitoriu) &&(
+      {dosar && (isRup || isRechizitoriu || isClasare) &&(
         <p style={{ display: "flex" }}>
           <label htmlFor="autorul-faptei" style={{ width: "20%" }}>
             {" "}
@@ -635,10 +635,13 @@ export const action = async ({ request, params }) => {
   const method = request.method;
   const data = await request.formData();
 
+  console.log(data.get("tip-solutie"));
+
   if (
     data.get("litera_articol_id") === null &&
-    data.get("tip-solutie") === "CLASARE"
+    data.get("tip_solutie") === "CLASARE"
   ) {
+    console.log("no litere")
     window.alert("selectati cel putin o litera pentru articol");
     return redirect(".");
   }
@@ -667,6 +670,7 @@ export const action = async ({ request, params }) => {
 
   if (data.get("tip_solutie") === "CLASARE") {
     url += "/clasare-insusita";
+    
   }
 
   if (data.get("tip_solutie") === "RUP") {

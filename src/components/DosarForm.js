@@ -45,7 +45,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
   const navigation = useNavigation();
   const userId = getUserId();
 
-  const [showSolutionType, setShowSolutionType] = useState(false);
+  const [showSolutionType, setShowSolutionType] = useState(true);
 
   let isRechi = false;
   let isClas = false;
@@ -123,7 +123,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
     }
   }
 
-  const [isSolutionat, setIsSolutionat] = useState(helper);
+  const [isSolutionat, setIsSolutionat] = useState(true);
 
   const isSubmitting = navigation.state === "submitting";
 

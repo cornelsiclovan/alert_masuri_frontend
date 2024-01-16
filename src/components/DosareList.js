@@ -879,7 +879,7 @@ const DosareList = ({ dosare, isAc }) => {
                                   }}
                                 >
                                   {dosar.days_remaining &&
-                                    `de la insituire/mentinere au trecut ${dosar.days_remaining} zile`}
+                                    `de la insituire/mentinere au trecut ${timpRamasSechestru}`}
                                 </time>
                                 {dosar.data_cj && <br />}
                                 <time

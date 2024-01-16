@@ -103,7 +103,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
       fapte.push(f);
     });
 
-    fapteString = fapte[fapte.length - 1].nume_temei;
+    fapteString = fapte[fapte.length-1].nume_infractiune + " prev. de " +fapte[fapte.length - 1].nume_temei;
 
     if(fapte[fapte.length - 1].nume_temei.includes("229")) {
       
@@ -118,6 +118,9 @@ const DosarForm = ({ method, dosar, procurori }) => {
       fapteString = fapte[fapte.length-1].nume_infractiune.toLowerCase() + " prev de." + fapte[fapte.length-1].nume_temei.split("NCP")[0].toLowerCase() + "rap. la " + "art. 193 alin. 1 C. pen.";
     }
 
+
+
+  
     if(isClasare) {
       fapteString = fapte[0].nume_infractiune.toLowerCase() + " prev. de " + fapte[0].nume_temei.split("NCP")[0].toLowerCase() + "C. pen.";
     }

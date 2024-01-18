@@ -1,15 +1,16 @@
 import { useState } from "react";
 import classes from "./SolutiiList.module.css";
 
-const SolutiiList = ({ solutii }) => {
+const SolutiiLunareList = ({ solutii }) => {
   const [rechIsChecked, setRechIsChecked] = useState(true);
   const [declIsChecked, setDeclIsChecked] = useState(true);
   const [renuIsChecked, setRenuIsChecked] = useState(true);
   const [clasIsChecked, setClasIsChecked] = useState(true);
   const [acordIsChecked, setAcordIsChecked] = useState(true);
 
-  const [anSolutie, setAnSolutie] = useState("");
+  const [anSolutie, setAnSolutie] = useState("2024");
   const [numeProcuror, setNumeProcuror] = useState("");
+  const [lunaSolutie, setLunaSolutie] = useState("");
 
   let totalSolutii = 0;
 
@@ -23,7 +24,10 @@ const SolutiiList = ({ solutii }) => {
     setAnSolutie(event.target.value);
   };
 
-
+  const onChangeLunaInput = (event) => {
+    totalSolutii = 0;
+    setLunaSolutie(event.target.value);
+  };
 
   const onChangeSolutieInput = (event) => {
     if (event.target.value === "rechizitoriu") {
@@ -105,7 +109,13 @@ const SolutiiList = ({ solutii }) => {
     }
   });
 
-  
+  solutiiFiltrate = solutiiFiltrate.filter((solutie) => {
+    if (lunaSolutie === "") {
+      return true;
+    } else {
+      return solutie.luna_solutie == lunaSolutie;
+    }
+  });
 
   let i = 0;
 
@@ -138,11 +148,23 @@ const SolutiiList = ({ solutii }) => {
             width: "260px",
           }}
           type="text"
+          placeholder="luna"
+          onChange={onChangeLunaInput}
+        ></input>
+
+        <input
+          style={{
+            height: "30px",
+            marginTop: "20px",
+            marginLeft: "50px",
+            width: "260px",
+          }}
+
+          defaultValue={2024}
+          type="text"
           placeholder="an"
           onChange={onChangeAnInput}
         ></input>
-
-     
         <div className={classes.checkbox}>
           <div className={classes.ul}>
             <div className={classes.li}>
@@ -208,6 +230,7 @@ const SolutiiList = ({ solutii }) => {
           <div className={classes.td}>nr. crt</div>
           <div className={classes.td}>numar solutii</div>
           <div className={classes.td}>an solutie</div>
+          <div className={classes.td}>luna solutie</div>
           <div className={classes.td}>solutie pe scurt</div>
           <div className={classes.td}>Nume</div>
         </div>
@@ -218,6 +241,7 @@ const SolutiiList = ({ solutii }) => {
               <div className={classes.td}>{i}</div>
               <div className={classes.td}>{solutie.numar_solutii}</div>
               <div className={classes.td}>{solutie.an_solutie}</div>
+              <div className={classes.td}>{solutie.luna_solutie}</div>
               <div className={classes.td}>{solutie.nume_pe_scurt_solutie}</div>
               <div className={classes.td}>{solutie.numeProcuror}</div>
             </div>
@@ -235,4 +259,4 @@ const SolutiiList = ({ solutii }) => {
   );
 };
 
-export default SolutiiList;
+export default SolutiiLunareList;

@@ -9,7 +9,6 @@ const MainNavigation = () => {
       <nav>
         <ul className={classes.list}>
           <div className={classes.mainList}>
-          
             {!token && (
               <li>
                 <NavLink
@@ -35,7 +34,7 @@ const MainNavigation = () => {
                 </NavLink>
               </li>
             )}
-             {token && (
+            {token && (
               <li>
                 <NavLink
                   to="/dosareCuAc"
@@ -43,7 +42,7 @@ const MainNavigation = () => {
                     isActive ? classes.active : undefined
                   }
                 >
-                  Dosare cu AC <br/> in supraveghere
+                  Dosare cu AC <br /> in supraveghere
                 </NavLink>
               </li>
             )}
@@ -56,6 +55,19 @@ const MainNavigation = () => {
                   }
                 >
                   Statistica
+                </NavLink>
+              </li>
+            )}
+
+            {token && (
+              <li>
+                <NavLink
+                  to="/solutionate-lunar"
+                  className={({ isActive }) =>
+                    isActive ? classes.active : undefined
+                  }
+                >
+                  Statistica lunara
                 </NavLink>
               </li>
             )}

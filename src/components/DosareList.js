@@ -558,7 +558,7 @@ const DosareList = ({ dosare, isAc }) => {
               dosareFilterCuMasuri.map((dosar) => {
             
                 if (
-                  dosar.trimis_masura_la_instanta !== 1 &&
+                 
                   (dosar.isControlJudiciar ||
                     dosar.isArest ||
                     dosar.isSechestru ||
@@ -597,6 +597,7 @@ const DosareList = ({ dosare, isAc }) => {
                             <h2>
                               {dosar.numar} - {dosar.numeProcuror}
                             </h2>
+                           { dosar.trimis_masura_la_instanta === '1' && <b><i style={{backgroundColor: "blue"}}>Trimis la instanta</i></b> }<br/>
                             <time>
                               expirare {dosar.isArest && "arest"}{" "}
                               {dosar.isControlJudiciar && "control judiciar"} :{" "}

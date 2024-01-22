@@ -9,8 +9,6 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 const DosareSolutionatePage = () => {
     const { solutii } = useLoaderData();
 
-    
-
     return (
         <>
         <Suspense fallback={<p style={{ textAlign: "center" }}>Loading...</p>}>
@@ -28,8 +26,6 @@ const loadSolutii = async () => {
     const isProcuror = getIsProcuror();
     const userId = getUserId();
   
- 
-
     let url = BASE_URL + "/dateDosareSolutionate"
   
     if(isAdmin === "true") {

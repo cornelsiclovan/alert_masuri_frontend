@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import classes from "./SolutiiList.module.css";
 
 const SolutiiLunareList = ({ solutii }) => {
@@ -12,7 +12,31 @@ const SolutiiLunareList = ({ solutii }) => {
   const [numeProcuror, setNumeProcuror] = useState("");
   const [lunaSolutie, setLunaSolutie] = useState("");
 
+  //const [procuroriList, setProcuroriList] = useState([]);
+
   let totalSolutii = 0;
+
+  let year = (new Date()).getFullYear();
+  let yearArray = []
+  for(let j = 0; j < 4; j++) {
+    yearArray.push(year - j);
+  }
+
+
+
+  let procuroriList = [];
+
+  solutii.forEach((element) => {
+    element.anSolutie;
+    if(procuroriList.includes(element.numeProcuror)) {
+
+    }else  if(element.an_solutie === anSolutie){
+      procuroriList.push(element.numeProcuror);
+    }
+  });
+
+  console.log(procuroriList);
+
 
   const onChangeNumeProcurorInput = (event) => {
     totalSolutii = 0;
@@ -103,6 +127,7 @@ const SolutiiLunareList = ({ solutii }) => {
 
   solutiiFiltrate = solutiiFiltrate.filter((solutie) => {
     if (anSolutie === "") {
+      setNumeProcuror("")
       return true;
     } else {
       return solutie.an_solutie.includes(anSolutie);
@@ -119,52 +144,97 @@ const SolutiiLunareList = ({ solutii }) => {
 
   let i = 0;
 
-  solutiiFiltrate.forEach((element) => {
+   solutiiFiltrate.forEach((element) => {
+
     totalSolutii += element.numar_solutii;
   });
-
-  console.log("dupa filtru", totalSolutii);
 
   return (
     <>
       <div className={classes.sort}>
-        <input
-          style={{
-            height: "30px",
-            marginTop: "20px",
-            marginLeft: "50px",
-            width: "260px",
-          }}
-          type="text"
-          placeholder="Nume procuror"
-          onChange={onChangeNumeProcurorInput}
-        ></input>
 
-        <input
+      <select
           style={{
             height: "30px",
             marginTop: "20px",
-            marginLeft: "50px",
-            width: "260px",
-          }}
-          type="text"
-          placeholder="luna"
-          onChange={onChangeLunaInput}
-        ></input>
-
-        <input
-          style={{
-            height: "30px",
-            marginTop: "20px",
-            marginLeft: "50px",
-            width: "260px",
+            marginLeft: "-100px",
+            width: "150px",
           }}
 
           defaultValue={2024}
           type="text"
           placeholder="an"
           onChange={onChangeAnInput}
-        ></input>
+        >
+          { yearArray.map(year => <option>{year}</option>)}
+
+        </select>
+
+        <select
+          style={{
+            height: "30px",
+            marginTop: "20px",
+            marginLeft: "-100px",
+            width: "200px",
+          }}
+          type="text"
+          placeholder="Nume procuror"
+          onChange={onChangeNumeProcurorInput}
+        >
+          {procuroriList.map(procuror => <option value={procuror}>{procuror}</option>)}
+
+        </select>
+
+        <select
+          style={{
+            height: "30px",
+            marginTop: "20px",
+            marginLeft: "-100px",
+            width: "150px",
+          }}
+          type="text"
+          placeholder="luna"
+          onChange={onChangeLunaInput}
+        >
+          <option value="1">
+            Ianuarie
+          </option>
+          <option value="2">
+            Februarie
+          </option>
+          <option value="3">
+            Martie
+          </option>
+          <option value="4">
+            Aprilie
+          </option>
+          <option value="5">
+            Mai
+          </option>
+          <option value="6">
+            Iunie
+          </option>
+          <option value="7">
+            Iulie
+          </option>
+          <option value="8">
+            August
+          </option>
+          <option value="9">
+            Septembrie
+          </option>
+          <option value="10">
+            Octombrie
+          </option>
+          <option value="11">
+            Noiembrie
+          </option>
+          <option value="1">
+            Decembrie
+          </option>
+        </select>
+
+       
         <div className={classes.checkbox}>
           <div className={classes.ul}>
             <div className={classes.li}>

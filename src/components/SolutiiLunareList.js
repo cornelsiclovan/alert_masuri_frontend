@@ -231,7 +231,7 @@ const SolutiiLunareList = ({ solutii }) => {
           <option value="11">
             Noiembrie
           </option>
-          <option value="1">
+          <option value="12">
             Decembrie
           </option>
         </select>

@@ -181,6 +181,7 @@ const SolutiiLunareList = ({ solutii }) => {
           placeholder="Nume procuror"
           onChange={onChangeNumeProcurorInput}
         >
+          <option value="">Alege un procuror</option>
           {procuroriList.map(procuror => <option value={procuror}>{procuror}</option>)}
 
         </select>
@@ -196,6 +197,7 @@ const SolutiiLunareList = ({ solutii }) => {
           placeholder="luna"
           onChange={onChangeLunaInput}
         >
+          <option value="0">Alege luna</option>
           <option value="1">
             Ianuarie
           </option>

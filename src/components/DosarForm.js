@@ -99,6 +99,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
   let fapteString = "";
 
   if (dosar && dosar.fapta) {
+    console.log(dosar);
     dosar.fapta.map((f) => {
       fapte.push(f);
     });
@@ -712,7 +713,9 @@ export const action = async ({ request, params }) => {
     "-" +
     data.get("numar_dosar").split("/")[1] +
     "-" +
-    data.get("numar_dosar").split("/")[2];
+    data.get("numar_dosar").split("/")[2] +
+    "-" + 
+    data.get("numar_dosar").split("/")[3]
 
   if (response.status === 200) {
     const responseFileRequest = await fetch(

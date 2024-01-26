@@ -137,7 +137,8 @@ const DosareList = ({ dosare, isAc }) => {
       dosar.numeProcuror.toLowerCase().includes(searchName) ||
       dosar.numeProcuror.includes(searchName) ||
       dosar.numeProcuror.toUpperCase().includes(searchName) ||
-      dosar.numar.includes(dosarCautat)
+      dosar.numar.includes(dosarCautat) ||
+      dosar.numar_fost.includes(dosarCautat)
   );
 
   dosareMaiVechiDeSaseLuni = dosareFilterFaraMasuri.filter(
@@ -332,14 +333,15 @@ const DosareList = ({ dosare, isAc }) => {
                 timpRamasIntrate += zileRamasIntrate + " zile";
               }
 
-   
               if (dosarCautat === null || dosarCautat === "") {
                 return (
                   <li key={dosar.id} className={classes.item}>
                     <Link to={`/dosare/${dosar.id}`}>
                       <div className={classes.content}>
                         <h2>
-                          {dosar.numar} - <small>{dosar.numeProcuror}</small>
+                          {dosar.numar} - <small>{dosar.numeProcuror}</small>{" "}
+                          <br />
+                          {dosar.numar_fost}
                         </h2>
                         {!isAc && dosar.tip_solutie_propusa !== "UPP" && (
                           <p>
@@ -452,6 +454,8 @@ const DosareList = ({ dosare, isAc }) => {
                       <div className={classes.content}>
                         <h2>
                           {dosar.numar} - <small>{dosar.numeProcuror}</small>
+                          <br />
+                          {dosar.numar_fost}
                         </h2>
                         {!isAc && dosar.tip_solutie_propusa !== "UPP" && (
                           <p>
@@ -556,13 +560,11 @@ const DosareList = ({ dosare, isAc }) => {
           <ul className={classes.list}>
             {cuMasuriAsiguratorii &&
               dosareFilterCuMasuri.map((dosar) => {
-            
                 if (
-                 
-                  (dosar.isControlJudiciar ||
-                    dosar.isArest ||
-                    dosar.isSechestru ||
-                    dosar.isInterceptari)
+                  dosar.isControlJudiciar ||
+                  dosar.isArest ||
+                  dosar.isSechestru ||
+                  dosar.isInterceptari
                 ) {
                   const timpRamasArest = Math.floor(
                     (new Date(dosar.data_arest).getTime() - dateNow) /
@@ -596,8 +598,17 @@ const DosareList = ({ dosare, isAc }) => {
                           <div className={classes.content}>
                             <h2>
                               {dosar.numar} - {dosar.numeProcuror}
+                              <br />
+                              {dosar.numar_fost}
                             </h2>
-                           { dosar.trimis_masura_la_instanta === '1' && <b><i style={{backgroundColor: "blue"}}>Trimis la instanta</i></b> }<br/>
+                            {dosar.trimis_masura_la_instanta === "1" && (
+                              <b>
+                                <i style={{ backgroundColor: "blue" }}>
+                                  Trimis la instanta
+                                </i>
+                              </b>
+                            )}
+                            <br />
                             <time>
                               expirare {dosar.isArest && "arest"}{" "}
                               {dosar.isControlJudiciar && "control judiciar"} :{" "}
@@ -652,7 +663,8 @@ const DosareList = ({ dosare, isAc }) => {
                       .includes(dosarCautat.toLowerCase()) ||
                       dosar.numeProcuror
                         .toLowerCase()
-                        .includes(dosarCautat.toLowerCase()))
+                        .includes(dosarCautat.toLowerCase()) ||
+                      dosar.numar_fost.includes(dosarCautat))
                   ) {
                     return (
                       <li key={dosar.id} className={classes.item}>
@@ -660,6 +672,8 @@ const DosareList = ({ dosare, isAc }) => {
                           <div className={classes.content}>
                             <h2>
                               {dosar.numar} - {dosar.numeProcuror}
+                              <br />
+                              {dosar.numar_fost}
                             </h2>
                             <time>
                               expirare masura preventiva:{" "}
@@ -778,6 +792,8 @@ const DosareList = ({ dosare, isAc }) => {
                               <div className={classes.content}>
                                 <h2>
                                   {dosar.numar} - {dosar.numeProcuror}
+                                  <br />
+                                  {dosar.numar_fost}
                                 </h2>
                                 <time>
                                   instituire/mentinere:{" "}
@@ -838,7 +854,8 @@ const DosareList = ({ dosare, isAc }) => {
                           .includes(dosarCautat.toLowerCase()) ||
                           dosar.numeProcuror
                             .toLowerCase()
-                            .includes(dosarCautat.toLowerCase()))
+                            .includes(dosarCautat.toLowerCase()) ||
+                          dosar.numar_fost.includes(dosarCautat))
                       ) {
                         return (
                           <li key={dosar.id} className={classes.item}>
@@ -846,6 +863,8 @@ const DosareList = ({ dosare, isAc }) => {
                               <div className={classes.content}>
                                 <h2>
                                   {dosar.numar} - {dosar.numeProcuror}
+                                  <br />
+                                  {dosar.numar_fost}
                                 </h2>
                                 <time>
                                   instituire/mentinere:{" "}
@@ -911,7 +930,6 @@ const DosareList = ({ dosare, isAc }) => {
               <h1> Contestatii </h1>
               <ul className={classes.list}>
                 {dosareContestatii.map((dosar) => {
-           
                   if (dosar.admitere_contestatie === 1) {
                     if (dosarCautat === null || dosarCautat === "") {
                       const timpRamasContestatie = Math.floor(
@@ -956,6 +974,8 @@ const DosareList = ({ dosare, isAc }) => {
                             <div className={classes.content}>
                               <h2>
                                 {dosar.numar} - {dosar.numeProcuror}
+                                <br />
+                                {dosar.numar_fost}
                               </h2>
                               <time>
                                 termen: {dosar.termen_contestatie.split("T")[0]}
@@ -984,7 +1004,8 @@ const DosareList = ({ dosare, isAc }) => {
                         .includes(dosarCautat.toLowerCase()) ||
                         dosar.numeProcuror
                           .toLowerCase()
-                          .includes(dosarCautat.toLowerCase()))
+                          .includes(dosarCautat.toLowerCase())||
+                          dosar.numar_fost.includes(dosarCautat))
                     ) {
                       const timpRamasContestatie = Math.floor(
                         (new Date(dosar.termen_contestatie).getTime() -
@@ -1027,6 +1048,8 @@ const DosareList = ({ dosare, isAc }) => {
                             <div className={classes.content}>
                               <h2>
                                 {dosar.numar} - {dosar.numeProcuror}
+                                <br />
+                                {dosar.numar_fost}
                               </h2>
                               <time>
                                 termen: {dosar.termen_contestatie.split("T")[0]}

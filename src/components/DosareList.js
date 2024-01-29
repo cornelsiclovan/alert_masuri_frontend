@@ -41,6 +41,8 @@ const DosareList = ({ dosare, isAc }) => {
     );
   }
 
+  console.log(dosareContestatii)
+
   useEffect(() => {
     setNumarDosare(dosareFilterFaraMasuri.length);
     setDosSaseLuni(dosareMaiVechiDeSaseLuni.length);
@@ -925,11 +927,12 @@ const DosareList = ({ dosare, isAc }) => {
           )}
         </div>
         <div className={classes.items}>
-          {dosareFilterCuSechestru.length !== 0 && (
+          {dosareContestatii.length !== 0 && (
             <>
               <h1> Contestatii </h1>
               <ul className={classes.list}>
                 {dosareContestatii.map((dosar) => {
+                  console.log(dosar)
                   if (dosar.admitere_contestatie === 1) {
                     if (dosarCautat === null || dosarCautat === "") {
                       const timpRamasContestatie = Math.floor(
@@ -967,7 +970,7 @@ const DosareList = ({ dosare, isAc }) => {
                       if (zileRamaseContestatie !== 0) {
                         textRamasContestatie += zileRamaseContestatie + " zile";
                       }
-
+                    
                       return (
                         <li key={dosar.id} className={classes.item}>
                           <Link to={`/dosare/${dosar.id}`}>

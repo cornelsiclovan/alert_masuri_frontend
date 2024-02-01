@@ -41,7 +41,7 @@ const DosareList = ({ dosare, isAc }) => {
     );
   }
 
-  console.log(dosareContestatii)
+  console.log(dosareContestatii);
 
   useEffect(() => {
     setNumarDosare(dosareFilterFaraMasuri.length);
@@ -932,16 +932,37 @@ const DosareList = ({ dosare, isAc }) => {
               <h1> Contestatii </h1>
               <ul className={classes.list}>
                 {dosareContestatii.map((dosar) => {
-                  console.log(dosar)
+                  console.log(dosar);
                   if (dosar.admitere_contestatie === 1) {
                     if (dosarCautat === null || dosarCautat === "") {
-                      const timpRamasContestatie = Math.floor(
-                        (new Date(dosar.termen_contestatie).getTime() -
-                          dateNow) /
-                          (1000 * 3600 * 24)
-                      );
-
                       let alertaContestatie = false;
+                      let timpRamasContestatie;
+                      let text_inainte_contestatie = "mai sunt ";
+                      let text_dupa_contestatie = " pana la termen"
+                      if (
+                        new Date(dosar.termen_contestatie).getTime() > dateNow
+                      ) {
+                        timpRamasContestatie = Math.floor(
+                          (new Date(dosar.termen_contestatie).getTime() -
+                            dateNow) /
+                            (1000 * 3600 * 24)
+                        );
+                      }
+
+                      if (
+                        new Date(dosar.termen_contestatie).getTime() < dateNow
+                      ) {
+                        alertaContestatie = true;
+                        text_inainte_contestatie = "au trecut ";
+                        text_dupa_contestatie = " de la termen";
+                        timpRamasContestatie = Math.floor(
+                          (dateNow -
+                            new Date(dosar.termen_contestatie).getTime()) /
+                            (1000 * 3600 * 24)
+                        );
+                      }
+
+                      
 
                       if (timpRamasContestatie < 30) {
                         alertaContestatie = true;
@@ -970,7 +991,7 @@ const DosareList = ({ dosare, isAc }) => {
                       if (zileRamaseContestatie !== 0) {
                         textRamasContestatie += zileRamaseContestatie + " zile";
                       }
-                    
+
                       return (
                         <li key={dosar.id} className={classes.item}>
                           <Link to={`/dosare/${dosar.id}`}>
@@ -992,7 +1013,7 @@ const DosareList = ({ dosare, isAc }) => {
                                   }}
                                 >
                                   {dosar.termen_contestatie &&
-                                    `mai sunt ${textRamasContestatie} pana la termen`}
+                                    `${text_inainte_contestatie} ${textRamasContestatie} ${text_dupa_contestatie}`}
                                 </time>
                               </div>
                             </div>
@@ -1007,16 +1028,36 @@ const DosareList = ({ dosare, isAc }) => {
                         .includes(dosarCautat.toLowerCase()) ||
                         dosar.numeProcuror
                           .toLowerCase()
-                          .includes(dosarCautat.toLowerCase())||
-                          dosar.numar_fost.includes(dosarCautat))
+                          .includes(dosarCautat.toLowerCase()) ||
+                        dosar.numar_fost.includes(dosarCautat))
                     ) {
-                      const timpRamasContestatie = Math.floor(
-                        (new Date(dosar.termen_contestatie).getTime() -
-                          dateNow) /
-                          (1000 * 3600 * 24)
-                      );
-
                       let alertaContestatie = false;
+                      let timpRamasContestatie;
+                      let text_inainte_contestatie = "mai sunt ";
+                      let text_dupa_contestatie = " pana la termen";
+                      if (
+                        new Date(dosar.termen_contestatie).getTime() > dateNow
+                      ) {
+                        timpRamasContestatie = Math.floor(
+                          (new Date(dosar.termen_contestatie).getTime() -
+                            dateNow) /
+                            (1000 * 3600 * 24)
+                        );
+                      }
+
+                      if (
+                        new Date(dosar.termen_contestatie).getTime() < dateNow
+                      ) {
+                        alertaContestatie = true;
+                        text_inainte_contestatie = "au trecut ";
+                        text_dupa_contestatie = " de la termen";
+                        timpRamasContestatie = Math.floor(
+                          (dateNow -
+                            new Date(dosar.termen_contestatie).getTime()) /
+                            (1000 * 3600 * 24)
+                        );
+                      }
+
 
                       if (timpRamasContestatie < 30) {
                         alertaContestatie = true;
@@ -1066,7 +1107,7 @@ const DosareList = ({ dosare, isAc }) => {
                                   }}
                                 >
                                   {dosar.termen_contestatie &&
-                                    `mai sunt ${textRamasContestatie} pana la termen`}
+                                    `${text_inainte_contestatie} ${textRamasContestatie} ${text_dupa_contestatie}`}
                                 </time>
                               </div>
                             </div>

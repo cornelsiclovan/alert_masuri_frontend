@@ -733,6 +733,18 @@ export const action = async ({ request, params }) => {
         type: "application/docx",
       });
 
+      let articol = "---";
+
+      if(data && data.get("fapta") && data.get("fapta").includes("Art")) {
+        articol = data.get("fapta").split("Art.")[1].split(" ")[0];
+      }
+
+      if(data && data.get("fapta") && data.get("fapta").includes("art")) {
+        articol = data.get("fapta").split("art.")[1].split(" ")[0];
+      }
+
+      numarDosarFormatat = data.get("tip_solutie") + " art." + articol + " " + numarDosarFormatat
+
       saveAs(newFile, numarDosarFormatat + ".docx");
     });
     const myFileData = await response.json();

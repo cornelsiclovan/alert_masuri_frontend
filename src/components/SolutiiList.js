@@ -113,7 +113,6 @@ const SolutiiList = ({ solutii }) => {
     totalSolutii += element.numar_solutii;
   });
 
-  console.log("dupa filtru", totalSolutii);
 
   return (
     <>

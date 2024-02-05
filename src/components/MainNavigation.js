@@ -1,5 +1,6 @@
 import { Form, NavLink, useRouteLoaderData } from "react-router-dom";
 import classes from "./MainNavigation.module.css";
+import logo from "./img/logo.png";
 
 const MainNavigation = () => {
   const { token, isAdmin } = useRouteLoaderData("root");
@@ -46,7 +47,7 @@ const MainNavigation = () => {
                 </NavLink>
               </li>
             )}
-            {token && (
+            {/* {token && (
               <li>
                 <NavLink
                   to="/dosare-solutionate"
@@ -55,6 +56,18 @@ const MainNavigation = () => {
                   }
                 >
                   Statistica
+                </NavLink>
+              </li>
+            )} */}
+             {token && (
+              <li>
+                <NavLink
+                  to="/incarcatura"
+                  className={({ isActive }) =>
+                    isActive ? classes.active : undefined
+                  }
+                >
+                  Incarcatura procuror
                 </NavLink>
               </li>
             )}
@@ -67,14 +80,14 @@ const MainNavigation = () => {
                     isActive ? classes.active : undefined
                   }
                 >
-                  Statistica lunara
+                  Statistica 
                 </NavLink>
               </li>
             )}
             {token && (
               <li>
                 <Form action="/logout" method="post">
-                  <button>Logout</button>
+                  <button style={{backgroundColor: "white"}}>Logout</button>
                 </Form>
               </li>
             )}
@@ -82,7 +95,9 @@ const MainNavigation = () => {
 
           {token && (
             <li style={{ display: "flex" }}>
-              <div
+              <img src={logo} width={150} height={50}/>
+              {/* <div
+
                 style={{
                   backgroundColor: "red",
                   paddingTop: "20px",
@@ -93,7 +108,7 @@ const MainNavigation = () => {
                 }}
               >
                 Alerte
-              </div>
+              </div> */}
             </li>
           )}
         </ul>

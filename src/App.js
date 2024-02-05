@@ -22,6 +22,7 @@ import DosareSolutionatePage, {
 } from "./pages/DosareSolutionate";
 import DosareCuAcPage, {loader as dosareCuAcLoader} from "./pages/DosareAC";
 import SolutiiLunarPage, {loader as dosareSolutionateLunarLoader} from "./pages/SolutionateLunar";
+import IncarcaturaPage, {loader as incarcaturaLoader} from "./pages/Incarcatura";
 
 
 
@@ -84,6 +85,11 @@ const router = createBrowserRouter([
         path: "solutionate-lunar",
         element: <SolutiiLunarPage />,
         loader: dosareSolutionateLunarLoader,
+      },
+      {
+        path: "incarcatura",
+        element: <IncarcaturaPage />,
+        loader: incarcaturaLoader
       },
       {
         path: "auth",

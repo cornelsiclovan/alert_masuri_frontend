@@ -41,7 +41,7 @@ const DosareList = ({ dosare, isAc }) => {
     );
   }
 
-  console.log(dosareContestatii);
+
 
   useEffect(() => {
     setNumarDosare(dosareFilterFaraMasuri.length);
@@ -932,7 +932,7 @@ const DosareList = ({ dosare, isAc }) => {
               <h1> Contestatii </h1>
               <ul className={classes.list}>
                 {dosareContestatii.map((dosar) => {
-                  console.log(dosar);
+          
                   if (dosar.admitere_contestatie === 1) {
                     if (dosarCautat === null || dosarCautat === "") {
                       let alertaContestatie = false;

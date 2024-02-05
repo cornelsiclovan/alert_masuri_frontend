@@ -1,8 +1,8 @@
 const Stoc = ({ stoc }) => {
   console.log(stoc);
-
+  if(stoc.length > 0)
   return (
-    <>
+   <>
       <div style={{ display: "flex" }}>
       <p
           style={{
@@ -40,5 +40,9 @@ const Stoc = ({ stoc }) => {
       </div>
     </>
   );
+
+  else {
+    return <></>
+  }
 };
 export default Stoc;

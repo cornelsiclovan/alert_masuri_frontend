@@ -35,7 +35,6 @@ const SolutiiLunareList = ({ solutii }) => {
     }
   });
 
-  console.log(procuroriList);
 
 
   const onChangeNumeProcurorInput = (event) => {
@@ -135,10 +134,11 @@ const SolutiiLunareList = ({ solutii }) => {
   });
 
   solutiiFiltrate = solutiiFiltrate.filter((solutie) => {
-    if (lunaSolutie === "") {
+    
+    if (+lunaSolutie === 0) {
       return true;
     } else {
-      return solutie.luna_solutie == lunaSolutie;
+      return solutie.luna_solutie.includes(lunaSolutie);
     }
   });
 

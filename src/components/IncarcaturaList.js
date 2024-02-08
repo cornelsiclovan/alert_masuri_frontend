@@ -25,8 +25,6 @@ const IncarcaturaList = ({ incarcatura }) => {
     setAnSolutie(event.target.value);
   };
 
-
-
   const onChangeSolutieInput = (event) => {
     if (event.target.value === "rechizitoriu") {
       setRechIsChecked(!rechIsChecked);
@@ -53,12 +51,13 @@ const IncarcaturaList = ({ incarcatura }) => {
 
   let totalAc = 0;
   let totalAn = 0;
+  let totalSup = 0;
+  let totalUpp = 0;
 
   incarcaturaFiltrate = incarcaturaFiltrate.filter((incarcatura) => {
     if (numeProcuror === "") {
       return true;
     } else {
-
       return incarcatura.numeProcuror
         .toLowerCase()
         .includes(numeProcuror.toLowerCase());
@@ -81,8 +80,6 @@ const IncarcaturaList = ({ incarcatura }) => {
           placeholder="Nume procuror"
           onChange={onChangeNumeProcurorInput}
         ></input>
-
-
       </div>
 
       <div className={classes.table}>
@@ -91,32 +88,50 @@ const IncarcaturaList = ({ incarcatura }) => {
           <div className={classes.td}>Nume</div>
           <div className={classes.td}>dosare cu ac</div>
           <div className={classes.td}>dosare cu an</div>
+          <div className={classes.td}>upp</div>
+          <div className={classes.td}>sup</div>
         </div>
         {incarcaturaFiltrate.map((inc) => {
-          
-          if(inc.number_dos_cu_ac !== 0 || + inc.number_dos_cu_an !== 0){
+          if (inc.number_dos_cu_ac !== 0 || +inc.number_dos_cu_an !== 0) {
             i = i + 1;
 
-            console.log( totalAc,  inc.number_dos_cu_ac)
+            console.log(totalAc, inc.number_dos_cu_ac);
 
-            totalAc = totalAc +  +inc.number_dos_cu_ac;
-            totalAn = totalAn +  +inc.number_dos_cu_an;
-            if(+inc.number_dos_cu_ac !== 0 || +inc.number_dos_cu_an !== 0)
-          return (
-            <div className={classes.tr}>
-                <div className={classes.td}>{i}</div>
-              <div className={classes.td}>{inc.numeProcuror}</div>
-              <div className={classes.td}>{inc.number_dos_cu_ac}</div>
-              <div className={classes.td}>{inc.number_dos_cu_an}</div>
-              
-            </div>
-          );}
+            totalAc = totalAc + +inc.number_dos_cu_ac;
+            totalAn = totalAn + +inc.number_dos_cu_an;
+            totalSup = totalSup + +inc.number_dos_cu_an +
+                      +inc.number_dos_cu_ac -
+                      +inc.number_dos_cu_ac_upp -
+                      +inc.number_dos_cu_an_upp;
+            totalUpp = totalUpp + +inc.number_dos_cu_ac_upp + +inc.number_dos_cu_an_upp
+
+            if (+inc.number_dos_cu_ac !== 0 || +inc.number_dos_cu_an !== 0)
+              return (
+                <div className={classes.tr}>
+                  <div className={classes.td}>{i}</div>
+                  <div className={classes.td}>{inc.numeProcuror}</div>
+                  <div className={classes.td}>{inc.number_dos_cu_ac}</div>
+                  <div className={classes.td}>{inc.number_dos_cu_an}</div>
+                  <div className={classes.td}>
+                    {+inc.number_dos_cu_ac_upp + +inc.number_dos_cu_an_upp}
+                  </div>
+                  <div className={classes.td}>
+                    {+inc.number_dos_cu_an +
+                      +inc.number_dos_cu_ac -
+                      +inc.number_dos_cu_ac_upp -
+                      +inc.number_dos_cu_an_upp}
+                  </div>
+                </div>
+              );
+          }
         })}
         <div className={classes.th}>
           <div className={classes.td}>Total Dosare</div>
           <div className={classes.td}>{totalSolutii}</div>
           <div className={classes.td}>{totalAc}</div>
           <div className={classes.td}>{totalAn}</div>
+          <div className={classes.td}>{totalUpp}</div>
+          <div className={classes.td}>{totalSup}</div>
         </div>
       </div>
     </>

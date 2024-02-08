@@ -558,7 +558,7 @@ const DosareList = ({ dosare, isAc }) => {
           </ul>
         </div>
         <div className={classes.items}>
-          {dosareFilterCuMasuri.length !== 0 && <h1> Dosare cu masuri </h1>}
+          {dosareFilterCuMasuri.length !== 0 && <h1> Dos mas preventive </h1>}
           <ul className={classes.list}>
             {cuMasuriAsiguratorii &&
               dosareFilterCuMasuri.map((dosar) => {
@@ -730,7 +730,7 @@ const DosareList = ({ dosare, isAc }) => {
         <div className={classes.items}>
           {dosareFilterCuSechestru.length !== 0 && (
             <>
-              <h1> Dosare cu sechestru </h1>
+              <h1> Dos sechestru </h1>
               <ul className={classes.list}>
                 {cuMasuriAsiguratorii &&
                   dosareFilterCuSechestru.map((dosar) => {
@@ -929,7 +929,7 @@ const DosareList = ({ dosare, isAc }) => {
         <div className={classes.items}>
           {dosareContestatii.length !== 0 && (
             <>
-              <h1> Contestatii </h1>
+              <h1> Contestatii DP </h1>
               <ul className={classes.list}>
                 {dosareContestatii.map((dosar) => {
           

@@ -88,6 +88,7 @@ const IncarcaturaList = ({ incarcatura }) => {
           <div className={classes.td}>Nume</div>
           <div className={classes.td}>dosare cu ac</div>
           <div className={classes.td}>dosare cu an</div>
+          <div className={classes.td}>total an + ac</div>
           <div className={classes.td}>upp</div>
           <div className={classes.td}>sup</div>
         </div>
@@ -112,6 +113,7 @@ const IncarcaturaList = ({ incarcatura }) => {
                   <div className={classes.td}>{inc.numeProcuror}</div>
                   <div className={classes.td}>{inc.number_dos_cu_ac}</div>
                   <div className={classes.td}>{inc.number_dos_cu_an}</div>
+                  <div className={classes.td}>{+inc.number_dos_cu_an + +inc.number_dos_cu_an}</div>
                   <div className={classes.td}>
                     {+inc.number_dos_cu_ac_upp + +inc.number_dos_cu_an_upp}
                   </div>
@@ -130,6 +132,7 @@ const IncarcaturaList = ({ incarcatura }) => {
           <div className={classes.td}>{totalSolutii}</div>
           <div className={classes.td}>{totalAc}</div>
           <div className={classes.td}>{totalAn}</div>
+          <div className={classes.td}>{totalAn + totalAc}</div>
           <div className={classes.td}>{totalUpp}</div>
           <div className={classes.td}>{totalSup}</div>
         </div>

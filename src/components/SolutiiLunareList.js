@@ -138,7 +138,7 @@ const SolutiiLunareList = ({ solutii }) => {
     if (+lunaSolutie === 0) {
       return true;
     } else {
-      return solutie.luna_solutie.includes(lunaSolutie);
+      return +solutie.luna_solutie === +lunaSolutie;
     }
   });
 

@@ -8,6 +8,7 @@ const DosareList = ({ dosare, isAc }) => {
   const [searchName, setSearchName] = useState("");
   const [numarDosare, setNumarDosare] = useState(dosare.length);
   const [dosSaseLuni, setDosSaseLuni] = useState(0);
+  const [yearSearch, setYearSearch] = useState("");
   const changeCuMasuriAsiguratorii = () => {
     setCuMasuriAsiguratorii(true);
   };
@@ -40,8 +41,6 @@ const DosareList = ({ dosare, isAc }) => {
         180
     );
   }
-
-
 
   useEffect(() => {
     setNumarDosare(dosareFilterFaraMasuri.length);
@@ -122,6 +121,10 @@ const DosareList = ({ dosare, isAc }) => {
     // );
   };
 
+  const onChangeYearInput = (event) => {
+    setYearSearch(event.target.value);
+  }
+
   if (!toate) {
     dosareFilterFaraMasuri = dosareFilterFaraMasuri.filter((dosar) => {
       let condition = getCondition(
@@ -136,11 +139,11 @@ const DosareList = ({ dosare, isAc }) => {
 
   dosareFilterFaraMasuri = dosareFilterFaraMasuri.filter(
     (dosar) =>
-      dosar.numeProcuror.toLowerCase().includes(searchName) ||
+     ( dosar.numeProcuror.toLowerCase().includes(searchName) ||
       dosar.numeProcuror.includes(searchName) ||
       dosar.numeProcuror.toUpperCase().includes(searchName) ||
       dosar.numar.includes(dosarCautat) ||
-      dosar.numar_fost.includes(dosarCautat)
+      dosar.numar_fost.includes(dosarCautat)) && dosar.numar.split("/")[3].includes(yearSearch)
   );
 
   dosareMaiVechiDeSaseLuni = dosareFilterFaraMasuri.filter(
@@ -273,12 +276,24 @@ const DosareList = ({ dosare, isAc }) => {
                 height: "30px",
                 marginTop: "20px",
                 marginLeft: "50px",
-                width: "260px",
+                width: "150px",
               }}
               type="text"
               placeholder="Numar de dosar / Nume procuror"
               onChange={onChangeDosarInput}
             ></input>
+            <input
+              style={{
+                height: "30px",
+                marginTop: "20px",
+                marginLeft: "10px",
+                width: "150px",
+              }}
+              type="text"
+              placeholder="an"
+              onChange={onChangeYearInput}
+            ></input>
+            
           </div>
           <br />
           <ul className={classes.list}>
@@ -660,14 +675,15 @@ const DosareList = ({ dosare, isAc }) => {
                   } else if (
                     dosar &&
                     dosarCautat &&
-                    (dosar.numar
+                    ((dosar.numar
                       .toLowerCase()
                       .includes(dosarCautat.toLowerCase()) ||
                       dosar.numeProcuror
                         .toLowerCase()
                         .includes(dosarCautat.toLowerCase()) ||
-                      dosar.numar_fost.includes(dosarCautat))
+                      dosar.numar_fost.includes(dosarCautat)))
                   ) {
+                    console.log();
                     return (
                       <li key={dosar.id} className={classes.item}>
                         <Link to={`/dosare/${dosar.id}`}>

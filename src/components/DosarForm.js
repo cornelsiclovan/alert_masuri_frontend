@@ -104,27 +104,31 @@ const DosarForm = ({ method, dosar, procurori }) => {
       fapte.push(f);
     });
 
-    fapteString = fapte[fapte.length-1].nume_infractiune + " prev. de " +fapte[fapte.length - 1].nume_temei;
 
-    if(fapte[fapte.length - 1].nume_temei.includes("229")) {
+
+    if(fapte.length > 0){
+      fapteString = fapte[fapte.length-1].nume_infractiune + " prev. de " +fapte[fapte.length - 1].nume_temei;
+      if(fapte[fapte.length - 1].nume_temei.includes("229")) {
       
-      fapteString = "";
-
-      fapteString = "furt calificat prev. de "+ " " + "art. 228" + ", " + fapte[fapte.length-1].nume_temei.split("NCP")[0] + "C. pen.";
-    }
-
-    if(fapte[fapte.length - 1].nume_temei.includes("199")) {
-      fapteString = "";
-
-      fapteString = fapte[fapte.length-1].nume_infractiune.toLowerCase() + " prev de." + fapte[fapte.length-1].nume_temei.split("NCP")[0].toLowerCase() + "rap. la " + "art. 193 alin. 1 C. pen.";
-    }
-
-
-
+        fapteString = "";
   
-    if(isClasare) {
-      fapteString = fapte[0].nume_infractiune.toLowerCase() + " prev. de " + fapte[0].nume_temei.split("NCP")[0].toLowerCase() + "C. pen.";
+        fapteString = "furt calificat prev. de "+ " " + "art. 228" + ", " + fapte[fapte.length-1].nume_temei.split("NCP")[0] + "C. pen.";
+      }
+  
+      if(fapte[fapte.length - 1].nume_temei.includes("199")) {
+        fapteString = "";
+  
+        fapteString = fapte[fapte.length-1].nume_infractiune.toLowerCase() + " prev de." + fapte[fapte.length-1].nume_temei.split("NCP")[0].toLowerCase() + "rap. la " + "art. 193 alin. 1 C. pen.";
+      }
+  
+  
+  
+    
+      if(isClasare) {
+        fapteString = fapte[0].nume_infractiune.toLowerCase() + " prev. de " + fapte[0].nume_temei.split("NCP")[0].toLowerCase() + "C. pen.";
+      }
     }
+  
   }
 
   const [isSolutionat, setIsSolutionat] = useState(true);

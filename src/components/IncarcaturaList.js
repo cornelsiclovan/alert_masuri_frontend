@@ -102,9 +102,8 @@ const IncarcaturaList = ({ incarcatura }) => {
             totalAn = totalAn + +inc.number_dos_cu_an;
             totalSup = totalSup + +inc.number_dos_cu_an +
                       +inc.number_dos_cu_ac -
-                      +inc.number_dos_cu_ac_upp -
-                      +inc.number_dos_cu_an_upp;
-            totalUpp = totalUpp + +inc.number_dos_cu_ac_upp + +inc.number_dos_cu_an_upp
+                      +inc.upp
+            totalUpp = totalUpp + +inc.upp
 
             if (+inc.number_dos_cu_ac !== 0 || +inc.number_dos_cu_an !== 0)
               return (
@@ -115,13 +114,12 @@ const IncarcaturaList = ({ incarcatura }) => {
                   <div className={classes.td}>{inc.number_dos_cu_an}</div>
                   <div className={classes.td}>{+inc.number_dos_cu_an + +inc.number_dos_cu_ac}</div>
                   <div className={classes.td}>
-                    {+inc.number_dos_cu_ac_upp + +inc.number_dos_cu_an_upp}
+                    {inc.upp}
                   </div>
                   <div className={classes.td}>
                     {+inc.number_dos_cu_an +
                       +inc.number_dos_cu_ac -
-                      +inc.number_dos_cu_ac_upp -
-                      +inc.number_dos_cu_an_upp}
+                      +inc.upp}
                   </div>
                 </div>
               );

@@ -73,14 +73,9 @@ const DosarItem = ({ dosar }) => {
             style={{ color: "lightcoral", backgroundColor: "white" }}
             to="edit"
           >
-            Edit
+            Soluționare
           </Link>
-          <button
-            onClick={startDeleteHandler}
-            style={{ backgroundColor: "white" }}
-          >
-            Delete
-          </button>
+        
         </menu>
       </div>
     </article>

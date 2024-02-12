@@ -253,7 +253,7 @@ const DosareList = ({ dosare, isAc }) => {
         <div className={classes.items}>
           <div style={{ display: "flex" }}>
             <div>
-              {!isAc && <h1> Dosare intrate({numarDosare}) </h1>}
+              {!isAc && <h2> Dosare intrate ({numarDosare}) </h2>}
               {isAc && (
                 <h1 style={{ width: "400px" }}>
                   {" "}
@@ -340,11 +340,11 @@ const DosareList = ({ dosare, isAc }) => {
                   <li key={dosar.id} className={classes.item}>
                     <Link to={`/dosare/${dosar.id}`}>
                       <div className={classes.content}>
-                        <h2>
+                        <h3>
                           {dosar.numar} - <small>{dosar.numeProcuror}</small>{" "}
                           <br />
                           {dosar.numar_fost}
-                        </h2>
+                        </h3>
                         {!isAc && dosar.tip_solutie_propusa !== "UPP" && (
                           <p>
                             Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
@@ -454,17 +454,17 @@ const DosareList = ({ dosare, isAc }) => {
                   <li key={dosar.id} className={classes.item}>
                     <Link to={`/dosare/${dosar.id}`}>
                       <div className={classes.content}>
-                        <h2>
+                        <h3>
                           {dosar.numar} - <small>{dosar.numeProcuror}</small>
                           <br />
                           {dosar.numar_fost}
-                        </h2>
+                        </h3>
                         {!isAc && dosar.tip_solutie_propusa !== "UPP" && (
                           <p>
                             Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
                           </p>
                         )}
-                        {!isAc && dosar.tip_solutie_propusa === "UPP" && (
+                        {(!isAc || isAc) && dosar.tip_solutie_propusa === "UPP" && (
                           <p>
                             <b>{dosar.tip_solutie_propusa}</b>
                           </p>
@@ -558,7 +558,7 @@ const DosareList = ({ dosare, isAc }) => {
           </ul>
         </div>
         <div className={classes.items}>
-          {dosareFilterCuMasuri.length !== 0 && <h1> Dos mas preventive </h1>}
+          {dosareFilterCuMasuri.length !== 0 && <h2> Dosare măsuri preventive </h2>}
           <ul className={classes.list}>
             {cuMasuriAsiguratorii &&
               dosareFilterCuMasuri.map((dosar) => {
@@ -598,11 +598,11 @@ const DosareList = ({ dosare, isAc }) => {
                       <li key={dosar.id} className={classes.item}>
                         <Link to={`/dosare/${dosar.id}`}>
                           <div className={classes.content}>
-                            <h2>
+                            <h3>
                               {dosar.numar} - {dosar.numeProcuror}
                               <br />
                               {dosar.numar_fost}
-                            </h2>
+                            </h3>
                             {dosar.trimis_masura_la_instanta === "1" && (
                               <b>
                                 <i style={{ backgroundColor: "blue" }}>
@@ -672,11 +672,11 @@ const DosareList = ({ dosare, isAc }) => {
                       <li key={dosar.id} className={classes.item}>
                         <Link to={`/dosare/${dosar.id}`}>
                           <div className={classes.content}>
-                            <h2>
+                            <h3>
                               {dosar.numar} - {dosar.numeProcuror}
                               <br />
                               {dosar.numar_fost}
-                            </h2>
+                            </h3>
                             <time>
                               expirare masura preventiva:{" "}
                               {dosar.data.split("T")[0]}
@@ -730,7 +730,7 @@ const DosareList = ({ dosare, isAc }) => {
         <div className={classes.items}>
           {dosareFilterCuSechestru.length !== 0 && (
             <>
-              <h1> Dos sechestru </h1>
+              <h2> Dosare măsuri asigurătorii </h2>
               <ul className={classes.list}>
                 {cuMasuriAsiguratorii &&
                   dosareFilterCuSechestru.map((dosar) => {
@@ -792,11 +792,11 @@ const DosareList = ({ dosare, isAc }) => {
                           <li key={dosar.id} className={classes.item}>
                             <Link to={`/dosare/${dosar.id}`}>
                               <div className={classes.content}>
-                                <h2>
+                                <h3>
                                   {dosar.numar} - {dosar.numeProcuror}
                                   <br />
                                   {dosar.numar_fost}
-                                </h2>
+                                </h3>
                                 <time>
                                   instituire/mentinere:{" "}
                                   {dosar.data.split("T")[0]}
@@ -863,11 +863,11 @@ const DosareList = ({ dosare, isAc }) => {
                           <li key={dosar.id} className={classes.item}>
                             <Link to={`/dosare/${dosar.id}`}>
                               <div className={classes.content}>
-                                <h2>
+                                <h3>
                                   {dosar.numar} - {dosar.numeProcuror}
                                   <br />
                                   {dosar.numar_fost}
-                                </h2>
+                                </h3>
                                 <time>
                                   instituire/mentinere:{" "}
                                   {dosar.data.split("T")[0]}
@@ -929,7 +929,7 @@ const DosareList = ({ dosare, isAc }) => {
         <div className={classes.items}>
           {dosareContestatii.length !== 0 && (
             <>
-              <h1> Contestatii DP </h1>
+              <h2> Contestații durată proces </h2>
               <ul className={classes.list}>
                 {dosareContestatii.map((dosar) => {
           
@@ -996,11 +996,11 @@ const DosareList = ({ dosare, isAc }) => {
                         <li key={dosar.id} className={classes.item}>
                           <Link to={`/dosare/${dosar.id}`}>
                             <div className={classes.content}>
-                              <h2>
+                              <h3>
                                 {dosar.numar} - {dosar.numeProcuror}
                                 <br />
                                 {dosar.numar_fost}
-                              </h2>
+                              </h3>
                               <time>
                                 termen: {dosar.termen_contestatie.split("T")[0]}
                               </time>{" "}

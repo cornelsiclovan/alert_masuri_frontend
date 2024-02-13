@@ -99,6 +99,7 @@ const DosarItem = ({ dosar, isAc }) => {
         <table border={1} width={"100%"}>
           <th>Autori</th>
           <th>Cnp</th>
+          <th>Calitate</th>
           {dosar &&
             dosar.parte &&
             dosar.parte.map((p, index) => {

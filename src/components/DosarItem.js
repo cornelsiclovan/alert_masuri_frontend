@@ -149,7 +149,7 @@ const DosarItem = ({ dosar, isAc }) => {
         )}
         <p style={{ backgroundColor: alertaIntrate ? "red" : "" }}>
           {dosar.data &&
-            `Intrare: ${dosar.data}, au trecut ${timpRamasIntrate} zile de la intrare`}
+            `Intrare: ${dosar.data.split("T")[0]}, au trecut ${timpRamasIntrate} zile de la intrare`}
         </p>
         <p style={{ backgroundColor: alertaArest ? "red" : "" }}>
           {dosar.data_arest &&

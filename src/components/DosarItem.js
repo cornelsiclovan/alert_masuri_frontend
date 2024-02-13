@@ -124,7 +124,7 @@ const DosarItem = ({ dosar, isAc }) => {
               else return;
             })}
         </table>
-        {!isAc && !dosar.isControlJudiciar && !dosar.isSechestru && dosar.admitere_contestatie != 1 &&(
+        {!isAc && !dosar.isControlJudiciar && !dosar.isSechestru && !dosar.isArest && dosar.admitere_contestatie != 1 &&(
           <p>
             Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
           </p>
@@ -154,7 +154,7 @@ const DosarItem = ({ dosar, isAc }) => {
           {dosar.data_interceptari &&
             `interceptari: ${dosar.data_interceptari}, mai sunt ${timpRamasInterceptari} zile pana la expirarea masurii`}
         </p>
-        {!isAc &&  !dosar.isControlJudiciar && !dosar.isSechestru && dosar.admitere_contestatie != 1 &&(
+        {!isAc &&  !dosar.isControlJudiciar && !dosar.isSechestru && !dosar.isArest && dosar.admitere_contestatie != 1 &&(
           <menu className={classes.actions}>
             <Link
               style={{ color: "lightcoral", backgroundColor: "white" }}

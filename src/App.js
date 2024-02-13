@@ -73,7 +73,25 @@ const router = createBrowserRouter([
             path: "dosareCuAc",
             element: <DosareCuAcPage />,
             loader: dosareCuAcLoader,
-          }
+          },
+          {
+            path: "/dosareCuAc/:dosarId",
+            id: "dosarac-detail",
+            loader: dosarDetailLoader,
+            children: [
+              {
+                index: true,
+                element: <DosarDetailPage />,
+                action: deleteDosarAction,
+              },
+              {
+                path: "edit",
+                element: <EditDosarPage />,
+                loader: procuroriLoaderData,
+                action: manipulateDosarAction,
+              },
+            ],
+          },
         ],
       },
       {

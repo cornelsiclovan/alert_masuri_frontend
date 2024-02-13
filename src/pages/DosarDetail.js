@@ -13,18 +13,24 @@ import { getAuthToken, getIsAdmin, getIsProcuror } from "../util/auth";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const DosarDetailPage = () => {
-  const { dosar, dosare, procurori } = useRouteLoaderData("dosar-detail");
+  let isAc = false;
+  let routeloader = "dosar-detail";
+  if (window.location.href.includes("dosareCuAc")) {
+    routeloader = "dosarac-detail";
+    isAc = true;
+  }
+  const { dosar, dosare, procurori } = useRouteLoaderData(routeloader);
 
   return (
     <>
       <Suspense fallback={<p style={{ textAlign: "center" }}>Loading ...</p>}>
         <Await resolve={dosar}>
-          {(loadedDosar) => <DosarItem dosar={loadedDosar} />}
+          {(loadedDosar) => <DosarItem dosar={loadedDosar} isAc={isAc}/>}
         </Await>
       </Suspense>
       <Suspense fallback={<p style={{ textAlign: "center" }}>Loading ...</p>}>
         <Await resolve={dosare}>
-          {(loadedDosare) => <DosareList dosare={loadedDosare} />}
+          {(loadedDosare) => <DosareList dosare={loadedDosare} isAc={isAc}/>}
         </Await>
       </Suspense>
     </>
@@ -62,10 +68,18 @@ const loadDosare = async () => {
     url = BASE_URL + "/dosar?isAdmin=1&este_solutionat=0";
   }
 
-  
-
   if (isProcuror === "true" && isAdmin === "false") {
     url = BASE_URL + "/dosar?procurorId=1&este_solutionat=0";
+  }
+
+  if (window.location.href.includes("dosareCuAc")) {
+    if (isAdmin === "true") {
+      url = BASE_URL + "/dosar/dosareCuAc?isAdmin=1&este_solutionat=0";
+    }
+  
+    if (isProcuror === "true" && isAdmin === "false") {
+      url = BASE_URL + "/dosar/dosareCuAc?procurorId=1&este_solutionat=0";
+    }
   }
 
   // if(isGrefier) {

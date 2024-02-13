@@ -3,7 +3,7 @@ import { Link, useSubmit } from "react-router-dom";
 import classes from "./DosarItem.module.css";
 import { useState } from "react";
 
-const DosarItem = ({ dosar }) => {
+const DosarItem = ({ dosar, isAc }) => {
   const submit = useSubmit();
   const [dateNow, setDate] = useState(Date.now());
 
@@ -29,9 +29,8 @@ const DosarItem = ({ dosar }) => {
   );
 
   const timpRamasIntrate = Math.floor(
-    (new Date(dosar.data).getTime() - dateNow) / (1000 * 3600 * 24) * -1
+    ((new Date(dosar.data).getTime() - dateNow) / (1000 * 3600 * 24)) * -1
   );
-
 
   const alertaArest = timpRamasArest <= 15 ? true : false;
   const alertaSechestru = timpRamasSechestru <= 30 ? true : false;
@@ -39,15 +38,95 @@ const DosarItem = ({ dosar }) => {
   const alertaInterceptari = timpRamasInterceptari <= 15 ? true : false;
   const alertaIntrate = timpRamasIntrate >= 90 ? true : false;
 
+  console.log(dosar);
+
   return (
     <article
       className={classes.dosar}
       style={{ backgroundColor: "darkgrey", borderRadius: "10px" }}
     >
       <div style={{ padding: "10px" }}>
-        <h1>{dosar.numar}</h1>
-        <p>Solutie propusa: <b>{dosar.tip_solutie_propusa}</b></p>
-        {dosar && dosar.este_solutionat === 1 && <p>Solutie finala: <b>{dosar.tip_solutie}</b></p>}
+        <h1>
+          {dosar.numar} - {dosar.numeProcuror}
+        </h1>
+        <table border={1} width={"100%"}>
+          <th>Data primei sesizari</th>
+          <th>Institutia la care se afla dosarul</th>
+
+          <tr>
+            <td>{dosar.data_primei_sesizari.split("T")[0]}</td>
+            {dosar.institutia_curenta && <td>{dosar.institutia_curenta}</td>}
+            {!dosar.institutia_curenta && <td>Intrat</td>}
+          </tr>
+        </table>
+        <table border={1} width={"100%"}>
+          <th>Fapte in dosar</th>
+          <th>Persoane Vatamata</th>
+          <tr>
+            <td>
+              {dosar &&
+                dosar.fapta &&
+                dosar.fapta.map((f) => {
+                  return <tr align={"left"} border={1}> {f.nume_infractiune}</tr>;
+                })}
+            </td>
+            <td>
+              {dosar &&
+                dosar.parte &&
+                dosar.parte.map((p, index) => {
+                  let numeString = "";
+                  if (p.ordine === "2") {
+                    numeString = numeString + p.nume;
+                  }
+                  if (
+                    dosar.parte.length > 0 &&
+                    index + 1 < dosar.parte.length &&
+                    p.ordine === "2" &&
+                    numeString !== ""
+                  ) {
+                    numeString = numeString + ", ";
+                  }
+                  return numeString;
+                })}
+            </td>
+          </tr>
+        </table>
+        <table border={1} width={"100%"}>
+          <th>Autori</th>
+          <th>Cnp</th>
+          {dosar &&
+            dosar.parte &&
+            dosar.parte.map((p, index) => {
+              let numeString = "";
+              if (p.ordine === "1") {
+                numeString = numeString + p.nume;
+              }
+              if (
+                dosar.parte.length > 0 &&
+                index + 1 < dosar.parte.length &&
+                p.ordine === "2" &&
+                numeString !== ""
+              ) {
+                numeString = numeString + ", ";
+              }
+              if(p.ordine === "1")
+              return (
+                <tr>
+                  <td>{numeString}</td>
+                  <td>{p.cnp}</td>
+                </tr>
+              );
+              else return;
+            })}
+        </table>
+        <p>
+          Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
+        </p>
+        {dosar && dosar.este_solutionat === 1 && (
+          <p>
+            Solutie finala: <b>{dosar.tip_solutie}</b>
+          </p>
+        )}
         <p style={{ backgroundColor: alertaIntrate ? "red" : "" }}>
           {dosar.data &&
             `Intrare: ${dosar.data}, au trecut ${timpRamasIntrate} zile de la intrare`}
@@ -65,18 +144,19 @@ const DosarItem = ({ dosar }) => {
             `control judiciar: ${dosar.data_cj}, mai sunt ${timpRamasCj} zile pana la expirarea masurii`}
         </p>
         <p style={{ backgroundColor: alertaInterceptari ? "red" : "" }}>
-        {dosar.data_interceptari &&
-                          `interceptari: ${dosar.data_interceptari}, mai sunt ${timpRamasInterceptari} zile pana la expirarea masurii`}
+          {dosar.data_interceptari &&
+            `interceptari: ${dosar.data_interceptari}, mai sunt ${timpRamasInterceptari} zile pana la expirarea masurii`}
         </p>
-        <menu className={classes.actions}>
-          <Link
-            style={{ color: "lightcoral", backgroundColor: "white" }}
-            to="edit"
-          >
-            Soluționare
-          </Link>
-        
-        </menu>
+        {!isAc && (
+          <menu className={classes.actions}>
+            <Link
+              style={{ color: "lightcoral", backgroundColor: "white" }}
+              to="edit"
+            >
+              Soluționare
+            </Link>
+          </menu>
+        )}
       </div>
     </article>
   );

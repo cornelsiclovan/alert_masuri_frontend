@@ -353,7 +353,7 @@ const DosareList = ({ dosare, isAc }) => {
               if (dosarCautat === null || dosarCautat === "") {
                 return (
                   <li key={dosar.id} className={classes.item}>
-                    <Link to={`/dosare/${dosar.id}`}>
+                    <Link to={!isAc? `/dosare/${dosar.id}` : `/dosareCuAc/${dosar.id}`}>
                       <div className={classes.content}>
                         <h3>
                           {dosar.numar} - <small>{dosar.numeProcuror}</small>{" "}

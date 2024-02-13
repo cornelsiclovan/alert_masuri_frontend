@@ -61,7 +61,7 @@ const DosarItem = ({ dosar, isAc }) => {
         </table>
         <table border={1} width={"100%"}>
           <th>Fapte in dosar</th>
-          <th>Persoane Vatamata</th>
+          <th>Persoane Vatamate</th>
           <tr>
             <td>
               {dosar &&
@@ -119,16 +119,28 @@ const DosarItem = ({ dosar, isAc }) => {
                   <tr>
                     <td>{numeString}</td>
                     <td>{p.cnp}</td>
+                    <td>{p.calitate}</td>
                   </tr>
                 );
               else return;
             })}
         </table>
-        {!isAc && !dosar.isControlJudiciar && !dosar.isSechestru && !dosar.isArest && dosar.admitere_contestatie != 1 &&(
-          <p>
-            Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
-          </p>
-        )}
+        <table border={1} width={"100%"}>
+          <th>Starea de fapt</th>
+
+          <tr>
+            <td>{dosar && dosar.fapta && dosar.fapta.length > 0 && dosar.fapta[0].situatie}</td>
+          </tr>
+        </table>
+        {!isAc &&
+          !dosar.isControlJudiciar &&
+          !dosar.isSechestru &&
+          !dosar.isArest &&
+          dosar.admitere_contestatie != 1 && (
+            <p>
+              Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
+            </p>
+          )}
         {dosar && dosar.este_solutionat === 1 && (
           <p>
             Solutie finala: <b>{dosar.tip_solutie}</b>
@@ -154,16 +166,20 @@ const DosarItem = ({ dosar, isAc }) => {
           {dosar.data_interceptari &&
             `interceptari: ${dosar.data_interceptari}, mai sunt ${timpRamasInterceptari} zile pana la expirarea masurii`}
         </p>
-        {!isAc &&  !dosar.isControlJudiciar && !dosar.isSechestru && !dosar.isArest && dosar.admitere_contestatie != 1 &&(
-          <menu className={classes.actions}>
-            <Link
-              style={{ color: "lightcoral", backgroundColor: "white" }}
-              to="edit"
-            >
-              Soluționare
-            </Link>
-          </menu>
-        )}
+        {!isAc &&
+          !dosar.isControlJudiciar &&
+          !dosar.isSechestru &&
+          !dosar.isArest &&
+          dosar.admitere_contestatie != 1 && (
+            <menu className={classes.actions}>
+              <Link
+                style={{ color: "lightcoral", backgroundColor: "white" }}
+                to="edit"
+              >
+                Soluționare
+              </Link>
+            </menu>
+          )}
       </div>
     </article>
   );

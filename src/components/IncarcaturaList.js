@@ -126,8 +126,8 @@ const IncarcaturaList = ({ incarcatura }) => {
           }
         })}
         <div className={classes.th}>
-          <div className={classes.td}>Total Dosare</div>
-          <div className={classes.td}>{totalSolutii}</div>
+          <div className={classes.td}>TOTAL DOSARE</div>
+          <div className={classes.td}></div>
           <div className={classes.td}>{totalAc}</div>
           <div className={classes.td}>{totalAn}</div>
           <div className={classes.td}>{totalAn + totalAc}</div>

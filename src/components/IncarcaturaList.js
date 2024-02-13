@@ -84,13 +84,13 @@ const IncarcaturaList = ({ incarcatura }) => {
 
       <div className={classes.table}>
         <div className={classes.th}>
-          <div className={classes.td}>nr. crt</div>
-          <div className={classes.td}>Nume</div>
-          <div className={classes.td}>dosare cu ac</div>
-          <div className={classes.td}>dosare cu an</div>
-          <div className={classes.td}>an + ac</div>
-          <div className={classes.td}>upp</div>
-          <div className={classes.td}>sup</div>
+          <div className={classes.td}>NR. CRT.</div>
+          <div className={classes.td}>PROCUROR</div>
+          <div className={classes.td}>DOSARE CU A.C.</div>
+          <div className={classes.td}>DOSARE CU A.N. <br/> NETRECUTE LA PASIV</div>
+          <div className={classes.td}>TOTAL DOSARE</div>
+          <div className={classes.td}>U.P.P.</div>
+          <div className={classes.td}>S.U.P.</div>
         </div>
         {incarcaturaFiltrate.map((inc) => {
           if (inc.number_dos_cu_ac !== 0 || +inc.number_dos_cu_an !== 0) {

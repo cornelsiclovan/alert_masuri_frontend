@@ -67,7 +67,12 @@ const DosarItem = ({ dosar, isAc }) => {
               {dosar &&
                 dosar.fapta &&
                 dosar.fapta.map((f) => {
-                  return <tr align={"left"} border={1}> {f.nume_infractiune}</tr>;
+                  return (
+                    <tr align={"left"} border={1}>
+                      {" "}
+                      {f.nume_infractiune}
+                    </tr>
+                  );
                 })}
             </td>
             <td>
@@ -109,19 +114,21 @@ const DosarItem = ({ dosar, isAc }) => {
               ) {
                 numeString = numeString + ", ";
               }
-              if(p.ordine === "1")
-              return (
-                <tr>
-                  <td>{numeString}</td>
-                  <td>{p.cnp}</td>
-                </tr>
-              );
+              if (p.ordine === "1")
+                return (
+                  <tr>
+                    <td>{numeString}</td>
+                    <td>{p.cnp}</td>
+                  </tr>
+                );
               else return;
             })}
         </table>
-        <p>
-          Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
-        </p>
+        {!isAc && !dosar.isControlJudiciar && !dosar.isSechestru && dosar.admitere_contestatie != 1 &&(
+          <p>
+            Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
+          </p>
+        )}
         {dosar && dosar.este_solutionat === 1 && (
           <p>
             Solutie finala: <b>{dosar.tip_solutie}</b>
@@ -147,7 +154,7 @@ const DosarItem = ({ dosar, isAc }) => {
           {dosar.data_interceptari &&
             `interceptari: ${dosar.data_interceptari}, mai sunt ${timpRamasInterceptari} zile pana la expirarea masurii`}
         </p>
-        {!isAc && (
+        {!isAc &&  !dosar.isControlJudiciar && !dosar.isSechestru && dosar.admitere_contestatie != 1 &&(
           <menu className={classes.actions}>
             <Link
               style={{ color: "lightcoral", backgroundColor: "white" }}

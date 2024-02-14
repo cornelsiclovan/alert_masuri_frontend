@@ -130,7 +130,12 @@ const DosarItem = ({ dosar, isAc }) => {
           <th>Starea de fapt</th>
 
           <tr>
-            <td>{dosar && dosar.fapta && dosar.fapta.length > 0 && dosar.fapta[0].situatie}</td>
+            <td>
+              {dosar &&
+                dosar.fapta &&
+                dosar.fapta.length > 0 &&
+                dosar.fapta[0].situatie}
+            </td>
           </tr>
         </table>
         {!isAc &&
@@ -147,10 +152,14 @@ const DosarItem = ({ dosar, isAc }) => {
             Solutie finala: <b>{dosar.tip_solutie}</b>
           </p>
         )}
-        <p style={{ backgroundColor: alertaIntrate ? "red" : "" }}>
-          {dosar.data &&
-            `Intrare: ${dosar.data.split("T")[0]}, au trecut ${timpRamasIntrate} zile de la intrare`}
-        </p>
+        {!isAc && (
+          <p style={{ backgroundColor: alertaIntrate ? "red" : "" }}>
+            {dosar.data &&
+              `Intrare: ${
+                dosar.data.split("T")[0]
+              }, au trecut ${timpRamasIntrate} zile de la intrare`}
+          </p>
+        )}
         <p style={{ backgroundColor: alertaArest ? "red" : "" }}>
           {dosar.data_arest &&
             `arest: ${dosar.data_arest}, mai sunt ${timpRamasArest} zile pana la expirarea masurii`}{" "}

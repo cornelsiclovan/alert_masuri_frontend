@@ -142,8 +142,8 @@ const DosareList = ({ dosare, isAc }) => {
      ( dosar.numeProcuror.toLowerCase().includes(searchName) ||
       dosar.numeProcuror.includes(searchName) ||
       dosar.numeProcuror.toUpperCase().includes(searchName) ||
-      dosar.numar.includes(dosarCautat) ||
-      dosar.numar_fost.includes(dosarCautat)) && dosar.numar.split("/")[3].includes(yearSearch)
+      dosar.numar.split("/P/")[0].includes(dosarCautat) ||
+      dosar.numar_fost.split("/P/")[0].includes(dosarCautat)) && dosar.numar.split("/")[3].includes(yearSearch)
   );
 
   dosareMaiVechiDeSaseLuni = dosareFilterFaraMasuri.filter(
@@ -625,7 +625,7 @@ const DosareList = ({ dosare, isAc }) => {
                                 </i>
                               </b>
                             )}
-                            <br />
+                         
                             <time>
                               expirare {dosar.isArest && "arest"}{" "}
                               {dosar.isControlJudiciar && "control judiciar"} :{" "}

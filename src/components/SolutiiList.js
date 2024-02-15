@@ -228,6 +228,7 @@ const SolutiiList = ({ solutii }) => {
           <div className={classes.td}></div>
           <div className={classes.td}></div>
           <div className={classes.td}></div>
+      
         </div>
       </div>
     </>

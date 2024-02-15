@@ -276,10 +276,10 @@ const DosareList = ({ dosare, isAc }) => {
                 height: "30px",
                 marginTop: "20px",
                 marginLeft: "50px",
-                width: "150px",
+                width: "200px",
               }}
               type="text"
-              placeholder="Numar de dosar / Nume procuror"
+              placeholder="Nr. dosar / Nume procuror"
               onChange={onChangeDosarInput}
             ></input>
             <input
@@ -287,7 +287,7 @@ const DosareList = ({ dosare, isAc }) => {
                 height: "30px",
                 marginTop: "20px",
                 marginLeft: "10px",
-                width: "150px",
+                width: "100px",
               }}
               type="text"
               placeholder="an"

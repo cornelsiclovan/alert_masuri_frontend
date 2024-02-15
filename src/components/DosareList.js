@@ -43,6 +43,7 @@ const DosareList = ({ dosare, isAc }) => {
   }
 
   useEffect(() => {
+    console.log(dosareFilterFaraMasuri);
     setNumarDosare(dosareFilterFaraMasuri.length);
     setDosSaseLuni(dosareMaiVechiDeSaseLuni.length);
   }, [dosareFilterFaraMasuri, dosareMaiVechiDeSaseLuni]);
@@ -143,7 +144,7 @@ const DosareList = ({ dosare, isAc }) => {
       dosar.numeProcuror.includes(searchName) ||
       dosar.numeProcuror.toUpperCase().includes(searchName) ||
       dosar.numar.split("/P/")[0].includes(dosarCautat) ||
-      dosar.numar_fost.split("/P/")[0].includes(dosarCautat)) && (dosar.numar.split("/")[3].includes(yearSearch) || dosar.numar_fost.split("/")[2].includes(yearSearch))
+      dosar.numar_fost.split("/P/")[0].includes(dosarCautat)) && dosar.numar.split("/")[3].includes(yearSearch)
   );
 
   dosareMaiVechiDeSaseLuni = dosareFilterFaraMasuri.filter(

@@ -124,7 +124,7 @@ const DosareList = ({ dosare, isAc }) => {
 
   const onChangeYearInput = (event) => {
     setYearSearch(event.target.value);
-  }
+  };
 
   if (!toate) {
     dosareFilterFaraMasuri = dosareFilterFaraMasuri.filter((dosar) => {
@@ -138,14 +138,18 @@ const DosareList = ({ dosare, isAc }) => {
     });
   }
 
-  dosareFilterFaraMasuri = dosareFilterFaraMasuri.filter(
-    (dosar) =>
-     ( dosar.numeProcuror.toLowerCase().includes(searchName) ||
+  dosareFilterFaraMasuri = dosareFilterFaraMasuri.filter((dosar) => {
+
+   
+    return (dosar.numeProcuror.toLowerCase().includes(searchName) ||
       dosar.numeProcuror.includes(searchName) ||
       dosar.numeProcuror.toUpperCase().includes(searchName) ||
       dosar.numar.split("/P/")[0].includes(dosarCautat) ||
-      dosar.numar_fost.split("/P/")[0].includes(dosarCautat)) && dosar.numar.split("/")[3].includes(yearSearch)
-  );
+      dosar.numar_fost && dosar.numar_fost.split("/P/")[0].includes(dosarCautat)) &&
+      (dosar.numar.split("/")[3].includes(yearSearch) || dosar.numar_fost && dosar.numar_fost.split("/")[2].includes(yearSearch));
+  });
+
+  console.log(dosareFilterFaraMasuri.length);
 
   dosareMaiVechiDeSaseLuni = dosareFilterFaraMasuri.filter(
     (dosar) =>
@@ -294,7 +298,6 @@ const DosareList = ({ dosare, isAc }) => {
               placeholder="an"
               onChange={onChangeYearInput}
             ></input>
-            
           </div>
           <br />
           <ul className={classes.list}>
@@ -354,7 +357,13 @@ const DosareList = ({ dosare, isAc }) => {
               if (dosarCautat === null || dosarCautat === "") {
                 return (
                   <li key={dosar.id} className={classes.item}>
-                    <Link to={!isAc? `/dosare/${dosar.id}` : `/dosareCuAc/${dosar.id}`}>
+                    <Link
+                      to={
+                        !isAc
+                          ? `/dosare/${dosar.id}`
+                          : `/dosareCuAc/${dosar.id}`
+                      }
+                    >
                       <div className={classes.content}>
                         <h3>
                           {dosar.numar} - <small>{dosar.numeProcuror}</small>{" "}
@@ -464,7 +473,9 @@ const DosareList = ({ dosare, isAc }) => {
                   .includes(dosarCautat.toLowerCase()) ||
                   dosar.numeProcuror
                     .toLowerCase()
-                    .includes(dosarCautat.toLowerCase()))
+                    .includes(dosarCautat.toLowerCase()) ||
+                  dosar.numar_fost.includes(dosarCautat)  
+                  )
               ) {
                 return (
                   <li key={dosar.id} className={classes.item}>
@@ -480,11 +491,12 @@ const DosareList = ({ dosare, isAc }) => {
                             Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
                           </p>
                         )}
-                        {(!isAc || isAc) && dosar.tip_solutie_propusa === "UPP" && (
-                          <p>
-                            <b>{dosar.tip_solutie_propusa}</b>
-                          </p>
-                        )}
+                        {(!isAc || isAc) &&
+                          dosar.tip_solutie_propusa === "UPP" && (
+                            <p>
+                              <b>{dosar.tip_solutie_propusa}</b>
+                            </p>
+                          )}
                         {!isAc && (
                           <p>
                             Data desemnare procuror:{" "}
@@ -574,7 +586,9 @@ const DosareList = ({ dosare, isAc }) => {
           </ul>
         </div>
         <div className={classes.items}>
-          {dosareFilterCuMasuri.length !== 0 && <h2> Dosare măsuri preventive </h2>}
+          {dosareFilterCuMasuri.length !== 0 && (
+            <h2> Dosare măsuri preventive </h2>
+          )}
           <ul className={classes.list}>
             {cuMasuriAsiguratorii &&
               dosareFilterCuMasuri.map((dosar) => {
@@ -626,7 +640,6 @@ const DosareList = ({ dosare, isAc }) => {
                                 </i>
                               </b>
                             )}
-                         
                             <time>
                               expirare {dosar.isArest && "arest"}{" "}
                               {dosar.isControlJudiciar && "control judiciar"} :{" "}
@@ -676,13 +689,13 @@ const DosareList = ({ dosare, isAc }) => {
                   } else if (
                     dosar &&
                     dosarCautat &&
-                    ((dosar.numar
+                    (dosar.numar
                       .toLowerCase()
                       .includes(dosarCautat.toLowerCase()) ||
                       dosar.numeProcuror
                         .toLowerCase()
                         .includes(dosarCautat.toLowerCase()) ||
-                      dosar.numar_fost.includes(dosarCautat)))
+                      dosar.numar_fost.includes(dosarCautat))
                   ) {
                     console.log();
                     return (
@@ -949,13 +962,12 @@ const DosareList = ({ dosare, isAc }) => {
               <h2> Contestații durată proces </h2>
               <ul className={classes.list}>
                 {dosareContestatii.map((dosar) => {
-          
                   if (dosar.admitere_contestatie === 1) {
                     if (dosarCautat === null || dosarCautat === "") {
                       let alertaContestatie = false;
                       let timpRamasContestatie;
                       let text_inainte_contestatie = "mai sunt ";
-                      let text_dupa_contestatie = " pana la termen"
+                      let text_dupa_contestatie = " pana la termen";
                       if (
                         new Date(dosar.termen_contestatie).getTime() > dateNow
                       ) {
@@ -978,8 +990,6 @@ const DosareList = ({ dosare, isAc }) => {
                             (1000 * 3600 * 24)
                         );
                       }
-
-                      
 
                       if (timpRamasContestatie < 30) {
                         alertaContestatie = true;
@@ -1074,7 +1084,6 @@ const DosareList = ({ dosare, isAc }) => {
                             (1000 * 3600 * 24)
                         );
                       }
-
 
                       if (timpRamasContestatie < 30) {
                         alertaContestatie = true;

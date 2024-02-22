@@ -50,6 +50,7 @@ const DosareList = ({ dosare, isAc }) => {
 
   const [rechIsChecked, setRechIsChecked] = useState(false);
   const [renuIsChecked, setRenuIsChecked] = useState(false);
+  const [uppIsChecked, setUppIsChecked] = useState(false);
   const [clasIsChecked, setClasIsChecked] = useState(false);
   const [toate, setToate] = useState(true);
 
@@ -68,21 +69,37 @@ const DosareList = ({ dosare, isAc }) => {
       checkToate("renu", renuIsChecked);
       setRenuIsChecked(!renuIsChecked);
     }
+
+    if (event.target.value === "upp") {
+      checkToate("upp", uppIsChecked);
+      setUppIsChecked(!uppIsChecked);
+    }
   };
 
   const checkToate = (tipSol, value) => {
     if (tipSol === "rech") {
-      setToate(!(!rechIsChecked || clasIsChecked || renuIsChecked));
+      setToate(
+        !(!rechIsChecked || clasIsChecked || renuIsChecked || uppIsChecked)
+      );
     }
     if (tipSol === "clas") {
-      setToate(!(rechIsChecked || !clasIsChecked || renuIsChecked));
+      setToate(
+        !(rechIsChecked || !clasIsChecked || renuIsChecked || uppIsChecked)
+      );
     }
     if (tipSol === "renu") {
-      setToate(!(rechIsChecked || clasIsChecked || !renuIsChecked));
+      setToate(
+        !(rechIsChecked || clasIsChecked || !renuIsChecked || uppIsChecked)
+      );
+    }
+    if (tipSol === "upp") {
+      setToate(
+        !(rechIsChecked || clasIsChecked || renuIsChecked || !uppIsChecked)
+      );
     }
   };
 
-  const getCondition = (isRech, isRenu, isClas) => {
+  const getCondition = (isRech, isRenu, isClas, isUpp) => {
     let condition = false;
 
     if (isRech && rechIsChecked) {
@@ -97,6 +114,9 @@ const DosareList = ({ dosare, isAc }) => {
       condition = condition || isRenu;
     }
 
+    if (isUpp && uppIsChecked) {
+      condition = condition || isUpp;
+    }
     return condition;
   };
 
@@ -131,7 +151,8 @@ const DosareList = ({ dosare, isAc }) => {
       let condition = getCondition(
         dosar.tip_solutie_propusa.includes("TERMINARE"),
         dosar.tip_solutie_propusa.includes("R.U.P."),
-        dosar.tip_solutie_propusa.includes("CLASARE")
+        dosar.tip_solutie_propusa.includes("CLASARE"),
+        dosar.tip_solutie_propusa.includes("UPP")
       );
 
       return condition;
@@ -139,14 +160,17 @@ const DosareList = ({ dosare, isAc }) => {
   }
 
   dosareFilterFaraMasuri = dosareFilterFaraMasuri.filter((dosar) => {
-
-   
-    return (dosar.numeProcuror.toLowerCase().includes(searchName) ||
-      dosar.numeProcuror.includes(searchName) ||
-      dosar.numeProcuror.toUpperCase().includes(searchName) ||
-      dosar.numar.split("/P/")[0].includes(dosarCautat) ||
-      dosar.numar_fost && dosar.numar_fost.split("/P/")[0].includes(dosarCautat)) &&
-      (dosar.numar.split("/")[3].includes(yearSearch) || dosar.numar_fost && dosar.numar_fost.split("/")[2].includes(yearSearch));
+    return (
+      (dosar.numeProcuror.toLowerCase().includes(searchName) ||
+        dosar.numeProcuror.includes(searchName) ||
+        dosar.numeProcuror.toUpperCase().includes(searchName) ||
+        dosar.numar.split("/P/")[0].includes(dosarCautat) ||
+        (dosar.numar_fost &&
+          dosar.numar_fost.split("/P/")[0].includes(dosarCautat))) &&
+      (dosar.numar.split("/")[3].includes(yearSearch) ||
+        (dosar.numar_fost &&
+          dosar.numar_fost.split("/")[2].includes(yearSearch)))
+    );
   });
 
   console.log(dosareFilterFaraMasuri.length);
@@ -252,6 +276,16 @@ const DosareList = ({ dosare, isAc }) => {
                   onChange={onChangeSolutieInput}
                 ></input>
                 <label style={{ marginLeft: "-200px" }}>Ref. renuntare</label>
+              </div>
+              <div className={classes.li}>
+                <input
+                  checked={uppIsChecked}
+                  type="checkbox"
+                  id="upp"
+                  value="upp"
+                  onChange={onChangeSolutieInput}
+                ></input>
+                <label style={{ marginLeft: "-200px" }}>U.P.P.</label>
               </div>
             </div>
           </div>
@@ -474,8 +508,7 @@ const DosareList = ({ dosare, isAc }) => {
                   dosar.numeProcuror
                     .toLowerCase()
                     .includes(dosarCautat.toLowerCase()) ||
-                  dosar.numar_fost.includes(dosarCautat)  
-                  )
+                  dosar.numar_fost.includes(dosarCautat))
               ) {
                 return (
                   <li key={dosar.id} className={classes.item}>

@@ -74,3 +74,58 @@
     margin-top: -5px;
     height: 30px;
 }
+
+.form {
+  max-width: 60rem;
+  margin: 2rem auto;
+}
+
+.form label,
+.form input,
+.form textarea,
+.form select {
+  display: block;
+  width: 100%;
+}
+
+
+.form input,
+.form textarea,
+.form select {
+  font: inherit;
+  padding: 0.25rem;
+}
+
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.actions button {
+  font: inherit;
+  cursor: pointer;
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  background-color: var(--color-gray-300);
+  color: var(--color-gray-800);
+  border: none;
+}
+
+.actions button[type='button'] {
+  background-color: transparent;
+  color: var(--color-gray-300);
+}
+
+.actions button:hover {
+  background-color: var(--color-primary-300);
+}
+
+.actions button[type='button']:hover {
+  background-color: var(--color-gray-800);
+}
+
+button {
+  cursor: pointer;
+}

@@ -59,7 +59,7 @@ const MainNavigation = () => {
                 </NavLink>
               </li>
             )} */}
-             {token && (
+            {token && (
               <li>
                 <NavLink
                   to="/incarcatura"
@@ -80,14 +80,41 @@ const MainNavigation = () => {
                     isActive ? classes.active : undefined
                   }
                 >
-                  Statistica 
+                  Statistica
                 </NavLink>
               </li>
             )}
+
+            {token && (
+              <li>
+                <NavLink
+                  to="/ordine"
+                  className={({ isActive }) =>
+                    isActive ? classes.active : undefined
+                  }
+                >
+                  Ordine
+                </NavLink>
+              </li>
+            )}
+
+            {token && (
+              <li>
+                <NavLink
+                  to="/judiciar"
+                  className={({ isActive }) =>
+                    isActive ? classes.active : undefined
+                  }
+                >
+                  Judiciar
+                </NavLink>
+              </li>
+            )}
+
             {token && (
               <li>
                 <Form action="/logout" method="post">
-                  <button style={{backgroundColor: "white"}}>Logout</button>
+                  <button style={{ backgroundColor: "white" }}>Logout</button>
                 </Form>
               </li>
             )}
@@ -95,7 +122,7 @@ const MainNavigation = () => {
 
           {token && (
             <li style={{ display: "flex" }}>
-              <img src={logo} width={150} height={50}/>
+              <img src={logo} width={150} height={50} />
               {/* <div
 
                 style={{

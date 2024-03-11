@@ -3,6 +3,7 @@ import { Await, defer, json, redirect, useLoaderData } from "react-router-dom";
 import DosareList from "../components/DosareList";
 import { getAuthToken, getIsAdmin, getIsProcuror, getUserId } from "../util/auth";
 import SolutiiList from "../components/SolutiiList";
+import ParticipariNavigation from "../components/ParticipariNavigation";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -11,6 +12,7 @@ const DosareSolutionatePage = () => {
 
     return (
         <>
+        <ParticipariNavigation />
         <Suspense fallback={<p style={{ textAlign: "center" }}>Loading...</p>}>
           <Await resolve={solutii}>
             {(loadedSolutii) => <SolutiiList solutii={loadedSolutii} />}

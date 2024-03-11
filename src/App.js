@@ -23,6 +23,8 @@ import DosareSolutionatePage, {
 import DosareCuAcPage, {loader as dosareCuAcLoader} from "./pages/DosareAC";
 import SolutiiLunarPage, {loader as dosareSolutionateLunarLoader} from "./pages/SolutionateLunar";
 import IncarcaturaPage, {loader as incarcaturaLoader} from "./pages/Incarcatura";
+import ParticiparePage, {loader as participareLoader} from "./pages/Participari";
+import OrdinePage, {loader as ordineLoader, action as ordineAction} from "./pages/Ordine";
 
 
 
@@ -108,6 +110,27 @@ const router = createBrowserRouter([
         path: "incarcatura",
         element: <IncarcaturaPage />,
         loader: incarcaturaLoader
+      },
+      {
+        path: "ordine",
+        element: <OrdinePage/>,
+        loader: ordineLoader,
+        action: ordineAction
+      },
+      {
+        path: "judiciar",
+        id: "judiciar",
+        children: [
+          {
+            index: true,
+            element: <ParticiparePage />,
+            loader: participareLoader
+          },{
+            path: "civil",
+            element: <ParticiparePage />,
+            loader: participareLoader
+          }
+        ]
       },
       {
         path: "auth",

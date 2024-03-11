@@ -9,8 +9,12 @@ const OrdineList = ({ ordine }) => {
   const [numar, setNumar] = useState("");
   const [descriere, setDescriere] = useState("");
   const [editItem, setEditItem] = useState(null);
+  const [descriereSearch, setDescriereSearch] = useState("");
+  const [numarSearch, setNumarSearch] = useState("");
 
   const isAdmin = getIsAdmin();
+
+  let ordineFiltrate = ordine;
 
   let i = 0;
   const submit = useSubmit();
@@ -26,7 +30,6 @@ const OrdineList = ({ ordine }) => {
   };
 
   const handleSubmit = async (event) => {
-    
     setTimeout(function () {
       event.target.form.reset();
       setNumar("");
@@ -44,8 +47,43 @@ const OrdineList = ({ ordine }) => {
     }
   };
 
+  const onChangeSearchNumar = (event) => {
+    setNumarSearch(event.target.value);
+  };
+
+  const onChangeSearchDescriere = (event) => {
+    setDescriereSearch(event.target.value);
+  };
+
+  ordineFiltrate = ordineFiltrate.filter((ordin) => {
+    console.log(ordin)
+    return ordin.descriere === descriereSearch && ordin.numar === numarSearch;
+  });
+
   return (
-    <>
+    <> Cauta un ordin
+      <input
+        style={{
+          height: "30px",
+          marginTop: "20px",
+          marginLeft: "50px",
+          width: "200px",
+        }}
+        type="text"
+        placeholder="numar ordin"
+        onChange={onChangeSearchNumar}
+      ></input>
+      <input
+        style={{
+          height: "30px",
+          marginTop: "20px",
+          marginLeft: "50px",
+          width: "200px",
+        }}
+        type="text"
+        placeholder="descriere"
+        onChange={onChangeSearchDescriere}
+      ></input>
       {isAdmin === "true" && (
         <Form
           method={editItem ? "patch" : "post"}
@@ -105,6 +143,7 @@ const OrdineList = ({ ordine }) => {
         {ordine &&
           ordine.map((ordin) => {
             i = i + 1;
+            if(ordin.descriere.includes(descriereSearch) && ordin.numar.includes(numarSearch))
             return (
               <div className={classes.tr}>
                 <div className={classes.td}>{i}</div>

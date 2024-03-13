@@ -138,7 +138,7 @@ const OrdineList = ({ ordine }) => {
           <div className={classes.td}>NUMAR ORDIN</div>
           <div className={classes.td}>DESCRIERE</div>
           <div className={classes.td}>LINK</div>
-          <div className={classes.td}>ACTIONS</div>
+          {isAdmin === "true" && <div className={classes.td}>ACTIONS</div>}
         </div>
         {ordine &&
           ordine.map((ordin) => {
@@ -154,7 +154,7 @@ const OrdineList = ({ ordine }) => {
                     link
                   </a>
                 </div>
-                <div className={classes.td}>
+                {isAdmin === "true" && <div className={classes.td}>
                   <button
                     style={{ marginRight: "10px" }}
                     onClick={() => {
@@ -170,7 +170,7 @@ const OrdineList = ({ ordine }) => {
                   >
                     EDIT
                   </button>
-                </div>
+                </div>}
               </div>
             );
           })}

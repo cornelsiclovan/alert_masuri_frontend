@@ -43,7 +43,7 @@ const DosareList = ({ dosare, isAc }) => {
   }
 
   useEffect(() => {
-    console.log(dosareFilterFaraMasuri);
+    
     setNumarDosare(dosareFilterFaraMasuri.length);
     setDosSaseLuni(dosareMaiVechiDeSaseLuni.length);
   }, [dosareFilterFaraMasuri, dosareMaiVechiDeSaseLuni]);
@@ -173,7 +173,7 @@ const DosareList = ({ dosare, isAc }) => {
     );
   });
 
-  console.log(dosareFilterFaraMasuri.length);
+
 
   dosareMaiVechiDeSaseLuni = dosareFilterFaraMasuri.filter(
     (dosar) =>
@@ -336,6 +336,7 @@ const DosareList = ({ dosare, isAc }) => {
           <br />
           <ul className={classes.list}>
             {dosareFilterFaraMasuri.map((dosar) => {
+             
               const timpRamasArest = Math.floor(
                 (new Date(dosar.data_arest).getTime() - dateNow) /
                   (1000 * 3600 * 24)
@@ -345,11 +346,11 @@ const DosareList = ({ dosare, isAc }) => {
                   (1000 * 3600 * 24)
               );
               const timpRamasSechestru = Math.floor(
-                (new Date(dosar.data_sechestru).getTime() - dateNow) /
+                (new Date(dosar.data).getTime() - dateNow) /
                   (1000 * 3600 * 24)
               );
               const timpRamasInterceptari = Math.floor(
-                (new Date(dosar.data_interceptari).getTime() - dateNow) /
+                (new Date(dosar.data).getTime() - dateNow) /
                   (1000 * 3600 * 24)
               );
 
@@ -625,6 +626,7 @@ const DosareList = ({ dosare, isAc }) => {
           <ul className={classes.list}>
             {cuMasuriAsiguratorii &&
               dosareFilterCuMasuri.map((dosar) => {
+            
                 if (
                   dosar.isControlJudiciar ||
                   dosar.isArest ||
@@ -640,7 +642,7 @@ const DosareList = ({ dosare, isAc }) => {
                       (1000 * 3600 * 24)
                   );
                   const timpRamasSechestru = Math.floor(
-                    (new Date(dosar.data_sechestru).getTime() - dateNow) /
+                    (new Date(dosar.data).getTime() - dateNow) /
                       (1000 * 3600 * 24)
                   );
                   const timpRamasInterceptari = Math.floor(
@@ -648,6 +650,7 @@ const DosareList = ({ dosare, isAc }) => {
                       (1000 * 3600 * 24)
                   );
 
+                  
                   const alertaArest = timpRamasArest <= 15 ? true : false;
                   const alertaSechestru =
                     timpRamasSechestru <= 30 ? true : false;
@@ -730,7 +733,7 @@ const DosareList = ({ dosare, isAc }) => {
                         .includes(dosarCautat.toLowerCase()) ||
                       dosar.numar_fost.includes(dosarCautat))
                   ) {
-                    console.log();
+                  
                     return (
                       <li key={dosar.id} className={classes.item}>
                         <Link to={`/dosare/${dosar.id}`}>
@@ -812,7 +815,7 @@ const DosareList = ({ dosare, isAc }) => {
                           (1000 * 3600 * 24)
                       );
                       let timpRamasSechestru = Math.floor(
-                        (new Date(dosar.data_sechestru).getTime() - dateNow) /
+                        (new Date(dosar.data).getTime() - dateNow) /
                           (1000 * 3600 * 24)
                       );
                       const timpRamasInterceptari = Math.floor(
@@ -820,17 +823,17 @@ const DosareList = ({ dosare, isAc }) => {
                           dateNow) /
                           (1000 * 3600 * 24)
                       );
-
+                      console.log(dosar.data, "timp ramas sech", timpRamasSechestru * -1)
                       const aniTimpRamasSechestru = Math.floor(
-                        dosar.days_remaining / 360
+                        timpRamasSechestru * -1 / 360
                       );
-                      const restZileSech = dosar.days_remaining % 360;
+                      const restZileSech = timpRamasSechestru * -1 % 360;
                       const luniRamasSechestru = Math.floor(restZileSech / 30);
                       const zileRamaseSechestru = restZileSech % 30;
 
                       const alertaArest = timpRamasArest <= 15 ? true : false;
                       const alertaSechestru =
-                        parseInt(dosar.days_remaining) > 150 ? true : false;
+                        parseInt(-1*timpRamasSechestru) > 150 ? true : false;
                       const alertaCj =
                         parseInt(dosar.days_remaining) <= 15 ? true : false;
                       const alertaInterceptari =
@@ -893,7 +896,7 @@ const DosareList = ({ dosare, isAc }) => {
                                   }}
                                 >
                                   {dosar.days_remaining &&
-                                    `de la insituire/mentinere au trecut ${timpRamasSechestru}`}
+                                    `de la instituire/mentinere au trecut ${timpRamasSechestru}`}
                                 </time>
                                 {dosar.data_cj && <br />}
                                 <time

@@ -3,7 +3,7 @@ const Stoc = ({ stoc }) => {
   if(stoc.length > 0)
   return (
    <>
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginRight: "235px", flex: "0, 0, auto"}}>
       <p
           style={{
             backgroundColor: "red",

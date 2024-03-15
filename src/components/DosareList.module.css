@@ -43,7 +43,9 @@
 .sort {
   display: flex;
   padding: 10px;
-  justify-content: space-evenly;
+  margin-left: 235px;
+
+  justify-content: flex-start;
 }
 
 .checkbox {

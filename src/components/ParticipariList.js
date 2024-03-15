@@ -55,7 +55,12 @@ const ParticipariList = ({ participari }) => {
     setLunaPart(event.target.value);
   };
 
-
+  let tot1 = 0;
+  let tot2 = 0;
+  let tot3 = 0;
+  let tot4 = 0;
+  let tot5 = 0;
+  let tot6 = 0
   let i = 0;
   return (
     <>
@@ -154,7 +159,12 @@ const ParticipariList = ({ participari }) => {
         </div>
         {partFiltrate.map((part) => {
           i = i + 1;
-
+          tot1 = tot1 + part.nr_part_sed;
+          tot2 = tot2 + part.nr_part_cauze;
+          tot3 = tot3 + part.nr_hot_vf;
+          tot4 = tot4 + part.nr_part_sed_copil;
+          tot5 = tot5 + part.nr_part_copil;
+          tot6 = tot6 + part.nr_hot_vf_copil;
           return (
             <div className={classes.tr}>
               <div className={classes.td}>{i}</div>
@@ -173,11 +183,14 @@ const ParticipariList = ({ participari }) => {
         <div className={classes.th}>
           <div className={classes.td}>TOTAL PARTICIPARI</div>
           <div className={classes.td}></div>
-          <div className={classes.td}>{}</div>
-          <div className={classes.td}>{}</div>
-          <div className={classes.td}>{}</div>
-          <div className={classes.td}>{}</div>
-          <div className={classes.td}>{}</div>
+          <div className={classes.td}>{tot1}</div>
+          <div className={classes.td}>{tot2}</div>
+          <div className={classes.td}>{tot3}</div>
+          <div className={classes.td}>{tot4}</div>
+          <div className={classes.td}>{tot5}</div>
+          <div className={classes.td}>{tot6}</div>
+          <div className={classes.td}></div>
+          <div className={classes.td}></div>
         </div>
       </div>
     </>

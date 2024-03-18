@@ -34,6 +34,10 @@ export const getUserId = () => {
   return localStorage.getItem("userId");
 }
 
+export const getIsInitialLogin = () => {
+  return localStorage.getItem("initiallogin")
+}
+
 export const tokenLoader = () => {
   return {
     token: getAuthToken(),

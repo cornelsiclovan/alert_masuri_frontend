@@ -9,7 +9,8 @@ const AuthenticationPage = () => {
 
 export const action = async ({ request }) => {
   const searchParams = new URL(request.url).searchParams;
-  const mode = searchParams.get("mode") || "login";
+  let mode = searchParams.get("mode") || "login";
+
 
   if (mode !== "login" && mode !== "signup") {
     throw json({ message: "Unsuported mode." }, { status: 422 });
@@ -22,16 +23,27 @@ export const action = async ({ request }) => {
     password: data.get("password"),
   };
 
+  console.log(mode);
+  console.log(data.get("oldPassword"))
+  console.log(data.get("password"))
+  console.log(data.get("repeatPassword"))
+
   if (mode !== "login") {
     authData = {
-      name: data.get("name"),
       email: data.get("email"),
-      password: data.get("password"),
-      repeatPassword: data.get("repeatPassword"),
+      oldPassword: data.get("oldPassword"),
+      newPassword: data.get("password"),
+      newPasswordRepeat: data.get("repeatPassword"),
     };
-  }
+  
+  
 
+    mode = "changePassword";
+  }
+  console.log("action")
+  console.log(mode!== "login");
   console.log(authData);
+  console.log("action");
 
   const response = await fetch(`${BASE_URL}`+ "/" + mode, {
     method: "POST",
@@ -40,6 +52,7 @@ export const action = async ({ request }) => {
     },
     body: JSON.stringify(authData),
   });
+
 
 
   if (response.status === 422 || response.status === 401) {
@@ -63,6 +76,7 @@ export const action = async ({ request }) => {
     localStorage.setItem("isGrefier", isGrefier),
     localStorage.setItem("isProcuror", isProcuror),
     localStorage.setItem("userId", userId)
+    localStorage.setItem("initiallogin", resData.initial_login)
   
     const expiration = new Date();
     expiration.setHours(expiration.getHours() + 10);
@@ -73,9 +87,20 @@ export const action = async ({ request }) => {
   
 
   if (mode === "signup") {
-    console.log(mode);
+    
     return redirect("/auth?mode=login");
   } 
+
+  if(resData.initial_login === 1 && mode === "login") {
+    localStorage.removeItem("token");
+    localStorage.removeItem("expiration");
+    localStorage.removeItem("isAdmin");
+    localStorage.removeItem("initiallogin");
+    localStorage.removeItem("isProcuror");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("isGrefier");
+    return redirect("/auth?mode=signup")
+  }
     
   return redirect("/");
 };

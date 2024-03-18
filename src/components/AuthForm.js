@@ -19,7 +19,7 @@ const AuthForm = () => {
   return (
     <>
       <Form method="post" className={classes.form}>
-        <h1>{isLogin ? "Log In" : "Creaza un utilizator"}</h1>
+        <h1>{isLogin ? "Log In" : "Reseteaza parola"}</h1>
         {data && data.errors && (
           <ul>
             {Object.values(data.errors).map((err) => {
@@ -29,20 +29,22 @@ const AuthForm = () => {
         )}
         {data && data.data && data.data[0].msg && <p>{data.data[0].msg}</p>}
         {data && data.message && <p>{data.message}</p>}
-        {!isLogin && (
-          <p>
-            <label htmlFor="name">Name</label>
-            <input id="name" type="text" name="name" required></input>
-          </p>
-        )}
+        
         <p>
           <label htmlFor="email">Username</label>
           <input id="email" type="text" name="email"  />
         </p>
+        {!isLogin && (
+          <p>
+            <label htmlFor="name">Old password</label>
+            <input id="oldPassword" type="text" name="oldPassword" required></input>
+          </p>
+        )}
         <p>
           <label htmlFor="password">Password</label>
           <input id="password" type="password" name="password" required />
         </p>
+
         {!isLogin && (
           <p>
             <label htmlFor="repeatPassword">Repeat Password</label>
@@ -56,7 +58,7 @@ const AuthForm = () => {
         )}
         <div className={classes.actions}>
           <Link to={`?mode=${isLogin ? "signup" : "login"}`}>
-            {isLogin ? "Creaza utilizator nou" : "Login"}
+            {isLogin ? "Schimba parola" : "Login"}
           </Link>
           <button disabled={isSubmitting}>
             {isSubmitting ? "Submitting" : "Salveaza"}

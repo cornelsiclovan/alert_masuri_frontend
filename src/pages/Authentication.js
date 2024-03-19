@@ -23,10 +23,6 @@ export const action = async ({ request }) => {
     password: data.get("password"),
   };
 
-  console.log(mode);
-  console.log(data.get("oldPassword"))
-  console.log(data.get("password"))
-  console.log(data.get("repeatPassword"))
 
   if (mode !== "login") {
     authData = {

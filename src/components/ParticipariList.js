@@ -2,7 +2,7 @@ import { useState } from "react";
 import classes from "./SolutiiList.module.css";
 
 const ParticipariList = ({ participari }) => {
-  console.log(participari);
+
 
   const [anPart, setAnPart] = useState("2024");
   const [numeProcuror, setNumeProcuror] = useState("");
@@ -13,6 +13,18 @@ const ParticipariList = ({ participari }) => {
   for(let j = 0; j < 2; j++) {
     yearArray.push(year - j);
   }
+
+  let procuroriList = [];
+
+  participari.forEach((element) => {
+    console.log("here");
+    if(procuroriList.includes(element.numeProcuror)) {
+
+    }else  if(+element.an === +anPart){
+      console.log("here")
+      procuroriList.push(element.numeProcuror);
+    }
+  });
 
   let partFiltrate = participari;
 
@@ -44,6 +56,11 @@ const ParticipariList = ({ participari }) => {
     }
   });
 
+
+  
+  const onChangeNumeProcurorInput = (event) => {
+    setNumeProcuror(event.target.value);
+  };
 
   const onChangeAnInput = (event) => {
   
@@ -83,7 +100,21 @@ const ParticipariList = ({ participari }) => {
 
         </select>
 
-       
+        <select
+          style={{
+            height: "30px",
+            marginTop: "20px",
+            marginLeft: "-100px",
+            width: "200px",
+          }}
+          type="text"
+          placeholder="Nume procuror"
+          onChange={onChangeNumeProcurorInput}
+        >
+          <option value="">Alege un procuror</option>
+          {procuroriList.map(procuror => <option value={procuror}>{procuror}</option>)}
+
+        </select>
 
         <select
           style={{
@@ -166,7 +197,7 @@ const ParticipariList = ({ participari }) => {
           tot5 = tot5 + part.nr_part_copil;
           tot6 = tot6 + part.nr_hot_vf_copil;
           return (
-            <div className={classes.tr}>
+            <div className={classes.tr} key={i}>
               <div className={classes.td}>{i}</div>
               <div className={classes.td}>{part.numeProcuror}</div>
               <div className={classes.td}>{part.nr_part_sed}</div>

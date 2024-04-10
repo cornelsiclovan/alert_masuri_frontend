@@ -25,6 +25,7 @@ import SolutiiLunarPage, {loader as dosareSolutionateLunarLoader} from "./pages/
 import IncarcaturaPage, {loader as incarcaturaLoader} from "./pages/Incarcatura";
 import ParticiparePage, {loader as participareLoader} from "./pages/Participari";
 import OrdinePage, {loader as ordineLoader, action as ordineAction} from "./pages/Ordine";
+import CalculTermenPage from "./pages/CalculTermen";
 
 
 
@@ -136,6 +137,10 @@ const router = createBrowserRouter([
         path: "auth",
         element: <AuthenticationPage />,
         action: authAction,
+      },
+      {
+        path: "calcul-termen",
+        element: <CalculTermenPage />,
       },
       {
         path: "logout",

@@ -113,6 +113,19 @@ const MainNavigation = () => {
 
             {token && (
               <li>
+                <NavLink
+                  to="/calcul-termen"
+                  className={({ isActive }) =>
+                    isActive ? classes.active : undefined
+                  }
+                >
+                  Calcul Termen
+                </NavLink>
+              </li>
+            )}
+
+            {token && (
+              <li>
                 <Form action="/logout" method="post">
                   <button style={{ backgroundColor: "white" }}>Logout</button>
                 </Form>

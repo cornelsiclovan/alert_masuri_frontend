@@ -45,7 +45,7 @@ const loadParticipari = async () => {
     url = BASE_URL + "/participari?procurorId=1";
   }
 
-  if (!window.location.href.includes("civil")) {
+  if (window.location.href.includes("civil")) {
     url = url + "&civil=1";
   }
 

@@ -5,6 +5,7 @@ import {
   json,
   redirect,
   useLoaderData,
+  useLocation,
   useRouteLoaderData,
 } from "react-router-dom";
 import { getAuthToken, getIsAdmin, getIsProcuror } from "../util/auth";
@@ -30,7 +31,7 @@ const ParticiparePage = () => {
   );
 };
 
-const loadParticipari = async () => {
+const loadParticipari = async (civil) => {
   const token = getAuthToken();
   const isAdmin = getIsAdmin();
   const isProcuror = getIsProcuror();
@@ -45,7 +46,8 @@ const loadParticipari = async () => {
     url = BASE_URL + "/participari?procurorId=1";
   }
 
-  if (window.location.href.includes("civil")) {
+
+  if (civil === "civil") {
     url = url + "&civil=1";
   }
 
@@ -68,15 +70,20 @@ const loadParticipari = async () => {
   }
 };
 
-export function loader() {
+export function loader({request}) {
+  
+  console.log(request.url)
+
+  const civil = request.url.includes("civil") ? "civil" : "";
+
   const token = getAuthToken();
-  console.log("test");
+
   if (!token) {
     return redirect("/auth?mode=login");
   }
 
   return defer({
-    participari: loadParticipari(),
+    participari: loadParticipari(civil),
   });
 }
 

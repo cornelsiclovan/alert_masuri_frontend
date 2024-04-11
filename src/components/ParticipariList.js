@@ -17,11 +17,11 @@ const ParticipariList = ({ participari }) => {
   let procuroriList = [];
 
   participari.forEach((element) => {
-    console.log("here");
+
     if(procuroriList.includes(element.numeProcuror)) {
 
     }else  if(+element.an === +anPart){
-      console.log("here")
+
       procuroriList.push(element.numeProcuror);
     }
   });

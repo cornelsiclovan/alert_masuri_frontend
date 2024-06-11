@@ -46,6 +46,7 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <DosarePage />,
+            id: "dosar",
             loader: dosareLoader,
           },
           {

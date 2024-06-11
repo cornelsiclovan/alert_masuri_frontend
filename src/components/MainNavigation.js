@@ -1,9 +1,20 @@
 import { Form, NavLink, useRouteLoaderData } from "react-router-dom";
 import classes from "./MainNavigation.module.css";
 import logo from "./img/logo.png";
+import { useState } from "react";
 
-const MainNavigation = () => {
+const MainNavigation =  () => {
   const { token, isAdmin } = useRouteLoaderData("root");
+  const {stoc} =  useRouteLoaderData("dosar");
+  const [dataupdate, setDataUpdate] = useState("");
+ 
+  let promise = new Promise((resolve, reject) => {
+    resolve(stoc);
+  })
+
+  promise.then(data => {
+    setDataUpdate("update:" + data[0].createdAt.split("T")[0] + " " + data[0].createdAt.split("T")[1].split(".")[0])
+  })
 
   return (
     <header className={classes.header}>
@@ -26,7 +37,7 @@ const MainNavigation = () => {
               <li>
                 <NavLink
                   to="/"
-                  className={({ isActive }) =>
+                  className={({ isActive }) =>  
                     isActive ? classes.active : undefined
                   }
                   end
@@ -129,6 +140,15 @@ const MainNavigation = () => {
                 <Form action="/logout" method="post">
                   <button style={{ backgroundColor: "white" }}>Logout</button>
                 </Form>
+              </li>
+            )}
+
+            
+            {token && (
+              <li style={{fontSize: "13px"}}>
+                
+                 {dataupdate}
+               
               </li>
             )}
           </div>

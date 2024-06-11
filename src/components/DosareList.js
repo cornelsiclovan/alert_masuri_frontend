@@ -13,6 +13,8 @@ const DosareList = ({ dosare, isAc }) => {
     setCuMasuriAsiguratorii(true);
   };
 
+ 
+
   let dosareFilterFaraMasuri = [];
   let dosareFilterCuSechestru = [];
 

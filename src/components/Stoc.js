@@ -1,5 +1,6 @@
 const Stoc = ({ stoc }) => {
-  console.log(stoc);
+  
+ 
   if(stoc.length > 0)
   return (
    <>
@@ -36,6 +37,17 @@ const Stoc = ({ stoc }) => {
         >
           {" "}
           <b>Solutionate anul curent: {stoc[0].solutionate_an_curent}{" "}</b>
+        </p>
+        <p
+          style={{
+            backgroundColor: "purple",
+            width: "250px",
+            margin: "20px",
+            padding: "10px",
+          }}
+        >
+          {" "}
+          <b>Versiune baza de date:<br/> {stoc[0].createdAt.split("T")[0]}{" "}</b>
         </p>
       </div>
     </>

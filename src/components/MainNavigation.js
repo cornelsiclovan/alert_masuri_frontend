@@ -14,8 +14,14 @@ const MainNavigation =  () => {
       resolve(stoc);
     })
   
+
+
     promise.then(data => {
-      setDataUpdate("update:" + data[0].createdAt.split("T")[0] + " " + data[0].createdAt.split("T")[1].split(".")[0])
+      
+      let ora = data[0].createdAt.split("T")[1].split(".")[0].split(":")[0];
+      let minutul = data[0].createdAt.split("T")[1].split(".")[0].split(":")[1];
+      ora = +ora + 3;
+      setDataUpdate("update:" + data[0].createdAt.split("T")[0] + " " + ora + ":" + minutul)
     })
   }
 

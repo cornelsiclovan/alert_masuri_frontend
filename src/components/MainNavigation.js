@@ -5,16 +5,21 @@ import { useState } from "react";
 
 const MainNavigation =  () => {
   const { token, isAdmin } = useRouteLoaderData("root");
-  const {stoc} =  useRouteLoaderData("dosar");
+ 
   const [dataupdate, setDataUpdate] = useState("");
  
-  let promise = new Promise((resolve, reject) => {
-    resolve(stoc);
-  })
+  if(useRouteLoaderData("dosar")) {
+    const {stoc} =  useRouteLoaderData("dosar");
+    let promise = new Promise((resolve, reject) => {
+      resolve(stoc);
+    })
+  
+    promise.then(data => {
+      setDataUpdate("update:" + data[0].createdAt.split("T")[0] + " " + data[0].createdAt.split("T")[1].split(".")[0])
+    })
+  }
 
-  promise.then(data => {
-    setDataUpdate("update:" + data[0].createdAt.split("T")[0] + " " + data[0].createdAt.split("T")[1].split(".")[0])
-  })
+ 
 
   return (
     <header className={classes.header}>

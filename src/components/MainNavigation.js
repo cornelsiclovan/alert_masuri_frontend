@@ -6,10 +6,11 @@ import { useEffect, useState } from "react";
 const MainNavigation = () => {
   const { token, isAdmin } = useRouteLoaderData("root");
 
-    
-  
-  let dataupdate = localStorage.getItem("dataupdate")
-  
+  let dataupdate = localStorage.getItem("dataupdate");
+
+  useEffect(() => {
+    dataupdate = dataupdate;
+  }, [dataupdate]);
 
   if (useRouteLoaderData("dosar")) {
     const { stoc } = useRouteLoaderData("dosar");
@@ -27,14 +28,14 @@ const MainNavigation = () => {
             .split(":")[1];
           ora = +ora + 3;
 
-          dataupdate = 
+          dataupdate =
             "update:" +
-              data[0].createdAt.split("T")[0] +
-              " " +
-              ora +
-              ":" +
-              minutul
-        
+            data[0].createdAt.split("T")[0] +
+            " " +
+            ora +
+            ":" +
+            minutul;
+
           localStorage.setItem(
             "dataupdate",
             "update:" +

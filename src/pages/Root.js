@@ -26,6 +26,7 @@ const RootLayout = () => {
     }, tokenDuration);
   }, [token]);
 
+
   return (
     <>
       <MainNavigation />

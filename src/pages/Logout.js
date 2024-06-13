@@ -8,6 +8,7 @@ export const action = () => {
   localStorage.removeItem("isProcuror");
   localStorage.removeItem("userId");
   localStorage.removeItem("isGrefier");
+  localStorage.removeItem("dataupdate");
   return redirect("/");
 };
 

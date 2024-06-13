@@ -1,14 +1,15 @@
 import { Form, NavLink, useRouteLoaderData } from "react-router-dom";
 import classes from "./MainNavigation.module.css";
 import logo from "./img/logo.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const MainNavigation = () => {
   const { token, isAdmin } = useRouteLoaderData("root");
 
-  const [dataupdate, setDataUpdate] = useState("");
-
-  console.log(window.location.href);
+    
+  
+  let dataupdate = localStorage.getItem("dataupdate")
+  
 
   if (useRouteLoaderData("dosar")) {
     const { stoc } = useRouteLoaderData("dosar");
@@ -16,19 +17,26 @@ const MainNavigation = () => {
       resolve(stoc);
     });
 
-    let i = 0;
-
     if (promise) {
-      i++;
-      promise.then((data) => {
-        let ora = data[0].createdAt.split("T")[1].split(".")[0].split(":")[0];
-        let minutul = data[0].createdAt
-          .split("T")[1]
-          .split(".")[0]
-          .split(":")[1];
-        ora = +ora + 3;
-        if (i === 0)
-          setDataUpdate(
+      if (!localStorage.getItem("dataupdate")) {
+        promise.then((data) => {
+          let ora = data[0].createdAt.split("T")[1].split(".")[0].split(":")[0];
+          let minutul = data[0].createdAt
+            .split("T")[1]
+            .split(".")[0]
+            .split(":")[1];
+          ora = +ora + 3;
+
+          dataupdate = 
+            "update:" +
+              data[0].createdAt.split("T")[0] +
+              " " +
+              ora +
+              ":" +
+              minutul
+        
+          localStorage.setItem(
+            "dataupdate",
             "update:" +
               data[0].createdAt.split("T")[0] +
               " " +
@@ -36,8 +44,8 @@ const MainNavigation = () => {
               ":" +
               minutul
           );
-        i++;
-      });
+        });
+      }
     }
   }
 

@@ -825,7 +825,7 @@ const DosareList = ({ dosare, isAc }) => {
                           dateNow) /
                           (1000 * 3600 * 24)
                       );
-                      console.log(dosar.data, "timp ramas sech", timpRamasSechestru * -1)
+                      
                       const aniTimpRamasSechestru = Math.floor(
                         timpRamasSechestru * -1 / 360
                       );

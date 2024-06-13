@@ -3,29 +3,43 @@ import classes from "./MainNavigation.module.css";
 import logo from "./img/logo.png";
 import { useState } from "react";
 
-const MainNavigation =  () => {
+const MainNavigation = () => {
   const { token, isAdmin } = useRouteLoaderData("root");
- 
+
   const [dataupdate, setDataUpdate] = useState("");
- 
-  if(useRouteLoaderData("dosar")) {
-    const {stoc} =  useRouteLoaderData("dosar");
+
+  console.log(window.location.href);
+
+  if (useRouteLoaderData("dosar")) {
+    const { stoc } = useRouteLoaderData("dosar");
     let promise = new Promise((resolve, reject) => {
       resolve(stoc);
-    })
-  
+    });
 
+    let i = 0;
 
-    promise.then(data => {
-      
-      let ora = data[0].createdAt.split("T")[1].split(".")[0].split(":")[0];
-      let minutul = data[0].createdAt.split("T")[1].split(".")[0].split(":")[1];
-      ora = +ora + 3;
-      setDataUpdate("update:" + data[0].createdAt.split("T")[0] + " " + ora + ":" + minutul)
-    })
+    if (promise) {
+      i++;
+      promise.then((data) => {
+        let ora = data[0].createdAt.split("T")[1].split(".")[0].split(":")[0];
+        let minutul = data[0].createdAt
+          .split("T")[1]
+          .split(".")[0]
+          .split(":")[1];
+        ora = +ora + 3;
+        if (i === 0)
+          setDataUpdate(
+            "update:" +
+              data[0].createdAt.split("T")[0] +
+              " " +
+              ora +
+              ":" +
+              minutul
+          );
+        i++;
+      });
+    }
   }
-
- 
 
   return (
     <header className={classes.header}>
@@ -48,7 +62,7 @@ const MainNavigation =  () => {
               <li>
                 <NavLink
                   to="/"
-                  className={({ isActive }) =>  
+                  className={({ isActive }) =>
                     isActive ? classes.active : undefined
                   }
                   end
@@ -154,14 +168,7 @@ const MainNavigation =  () => {
               </li>
             )}
 
-            
-            {token && (
-              <li style={{fontSize: "13px"}}>
-                
-                 {dataupdate}
-               
-              </li>
-            )}
+            {token && <li style={{ fontSize: "13px" }}>{dataupdate}</li>}
           </div>
 
           {token && (

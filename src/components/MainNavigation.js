@@ -6,11 +6,15 @@ import { useEffect, useState } from "react";
 const MainNavigation = () => {
   const { token, isAdmin } = useRouteLoaderData("root");
 
-  let dataupdate = localStorage.getItem("dataupdate");
+
+  let dataupdate = localStorage.getItem("dataupdate");;
+
+  let test = "";
 
   useEffect(() => {
-    dataupdate = dataupdate;
-  }, [dataupdate]);
+    console.log("what", localStorage.getItem("dataupdate"))
+    dataupdate = localStorage.getItem("dataupdate");
+  }, [token, dataupdate]);
 
   if (useRouteLoaderData("dosar")) {
     const { stoc } = useRouteLoaderData("dosar");
@@ -18,16 +22,19 @@ const MainNavigation = () => {
       resolve(stoc);
     });
 
-    if (promise) {
+
+    if (promise && localStorage.getItem("token")) {
+     
       if (!localStorage.getItem("dataupdate")) {
-        promise.then((data) => {
+       promise.then((data) => {
+          
           let ora = data[0].createdAt.split("T")[1].split(".")[0].split(":")[0];
           let minutul = data[0].createdAt
             .split("T")[1]
             .split(".")[0]
             .split(":")[1];
           ora = +ora + 3;
-
+          
           dataupdate =
             "update:" +
             data[0].createdAt.split("T")[0] +
@@ -45,6 +52,8 @@ const MainNavigation = () => {
               ":" +
               minutul
           );
+
+          test = data;
         });
       }
     }

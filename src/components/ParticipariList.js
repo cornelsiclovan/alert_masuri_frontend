@@ -60,14 +60,17 @@ const ParticipariList = ({ participari }) => {
 
   const onChangeNumeProcurorInput = (event) => {
     setNumeProcuror(event.target.value);
+    setSemestru(false);
   };
 
   const onChangeAnInput = (event) => {
     setAnPart(event.target.value);
+    setSemestru(false)
   };
 
   const onChangeLunaInput = (event) => {
     setLunaPart(event.target.value);
+    setSemestru(false);
   };
 
 

@@ -17,6 +17,9 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 const ParticiparePage = () => {
   const { participari } = useLoaderData();
 
+  console.log(window.location.href);
+
+
   return (
     <>
       <ParticipariNavigation />

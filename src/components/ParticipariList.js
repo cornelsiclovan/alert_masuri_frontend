@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import classes from "./SolutiiList.module.css";
 
+
 const ParticipariList = ({ participari }) => {
   const [anPart, setAnPart] = useState("2024");
   const [numeProcuror, setNumeProcuror] = useState("");
@@ -13,6 +14,11 @@ const ParticipariList = ({ participari }) => {
   for (let j = 0; j < 2; j++) {
     yearArray.push(year - j);
   }
+
+  useEffect(() => {
+    setSemestru(false);
+    setPartSemestru([]);
+  }, [window.location.href])
 
   let procuroriList = [];
 
@@ -64,11 +70,11 @@ const ParticipariList = ({ participari }) => {
     setLunaPart(event.target.value);
   };
 
-  const checkSemestru = () => {
+
+  const checkSemestru = (event) => {
     setSemestru(!semestru);
 
-    console.log(semestru);
-    if (semestru) {
+    if (event.target.checked) {
       let sem = [];
       let mapSem = [];
       partFiltrate.map((part) => {
@@ -114,6 +120,7 @@ const ParticipariList = ({ participari }) => {
       });
 
       setPartSemestru([...sem]);
+      console.log(partSemestru);
     }
   };
 

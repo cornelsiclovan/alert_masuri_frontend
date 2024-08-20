@@ -7,6 +7,7 @@ const ParticipariList = ({ participari }) => {
   const [numeProcuror, setNumeProcuror] = useState("");
   const [lunaPart, setLunaPart] = useState("");
   const [semestru, setSemestru] = useState(false);
+  const [lazi, setLaZi] = useState(false);
   const [partSemestru, setPartSemestru] = useState([]);
 
   let year = new Date().getFullYear();
@@ -14,6 +15,8 @@ const ParticipariList = ({ participari }) => {
   for (let j = 0; j < 2; j++) {
     yearArray.push(year - j);
   }
+
+  
 
   useEffect(() => {
     setSemestru(false);
@@ -74,8 +77,64 @@ const ParticipariList = ({ participari }) => {
   };
 
 
+  const checkLazi = (event) => {
+    setSemestru(false)
+    setLaZi(!lazi);
+
+    if (event.target.checked) {
+      let sem = [];
+      let mapSem = [];
+      partFiltrate.map((part) => {
+        let index = 0;
+        if (sem.length === 0 && +part.luna <= 6) {
+          mapSem.push(part.numeProcuror);
+          sem.push({ ...part });
+          index++;
+        } else if( +part.luna <= 12) {
+          if (mapSem.includes(part.numeProcuror)) {
+            const myIndex = mapSem.indexOf(part.numeProcuror);
+            console.log(part.nr_part_sed);
+
+            if (!sem[myIndex].nr_part_sed) {
+              sem[myIndex].nr_part_sed = 0;
+              sem[myIndex].nr_part_cauze = 0;
+              sem[myIndex].nr_hot_vf = 0;
+              sem[myIndex].nr_part_sed_copil = 0;
+              sem[myIndex].nr_part_copil = 0;
+              sem[myIndex].nr_hot_vf_copil = 0;
+              
+            }
+
+            
+
+            sem[myIndex].nr_part_sed = +sem[myIndex].nr_part_sed + +part.nr_part_sed;
+            sem[myIndex].nr_part_cauze =
+              +sem[myIndex].nr_part_cauze + +part.nr_part_cauze;
+            sem[myIndex].nr_hot_vf = +sem[myIndex].nr_hot_vf + +part.nr_hot_vf;
+            sem[myIndex].nr_part_sed_copil =
+              +sem[myIndex].nr_part_sed_copil + +part.nr_part_sed_copil;
+            sem[myIndex].nr_part_copil =
+              +sem[myIndex].nr_part_copil + +part.nr_part_copil;
+            sem[myIndex].nr_hot_vf_copil =
+              +sem[myIndex].nr_hot_vf_copil + +part.nr_hot_vf_copil;
+          } else {
+            console.log(part);
+            sem.push({ ...part });
+            mapSem.push(part.numeProcuror);
+            index++;
+          }
+        }
+      });
+
+      setPartSemestru([...sem]);
+      console.log(partSemestru);
+    }
+  }
+
+
   const checkSemestru = (event) => {
     setSemestru(!semestru);
+    setLaZi(false);
 
     if (event.target.checked) {
       let sem = [];
@@ -205,6 +264,14 @@ const ParticipariList = ({ participari }) => {
             onChange={checkSemestru}
           ></input>
           <label>Semestru</label>
+          <input
+            checked={lazi}
+            type="checkbox"
+            id="toate"
+            value="toate"
+            onChange={checkLazi}
+          ></input>
+          <label>La zi</label>
         </div>
       </div>
 
@@ -227,9 +294,9 @@ const ParticipariList = ({ participari }) => {
             NR. HOT. VERIFICATE <br /> COPIL
           </div>
           <div className={classes.td}>AN</div>
-        {!semestru &&  <div className={classes.td}>LUNA</div>}
+        {!semestru && !lazi && <div className={classes.td}>LUNA</div>}
         </div>
-        {!semestru &&
+        {!semestru && !lazi &&
           partFiltrate.map((part) => {
             i = i + 1;
             tot1 = tot1 + part.nr_part_sed;
@@ -250,6 +317,30 @@ const ParticipariList = ({ participari }) => {
                 <div className={classes.td}>{part.nr_hot_vf_copil}</div>
                 <div className={classes.td}>{part.an}</div>
                 <div className={classes.td}>{part.luna}</div>
+              </div>
+            );
+          })}
+          {lazi &&
+          partSemestru.map((part) => {
+            i = i + 1;
+            tot1 = tot1 + part.nr_part_sed;
+            tot2 = tot2 + part.nr_part_cauze;
+            tot3 = tot3 + part.nr_hot_vf;
+            tot4 = tot4 + part.nr_part_sed_copil;
+            tot5 = tot5 + part.nr_part_copil;
+            tot6 = tot6 + part.nr_hot_vf_copil;
+            return (
+              <div className={classes.tr} key={i}>
+                <div className={classes.td}>{i}</div>
+                <div className={classes.td}>{part.numeProcuror}</div>
+                <div className={classes.td}>{part.nr_part_sed}</div>
+                <div className={classes.td}>{part.nr_part_cauze}</div>
+                <div className={classes.td}>{part.nr_hot_vf}</div>
+                <div className={classes.td}>{part.nr_part_sed_copil}</div>
+                <div className={classes.td}>{part.nr_part_copil}</div>
+                <div className={classes.td}>{part.nr_hot_vf_copil}</div>
+                <div className={classes.td}>{part.an}</div>
+            
               </div>
             );
           })}
@@ -287,7 +378,7 @@ const ParticipariList = ({ participari }) => {
           <div className={classes.td}>{tot5}</div>
           <div className={classes.td}>{tot6}</div>
           <div className={classes.td}></div>
-          {!semestru && <div className={classes.td}></div>}
+          {!semestru && !lazi && <div className={classes.td}></div>}
         </div>
       </div>
     </>

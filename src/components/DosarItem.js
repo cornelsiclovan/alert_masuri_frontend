@@ -1,11 +1,15 @@
-import { Link, useSubmit } from "react-router-dom";
+import { Link, json, useSubmit } from "react-router-dom";
 
 import classes from "./DosarItem.module.css";
 import { useState } from "react";
+import { getAuthToken } from "../util/auth";
+
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const DosarItem = ({ dosar, isAc }) => {
   const submit = useSubmit();
   const [dateNow, setDate] = useState(Date.now());
+  const [vreauAdresa, setVreauAdresa] = useState(false);
 
   const startDeleteHandler = () => {
     const proceed = window.confirm("Sunteti sigur?");
@@ -39,6 +43,116 @@ const DosarItem = ({ dosar, isAc }) => {
   const alertaIntrate = timpRamasIntrate >= 90 ? true : false;
 
   console.log(dosar);
+
+  const genereazaAdresa = async (tip_document) => {
+
+    let url = BASE_URL + "/genereaza-documente/adresa";
+    let urlFile = BASE_URL + "/file";
+
+
+
+
+    let nume_parte_vatamata = "";
+    let nume_invinuit = "";
+
+    let numeString = "";
+    {
+      dosar &&
+        dosar.parte &&
+        dosar.parte.map((p, index) => {
+          console.log("index")
+          
+          if (p.ordine === "2") {
+            numeString = numeString + p.nume;
+          }
+          if (
+            dosar.parte.length > 0 &&
+            index + 1 < dosar.parte.length &&
+            p.ordine === "2" &&
+            numeString !== ""
+          ) {
+            numeString = numeString + ", ";
+          }
+          nume_parte_vatamata = numeString;
+        })
+    }
+
+    console.log(nume_parte_vatamata);
+    {
+      dosar &&
+        dosar.parte &&
+        dosar.parte.map((p, index) => {
+          let numeString = "";
+          if (p.ordine === "1") {
+            numeString = numeString + p.nume;
+          }
+          if (
+            dosar.parte.length > 0 &&
+            index + 1 < dosar.parte.length &&
+            p.ordine === "1" &&
+            numeString !== ""
+          ) {
+            numeString = numeString + ", ";
+          }
+
+          nume_invinuit = numeString;
+        })
+    }
+
+    let nume_infractiune = ""
+
+    {
+      dosar &&
+        dosar.fapta &&
+        dosar.fapta.map((f) => {
+          nume_infractiune = nume_infractiune + f.nume_infractiune;
+
+        })
+    }
+
+    const document_data = {
+      nume_procuror: dosar.numeProcuror,
+      numar_dosar: dosar.numar,
+      autorul_faptei: nume_invinuit,
+      infractiune: nume_infractiune,
+      tip_adresa: tip_document,
+      parte_vatamata: nume_parte_vatamata
+    };
+
+    const token = getAuthToken();
+
+    const response = await fetch(url, {
+      method: "post",
+      headers: {
+        "Content-Type": "Application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify(document_data),
+    });
+
+    if (response.status === 422) {
+      return response;
+    }
+
+    if (!response.ok) {
+      throw json(
+        { message: "Nu am putut salva adresa!" },
+        { status: response.status }
+      );
+    }
+  }
+
+  const genAdrSiceComplex = () => {
+    console.log("sice complex")
+    genereazaAdresa("sice_complex");
+
+
+  }
+
+  const genAdrSiceSimplu = () => {
+    console.log("sice simplu")
+    genereazaAdresa("sice_simplu");
+  }
 
   return (
     <article
@@ -155,8 +269,7 @@ const DosarItem = ({ dosar, isAc }) => {
         {!isAc && (
           <p style={{ backgroundColor: alertaIntrate ? "red" : "" }}>
             {dosar.data &&
-              `Intrare: ${
-                dosar.data.split("T")[0]
+              `Intrare: ${dosar.data.split("T")[0]
               }, au trecut ${timpRamasIntrate} zile de la intrare`}
           </p>
         )}
@@ -181,14 +294,21 @@ const DosarItem = ({ dosar, isAc }) => {
           !dosar.isSechestru &&
           !dosar.isArest &&
           dosar.admitere_contestatie != 1 && (
-            <menu className={classes.actions}>
-              <Link
-                style={{ color: "lightcoral", backgroundColor: "white" }}
-                to="edit"
-              >
-                Soluționare
-              </Link>
-            </menu>
+            <>
+              <menu className={classes.actions}>
+                <Link
+                  style={{ color: "lightcoral", backgroundColor: "white" }}
+                  to="edit"
+                >
+                  Soluționare
+                </Link>
+                <button style={{ backgroundColor: "black" }} onClick={() => setVreauAdresa(!vreauAdresa)}>Adresa</button>
+              </menu>
+              {vreauAdresa && <menu className={classes.actions}>
+                <button style={{ backgroundColor: "black" }} onClick={genAdrSiceSimplu}>sice simplu</button>
+                <button style={{ backgroundColor: "black" }} onClick={genAdrSiceComplex}>sice complex</button>
+              </menu>}
+            </>
           )}
       </div>
     </article>

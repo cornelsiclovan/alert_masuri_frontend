@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import classes from "./SolutiiList.module.css";
+import ArestatiList from "./ArestatiList";
 
 const SolutiiLunareList = ({ solutii }) => {
   const [rechIsChecked, setRechIsChecked] = useState(true);
@@ -150,7 +151,7 @@ const SolutiiLunareList = ({ solutii }) => {
   });
 
   return (
-    <>
+    <div style={{display: "flex", flexDirection: "column", width: "180%"}}>
       <div className={classes.sort}>
 
       <select
@@ -297,6 +298,9 @@ const SolutiiLunareList = ({ solutii }) => {
         </div>
       </div>
 
+ 
+      
+
       <div className={classes.table}>
         <div className={classes.th}>
           <div className={classes.td}>nr. crt</div>
@@ -328,7 +332,8 @@ const SolutiiLunareList = ({ solutii }) => {
           <div className={classes.td}></div>
         </div>
       </div>
-    </>
+  
+    </div>
   );
 };
 

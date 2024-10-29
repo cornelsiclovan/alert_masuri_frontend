@@ -1,4 +1,4 @@
-import { Link, json, useSubmit } from "react-router-dom";
+import { Link, json, redirect, useSubmit } from "react-router-dom";
 
 import classes from "./DosarItem.module.css";
 import { useState } from "react";
@@ -78,11 +78,11 @@ const DosarItem = ({ dosar, isAc }) => {
     }
 
     console.log(nume_parte_vatamata);
+    numeString = "";
     {
       dosar &&
         dosar.parte &&
         dosar.parte.map((p, index) => {
-          let numeString = "";
           if (p.ordine === "1") {
             numeString = numeString + p.nume;
           }
@@ -105,7 +105,8 @@ const DosarItem = ({ dosar, isAc }) => {
       dosar &&
         dosar.fapta &&
         dosar.fapta.map((f) => {
-          nume_infractiune = nume_infractiune + f.nume_infractiune;
+          console.log(f.nume_temei);
+          nume_infractiune = nume_infractiune + f.nume_temei;
 
         })
     }
@@ -140,6 +141,41 @@ const DosarItem = ({ dosar, isAc }) => {
         { status: response.status }
       );
     }
+
+    let numarDosarFormatat =
+    dosar.numar.split("/")[0] +
+    "-" +
+    dosar.numar.split("/")[1] +
+    "-" +
+    dosar.numar.split("/")[2] +
+    "-" + 
+    dosar.numar.split("/")[3]
+
+    if (response.status === 200) {
+      const responseFileRequest = await fetch(
+        urlFile + "/" + numarDosarFormatat,
+        {
+          method: "get",
+          headers: {
+            "Content-Type": "Application/json",
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      responseFileRequest.blob().then((file) => {
+        const newFile = new File([file], "test.docx", {
+          type: "application/docx",
+        });
+
+        numarDosarFormatat = "adresa " + numarDosarFormatat
+  
+        saveAs(newFile, numarDosarFormatat + ".docx");
+      });
+      const myFileData = await response.json();
+      const myFileName = myFileData.filename;
+      //saveAs(responseFileRequest, _);
+    }
+    return redirect("/");
   }
 
   const genAdrSiceComplex = () => {

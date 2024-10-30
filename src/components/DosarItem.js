@@ -100,13 +100,19 @@ const DosarItem = ({ dosar, isAc }) => {
     }
 
     let nume_infractiune = ""
+    let separator = "";
 
     {
       dosar &&
         dosar.fapta &&
         dosar.fapta.map((f) => {
           console.log(f.nume_temei);
-          nume_infractiune = nume_infractiune + f.nume_temei;
+
+          if(nume_infractiune != "") {
+            separator = ", "
+          }
+
+          nume_infractiune = nume_infractiune + separator + f.nume_temei;
 
         })
     }

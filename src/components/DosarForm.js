@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import classes from "./DosarForm.module.css";
 import { getAuthToken, getIsProcuror, getUserId } from "../util/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { saveAs } from "file-saver";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -44,30 +44,78 @@ const DosarForm = ({ method, dosar, procurori }) => {
   const navigate = useNavigate();
   const navigation = useNavigation();
   const userId = getUserId();
-
+ // let aliniate = [];
+ // let litere = [];
+ // let articole = [];
   const [showSolutionType, setShowSolutionType] = useState(true);
+  // const [aliniateleMele, setAliniateleMele] = useState([]);
+  // let bool = true;
+
+  // useEffect(() => {
+
+  //   const token = getAuthToken();
+
+  //   const fetchAliniate = async () => {
+
+  //     articole = [];
+  //     dosar.fapta.map(f => {
+
+  //       articole.push(f.nume_temei.split("Art.")[1].split(" ")[0]);
+  //     });
+  //     aliniate = []
+
+  //     await Promise.all(articole.map(async articol => {
+  //       const response = await fetch(`${BASE_URL}/alineate/${articol}`, {
+  //         method: "get",
+  //         headers: {
+  //           "Content-Type": "Application/json",
+  //           Authorization: "Bearer " + token,
+  //         }
+  //       });
+
+  //       const resData = await response.json();
+
+  //       aliniate.push(resData.alineate);
+
+
+
+  //     }
+  //     ));
+  //     setAliniateleMele(aliniate);
+  //   }
+
+
+  //   if (bool) {
+  //     fetchAliniate();
+  //     bool = false;
+  //   }
+
+
+  // }, [])
+
+
+
+
 
   let isRechi = false;
   let isClas = false;
-  let isRen  = false
+  let isRen = false
 
-  if(dosar.tip_solutie_propusa.includes("TERMINARE")) {
+  if (dosar.tip_solutie_propusa.includes("TERMINARE")) {
     isRechi = true
   }
 
-  if(dosar.tip_solutie_propusa.includes("CLASARE")) {
+  if (dosar.tip_solutie_propusa.includes("CLASARE")) {
     isClas = true;
   }
 
-  if(dosar.tip_solutie_propusa.includes("R.")) {
+  if (dosar.tip_solutie_propusa.includes("R.")) {
     isRen = true;
   }
 
   const [isClasare, setIsClasare] = useState(isClas);
   const [isRechizitoriu, setIsRechizitoriu] = useState(isRechi);
   const [isRup, setIsRup] = useState(isRen);
-
-
 
   let helper = false;
 
@@ -99,36 +147,36 @@ const DosarForm = ({ method, dosar, procurori }) => {
   let fapteString = "";
 
   if (dosar && dosar.fapta) {
-    console.log(dosar);
+
     dosar.fapta.map((f) => {
       fapte.push(f);
     });
 
 
 
-    if(fapte.length > 0){
-      fapteString = fapte[fapte.length-1].nume_infractiune + " prev. de " +fapte[fapte.length - 1].nume_temei;
-      if(fapte[fapte.length - 1].nume_temei.includes("229")) {
-      
+    if (fapte.length > 0) {
+      fapteString = fapte[fapte.length - 1].nume_infractiune + " prev. de " + fapte[fapte.length - 1].nume_temei;
+      if (fapte[fapte.length - 1].nume_temei.includes("229")) {
+
         fapteString = "";
-  
-        fapteString = "furt calificat prev. de "+ " " + "art. 228" + ", " + fapte[fapte.length-1].nume_temei.split("NCP")[0] + "C. pen.";
+
+        fapteString = "furt calificat prev. de " + " " + "art. 228" + ", " + fapte[fapte.length - 1].nume_temei.split("NCP")[0] + "C. pen.";
       }
-  
-      if(fapte[fapte.length - 1].nume_temei.includes("199")) {
+
+      if (fapte[fapte.length - 1].nume_temei.includes("199")) {
         fapteString = "";
-  
-        fapteString = fapte[fapte.length-1].nume_infractiune.toLowerCase() + " prev de." + fapte[fapte.length-1].nume_temei.split("NCP")[0].toLowerCase() + "rap. la " + "art. 193 alin. 1 C. pen.";
+
+        fapteString = fapte[fapte.length - 1].nume_infractiune.toLowerCase() + " prev de." + fapte[fapte.length - 1].nume_temei.split("NCP")[0].toLowerCase() + "rap. la " + "art. 193 alin. 1 C. pen.";
       }
-  
-  
-  
-    
-      if(isClasare) {
+
+
+
+
+      if (isClasare) {
         fapteString = fapte[0].nume_infractiune.toLowerCase() + " prev. de " + fapte[0].nume_temei.split("NCP")[0].toLowerCase() + "C. pen.";
       }
     }
-  
+
   }
 
   const [isSolutionat, setIsSolutionat] = useState(true);
@@ -150,7 +198,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
   }
 
   const handleCheck = () => {
-   
+
     setShowSolutionType(!showSolutionType);
 
     setIsSolutionat(!isSolutionat);
@@ -161,7 +209,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
   };
 
   const onSelectTipSolutie = (event) => {
-    
+
     if (event.target.value === "CLASARE") {
       setIsClasare(true);
       setIsRechizitoriu(false);
@@ -484,7 +532,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
         </p>
       )}
 
-      {dosar && (isRup || isRechizitoriu || isClasare) &&(
+      {dosar && (isRup || isRechizitoriu || isClasare) && (
         <p style={{ display: "flex" }}>
           <label htmlFor="autorul-faptei" style={{ width: "20%" }}>
             {" "}
@@ -510,26 +558,38 @@ const DosarForm = ({ method, dosar, procurori }) => {
             name="fapta"
             id="fapta"
             value={
-             fapteString
+              fapteString
             }
           />
         </p>
       )}
+      {/* alineate si litere
+      {aliniateleMele && aliniateleMele.length > 0 && aliniateleMele.map(alineate => {
+        let i = 0;
+        return alineate && alineate.length > 0 && alineate.map(alineat => {
+          i++;
+          return <>{i==1&&<small style={{padding: "0px"}}>Art. {alineat.articol_infractiune}</small>}<div style={{ display: "flex" }}>
+            <input type="checkbox" style={{ width: "25px" }}></input>
+            <small >{alineat.nume}. {alineat.descriere.slice(0, 100)}</small>
+          </div></>;
+        })
+      })} */}
 
-    {dosar && isRup &&(
+
+      {dosar && isRup && (
         <p style={{ display: "flex" }}>
           <label htmlFor="litera_infr" style={{ width: "20%" }}>
             {" "}
             Litera Infractiune
           </label>
           <input
-          style={{width:"5%"}}
+            style={{ width: "5%" }}
             type="text"
             name="litera_infr"
             id="litera_infr"
           />
         </p>
-      )}      
+      )}
 
       {dosar && (
         <p style={{ display: "flex" }}>
@@ -546,7 +606,7 @@ const DosarForm = ({ method, dosar, procurori }) => {
         </p>
       )}
 
-      {dosar && ( isRup || isRechizitoriu) && (
+      {dosar && (isRup || isRechizitoriu) && (
         <p style={{ display: "flex" }}>
           <label htmlFor="starea_de_fapt" style={{ width: "20%" }}>
             {" "}
@@ -674,14 +734,14 @@ export const action = async ({ request, params }) => {
 
   if (data.get("tip_solutie") === "CLASARE") {
     url += "/clasare-insusita";
-    
+
   }
 
   if (data.get("tip_solutie") === "RUP") {
     url += "/rup";
   }
 
-  if(data.get("tip_solutie") === "RECHIZITORIU") {
+  if (data.get("tip_solutie") === "RECHIZITORIU") {
     url += "/rech";
   }
 
@@ -718,7 +778,7 @@ export const action = async ({ request, params }) => {
     data.get("numar_dosar").split("/")[1] +
     "-" +
     data.get("numar_dosar").split("/")[2] +
-    "-" + 
+    "-" +
     data.get("numar_dosar").split("/")[3]
 
   if (response.status === 200) {
@@ -739,11 +799,11 @@ export const action = async ({ request, params }) => {
 
       let articol = "---";
 
-      if(data && data.get("fapta") && data.get("fapta").includes("Art")) {
+      if (data && data.get("fapta") && data.get("fapta").includes("Art")) {
         articol = data.get("fapta").split("Art.")[1].split(" ")[0];
       }
 
-      if(data && data.get("fapta") && data.get("fapta").includes("art")) {
+      if (data && data.get("fapta") && data.get("fapta").includes("art")) {
         articol = data.get("fapta").split("art.")[1].split(" ")[0];
       }
 

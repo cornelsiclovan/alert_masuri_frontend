@@ -23,12 +23,26 @@ const SolutiiLunareList = ({ solutii }) => {
     yearArray.push(year - j);
   }
 
-
-
+  let declinari = 0;
+  let rech_acc = 0;
+  let toatesolutiile = 0;
   let procuroriList = [];
 
   solutii.forEach((element) => {
-    element.anSolutie;
+    console.log(element);
+    
+    if((element.nume_pe_scurt_solutie === "Rechizitoriu" || element.nume_pe_scurt_solutie === "Acord de recunoastere") && element.an_solutie === anSolutie ) {
+      rech_acc += element.numar_solutii;
+    }
+
+    if(element.nume_pe_scurt_solutie === "Declinare" && element.an_solutie === anSolutie ) {
+      declinari += element.numar_solutii;
+    }
+    
+    if(element.an_solutie === anSolutie) {
+      toatesolutiile += element.numar_solutii;
+    }
+
     if(procuroriList.includes(element.numeProcuror)) {
 
     }else  if(element.an_solutie === anSolutie){
@@ -296,6 +310,21 @@ const SolutiiLunareList = ({ solutii }) => {
             </div>
           </div>
         </div>
+
+        <p
+          style={{
+            backgroundColor: "green",
+          
+            padding: "10px",
+            marginTop: "-10px",
+            marginLeft: "-200px", 
+            marginRight: "-200px"
+          }}
+        >
+          <b>Procent sesizare instanta: <br/> <span style={{margin: "40%"}}>{ ( rech_acc / (toatesolutiile - declinari) * 100).toFixed(2)}%</span></b>
+        </p>
+
+        
       </div>
 
  

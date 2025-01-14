@@ -9,7 +9,7 @@ const SolutiiLunareList = ({ solutii }) => {
   const [clasIsChecked, setClasIsChecked] = useState(true);
   const [acordIsChecked, setAcordIsChecked] = useState(true);
 
-  const [anSolutie, setAnSolutie] = useState("2024");
+  const [anSolutie, setAnSolutie] = useState(new Date().getFullYear().toString());
   const [numeProcuror, setNumeProcuror] = useState("");
   const [lunaSolutie, setLunaSolutie] = useState("");
 
@@ -176,7 +176,7 @@ const SolutiiLunareList = ({ solutii }) => {
             width: "150px",
           }}
 
-          defaultValue={2024}
+          defaultValue={new Date().getFullYear()}
           type="text"
           placeholder="an"
           onChange={onChangeAnInput}

@@ -38,7 +38,18 @@ const Stoc = ({ stoc }) => {
           {" "}
           <b>Solutionate anul curent: {stoc[0].solutionate_an_curent}{" "}</b>
         </p>
-       
+        <p
+          style={{
+            backgroundColor: "#4267B2",
+            width: "250px",
+            margin: "20px",
+            padding: "10px",
+          }}
+        >
+          {" "}
+          <b>Operativitate solutionare dos. an curent: {((stoc[0].solutionate_an_curent*100)/(+stoc[0].in_lucru + +stoc[0].solutionate_an_curent)).toFixed(2)
+          }%{" "}</b>
+        </p>
       </div>
     </>
   );

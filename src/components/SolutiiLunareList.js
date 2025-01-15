@@ -19,7 +19,7 @@ const SolutiiLunareList = ({ solutii }) => {
 
   let year = (new Date()).getFullYear();
   let yearArray = []
-  for(let j = 0; j < 4; j++) {
+  for (let j = 0; j < 4; j++) {
     yearArray.push(year - j);
   }
 
@@ -30,22 +30,22 @@ const SolutiiLunareList = ({ solutii }) => {
 
   solutii.forEach((element) => {
     console.log(element);
-    
-    if((element.nume_pe_scurt_solutie === "Rechizitoriu" || element.nume_pe_scurt_solutie === "Acord de recunoastere") && element.an_solutie === anSolutie ) {
+
+    if ((element.nume_pe_scurt_solutie === "Rechizitoriu" || element.nume_pe_scurt_solutie === "Acord de recunoastere") && element.an_solutie === anSolutie) {
       rech_acc += element.numar_solutii;
     }
 
-    if(element.nume_pe_scurt_solutie === "Declinare" && element.an_solutie === anSolutie ) {
+    if (element.nume_pe_scurt_solutie === "Declinare" && element.an_solutie === anSolutie) {
       declinari += element.numar_solutii;
     }
-    
-    if(element.an_solutie === anSolutie) {
+
+    if (element.an_solutie === anSolutie) {
       toatesolutiile += element.numar_solutii;
     }
 
-    if(procuroriList.includes(element.numeProcuror)) {
+    if (procuroriList.includes(element.numeProcuror)) {
 
-    }else  if(element.an_solutie === anSolutie){
+    } else if (element.an_solutie === anSolutie) {
       procuroriList.push(element.numeProcuror);
     }
   });
@@ -149,7 +149,7 @@ const SolutiiLunareList = ({ solutii }) => {
   });
 
   solutiiFiltrate = solutiiFiltrate.filter((solutie) => {
-    
+
     if (+lunaSolutie === 0) {
       return true;
     } else {
@@ -159,16 +159,16 @@ const SolutiiLunareList = ({ solutii }) => {
 
   let i = 0;
 
-   solutiiFiltrate.forEach((element) => {
+  solutiiFiltrate.forEach((element) => {
 
     totalSolutii += element.numar_solutii;
   });
 
   return (
-    <div style={{display: "flex", flexDirection: "column", width: "180%"}}>
+    <div style={{ display: "flex", flexDirection: "column", width: "180%" }}>
       <div className={classes.sort}>
 
-      <select
+        <select
           style={{
             height: "30px",
             marginTop: "20px",
@@ -181,7 +181,7 @@ const SolutiiLunareList = ({ solutii }) => {
           placeholder="an"
           onChange={onChangeAnInput}
         >
-          { yearArray.map(year => <option>{year}</option>)}
+          {yearArray.map(year => <option>{year}</option>)}
 
         </select>
 
@@ -251,7 +251,7 @@ const SolutiiLunareList = ({ solutii }) => {
           </option>
         </select>
 
-       
+
         <div className={classes.checkbox}>
           <div className={classes.ul}>
             <div className={classes.li}>
@@ -266,13 +266,16 @@ const SolutiiLunareList = ({ solutii }) => {
             </div>
             <div className={classes.li}>
               <input
-                checked={clasIsChecked}
-                id="clasare"
-                value="clasare"
+                checked={acordIsChecked}
                 type="checkbox"
+                id="acord"
+                value="acord"
+                placeholder="Tip solutie"
                 onChange={onChangeSolutieInput}
               ></input>
-              <label style={{ marginLeft: "-200px" }}>Clasare</label>
+              <label style={{ marginLeft: "-200px" }}>
+                Acord de recunoastere
+              </label>
             </div>
             <div className={classes.li}>
               <input
@@ -286,6 +289,16 @@ const SolutiiLunareList = ({ solutii }) => {
             </div>
             <div className={classes.li}>
               <input
+                checked={clasIsChecked}
+                id="clasare"
+                value="clasare"
+                type="checkbox"
+                onChange={onChangeSolutieInput}
+              ></input>
+              <label style={{ marginLeft: "-200px" }}>Clasare</label>
+            </div>
+            <div className={classes.li}>
+              <input
                 checked={declIsChecked}
                 type="checkbox"
                 id="declinare"
@@ -295,40 +308,28 @@ const SolutiiLunareList = ({ solutii }) => {
               ></input>
               <label style={{ marginLeft: "-200px" }}>Declinare</label>
             </div>
-            <div className={classes.li}>
-              <input
-                checked={acordIsChecked}
-                type="checkbox"
-                id="acord"
-                value="acord"
-                placeholder="Tip solutie"
-                onChange={onChangeSolutieInput}
-              ></input>
-              <label style={{ marginLeft: "-200px" }}>
-                Acord de recunoastere
-              </label>
-            </div>
+
           </div>
         </div>
 
         <p
           style={{
             backgroundColor: "green",
-          
+
             padding: "10px",
             marginTop: "-10px",
-            marginLeft: "-200px", 
+            marginLeft: "-200px",
             marginRight: "-200px"
           }}
         >
-          <b>Procent sesizare instanta: <br/> <span style={{margin: "40%"}}>{ ( rech_acc / (toatesolutiile - declinari) * 100).toFixed(2)}%</span></b>
+          <b>Procent sesizare instanta: <br /> <span style={{ margin: "40%" }}>{(rech_acc / (toatesolutiile - declinari) * 100).toFixed(2)}%</span></b>
         </p>
 
-        
+
       </div>
 
- 
-      
+
+
 
       <div className={classes.table}>
         <div className={classes.th}>
@@ -361,7 +362,7 @@ const SolutiiLunareList = ({ solutii }) => {
           <div className={classes.td}></div>
         </div>
       </div>
-  
+
     </div>
   );
 };

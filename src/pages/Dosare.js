@@ -119,7 +119,7 @@ const loadStoc = async () => {
 
 export function loader() {
   const token = getAuthToken();
-  if (!token) {
+  if (!token || token === 'EXPIRED') {
     return redirect("/auth?mode=login");
   }
 

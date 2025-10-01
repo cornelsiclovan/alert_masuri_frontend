@@ -84,6 +84,18 @@ const MainNavigation = () => {
                 </NavLink>
               </li>
             )}
+             {token && (
+              <li>
+                <NavLink
+                  to="/indrumator"
+                  className={({ isActive }) =>
+                    isActive ? classes.active : undefined
+                  }
+                >
+                Îndrumator
+                </NavLink>
+              </li>
+            )}
             {token && (
               <li>
                 <NavLink
@@ -116,7 +128,7 @@ const MainNavigation = () => {
                     isActive ? classes.active : undefined
                   }
                 >
-                  Incarcatura procuror
+                  Încarcatura procuror
                 </NavLink>
               </li>
             )}
@@ -129,7 +141,7 @@ const MainNavigation = () => {
                     isActive ? classes.active : undefined
                   }
                 >
-                  Statistica
+                  Statistică
                 </NavLink>
               </li>
             )}

@@ -1,8 +1,10 @@
 import { Link, json, redirect, useSubmit } from "react-router-dom";
 
+
 import classes from "./DosarItem.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getAuthToken } from "../util/auth";
+
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -10,6 +12,24 @@ const DosarItem = ({ dosar, isAc }) => {
   const submit = useSubmit();
   const [dateNow, setDate] = useState(Date.now());
   const [vreauAdresa, setVreauAdresa] = useState(false);
+  const [indrumatorForm, setIndrumatorForm] = useState(false);
+  const [activitatiToShow, setActivitatiToShow] = useState([]);
+  const [timeNotaDeIndrumare, setTimeNotaDeIndrumare] = useState();
+  const [notaDeIndrumare, setNotaDeIndrumare] = useState();
+  const [notaTypeSelected, setNotaTypeSelected] = useState();
+  const [notaSelected, setNotaSelected] = useState();
+  const [taskTypes, setTaskTypes] = useState();
+  const [runOnStart, setRunOnStart] = useState(true);
+  const [taskOptions, setTasksOptions] = useState();
+  const [taskSelected, setTaskSelected] = useState();
+  const [notaTask, setNotaTask] = useState();
+  const [tasks, setTasks] = useState();
+  const [taskStatusModification, setTaskStatusModification] = useState(1);
+
+  const [showActivitateForm, setShowActivitateForm] = useState(false);
+
+  let activitati = [];
+
 
   const startDeleteHandler = () => {
     const proceed = window.confirm("Sunteti sigur?");
@@ -42,7 +62,106 @@ const DosarItem = ({ dosar, isAc }) => {
   const alertaInterceptari = timpRamasInterceptari <= 15 ? true : false;
   const alertaIntrate = timpRamasIntrate >= 90 ? true : false;
 
-  console.log(dosar);
+
+
+  useEffect(() => {
+    const fetchIndrumator = async () => {
+      let url = BASE_URL + `/indrumator/${dosar.id_dosar}`;
+      let token = getAuthToken();
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      });
+
+      let resData = await response.json();
+
+      console.log(resData);
+
+      if (resData.message === 'error') {
+
+        document.getElementById("dataIndrumare").value = null;
+        setNotaDeIndrumare();
+      } else {
+        setNotaDeIndrumare(resData);
+      }
+
+    }
+
+    const fetchTaskTypes = async () => {
+      let url = BASE_URL + "/type";
+      let token = getAuthToken();
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token
+        }
+      });
+
+      let resData = await response.json();
+
+      setTaskTypes(resData);
+    }
+
+    const fetchTasks = async () => {
+
+      let url = BASE_URL + `/task?typeId=${notaTypeSelected}`;
+      let token = getAuthToken();
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+
+      const resData = await response.json();
+      setTasksOptions(resData);
+    }
+
+    fetchIndrumator();
+    fetchTaskTypes();
+
+    if (notaTypeSelected) {
+      fetchTasks();
+    }
+
+
+  }, [notaTypeSelected, dosar, taskStatusModification])
+
+
+  const addActivitate = async () => {
+    const token = getAuthToken();
+    let url = BASE_URL + `/indrumator/${notaDeIndrumare.id}/task`;
+
+    console.log(notaTask);
+
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify({
+        id_task: taskSelected,
+        nota: notaTask || "",
+      }),
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    });
+
+    setNotaTypeSelected();
+    setTaskSelected();
+    document.getElementById("taskTypeSelect").selectedIndex = 0;
+
+
+    // let activitate = {
+    //   id_dosar: id_dosar,
+    // }
+    // activitati = activitatiToShow;
+
+    // activitati.push(activitate);
+    // setActivitatiToShow([...activitati])
+  }
 
   const genereazaAdresa = async (tip_document) => {
 
@@ -60,8 +179,7 @@ const DosarItem = ({ dosar, isAc }) => {
       dosar &&
         dosar.parte &&
         dosar.parte.map((p, index) => {
-          console.log("index")
-          
+
           if (p.ordine === "2") {
             numeString = numeString + p.nume;
           }
@@ -77,7 +195,6 @@ const DosarItem = ({ dosar, isAc }) => {
         })
     }
 
-    console.log(nume_parte_vatamata);
     numeString = "";
     {
       dosar &&
@@ -106,9 +223,8 @@ const DosarItem = ({ dosar, isAc }) => {
       dosar &&
         dosar.fapta &&
         dosar.fapta.map((f) => {
-          console.log(f.nume_temei);
 
-          if(nume_infractiune != "") {
+          if (nume_infractiune != "") {
             separator = ", "
           }
 
@@ -149,13 +265,13 @@ const DosarItem = ({ dosar, isAc }) => {
     }
 
     let numarDosarFormatat =
-    dosar.numar.split("/")[0] +
-    "-" +
-    dosar.numar.split("/")[1] +
-    "-" +
-    dosar.numar.split("/")[2] +
-    "-" + 
-    dosar.numar.split("/")[3]
+      dosar.numar.split("/")[0] +
+      "-" +
+      dosar.numar.split("/")[1] +
+      "-" +
+      dosar.numar.split("/")[2] +
+      "-" +
+      dosar.numar.split("/")[3]
 
     if (response.status === 200) {
       const responseFileRequest = await fetch(
@@ -174,7 +290,7 @@ const DosarItem = ({ dosar, isAc }) => {
         });
 
         numarDosarFormatat = "adresa " + numarDosarFormatat
-  
+
         saveAs(newFile, numarDosarFormatat + ".docx");
       });
       const myFileData = await response.json();
@@ -185,175 +301,373 @@ const DosarItem = ({ dosar, isAc }) => {
   }
 
   const genAdrSiceComplex = () => {
-    console.log("sice complex")
+
     genereazaAdresa("sice_complex");
 
 
   }
 
   const genAdrSiceSimplu = () => {
-    console.log("sice simplu")
+
     genereazaAdresa("sice_simplu");
   }
 
-  return (
-    <article
-      className={classes.dosar}
-      style={{ backgroundColor: "darkgrey", borderRadius: "10px" }}
-    >
-      <div style={{ padding: "10px" }}>
-        <h1>
-          {dosar.numar} - {dosar.numeProcuror}
-        </h1>
-        <table border={1} width={"100%"}>
-          <th>Data primei sesizari</th>
-          <th>Institutia la care se afla dosarul</th>
+  const genereazaNotaIndrumare = async () => {
+    const token = getAuthToken();
+    const url = BASE_URL + `/genereaza-documente/note_indrumare`;
+    let urlFile = BASE_URL + "/file";
 
-          <tr>
-            <td>{dosar.data_primei_sesizari.split("T")[0]}</td>
-            {dosar.institutia_curenta && <td>{dosar.institutia_curenta}</td>}
-            {!dosar.institutia_curenta && <td>Intrat</td>}
-          </tr>
-        </table>
-        <table border={1} width={"100%"}>
-          <th>Fapte in dosar</th>
-          <th>Persoane Vatamate</th>
-          <tr>
-            <td>
-              {dosar &&
-                dosar.fapta &&
-                dosar.fapta.map((f) => {
+
+    let response = await fetch(url, {
+      method: "post",
+      headers: {
+        "Content-Type": "Application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        nume_procuror: dosar.numeProcuror,
+        numar_dosar: dosar.numar,
+        termen: notaDeIndrumare.termen,
+        notaDeIndrumare: notaDeIndrumare
+      })
+    })
+
+    let numarDosarFormatat =
+      dosar.numar.split("/")[0] +
+      "-" +
+      dosar.numar.split("/")[1] +
+      "-" +
+      dosar.numar.split("/")[2] +
+      "-" +
+      dosar.numar.split("/")[3]
+
+    if (response.status === 200) {
+      const responseFileRequest = await fetch(
+        urlFile + "/" + numarDosarFormatat,
+        {
+          method: "get",
+          headers: {
+            "Content-Type": "Application/json",
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      responseFileRequest.blob().then((file) => {
+        const newFile = new File([file], "test.docx", {
+          type: "application/docx",
+        });
+
+        numarDosarFormatat = "indrumator " + numarDosarFormatat
+
+        saveAs(newFile, numarDosarFormatat + ".docx");
+      });
+      const myFileData = await response.json();
+      const myFileName = myFileData.filename;
+      //saveAs(responseFileRequest, _);
+    }
+    return redirect("/");
+  }
+
+  const onTimeSelect = async (event) => {
+    let url = BASE_URL + "/indrumator";
+    let token = getAuthToken();
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify({
+        id_dosar: dosar.id_dosar,
+        termen: event.target.value
+      }),
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
+  if (notaDeIndrumare !== null && notaDeIndrumare !== "undefined" && notaDeIndrumare !== undefined) {
+
+
+    document.getElementById("dataIndrumare").value = notaDeIndrumare.termen;
+  }
+
+  const changeActivitateStatus = async (id_activitate, status) => {
+    const token = getAuthToken();
+
+    if (status === 0) {
+      status = 1
+    } else if (status === 1) {
+      status = 0
+    }
+
+    console.log(status, id_activitate)
+    const url = BASE_URL + `/indrumator/${id_activitate}`;
+    const response = await fetch(url, {
+      method: "put",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ status: status })
+    })
+
+    setTaskStatusModification(taskStatusModification + 1)
+  }
+
+  const onDeleteTaskAction = async (id) => {
+    const token = getAuthToken();
+    const url = BASE_URL + `/indrumator/${id}`;
+
+    const response = await fetch(url, {
+      method: "delete",
+      headers: {
+        Authorization: "Bearer " + token,
+      }
+    });
+
+    setTaskStatusModification(taskStatusModification + 1);
+  }
+
+  return (
+    <div>
+      {
+
+        <article
+          className={classes.dosar}
+          style={{ backgroundColor: "darkgrey", borderRadius: "10px" }}
+        >
+          <div style={{ padding: "10px" }}>
+            <h2>
+              Nota de îndrumare: {" "}
+              <button onClick={() => { setShowActivitateForm(!showActivitateForm) }}>
+                <h2 style={{ color: "lightcoral", paddingLeft: "10px", paddingRight: "10px" }}>
+                  + activitate
+                </h2>
+              </button>
+              {"  "} termen: <input style={{ fontSize: '20px' }} onChange={onTimeSelect} type="date" id="dataIndrumare"></input>
+            </h2>
+            {
+              showActivitateForm &&
+              <>
+                <div>
+
+
+                </div>
+                <select style={{ fontSize: '20px', padding: '5px' }} id="taskTypeSelect" onChange={(event) => { setNotaTypeSelected(event.target.value) }} name="tip_activitate" value={notaTypeSelected}>
+                  <option style={{ padding: "5px", fontSize: "15px" }}>Selecteaza ..</option>
+                  {taskTypes && taskTypes.map(taskType => {
+                    return <option style={{ padding: "5px", fontSize: "15px" }} value={taskType.id}>{taskType.nume}</option>
+                  })
+                  }
+                </select>
+                {
+                  notaTypeSelected &&
+                  <>
+                    <select style={{ fontSize: '20px', padding: '5px' }} onChange={(event) => { setTaskSelected(event.target.value) }} name="activitate" value={taskSelected}>
+                      <option style={{ padding: "5px", fontSize: "15px" }}>Selecteaza ..</option>
+                      {taskOptions && taskOptions.map(taskOption =>
+                        <option style={{ padding: "5px", fontSize: "15px" }} value={taskOption.id}>{taskOption.nume}</option>
+                      )}
+                    </select>
+                    <input type="text" style={{ fontSize: '20px', padding: '5px' }} size="50" onChange={(event) => setNotaTask(event.target.value)}></input>
+                  </>
+                }
+                <div style={{ paddingTop: "10px" }}>
+                  <button
+                    onClick={() => addActivitate(dosar.id_dosar)}
+                    style={{ fontSize: "20px", padding: "5px", color: "lightcoral", border: "none" }}
+                  >
+                    Adauga activitatea
+                  </button>
+                </div>
+              </>
+            }
+            <h2>Activitati</h2>
+            <div style={{ textAlign: "left", marginLeft: "36%", fontSize: "20px", width: "400px" }}>
+              <ul style={{ display: "flex", flexDirection: "column", marginLeft: "auto" }}>
+                {notaDeIndrumare && notaDeIndrumare.tasks && notaDeIndrumare.tasks.map(activitate => {
+                  return <li style={{ display: "flex", justifyContent: "space-between", marginBottom: "3px" }}>
+                    <button style={{ background: "red", color: "white", border: "none" }} onClick={() => { onDeleteTaskAction(activitate.id) }}>delete</button>
+                    <b>{activitate.task_type + " " + activitate.task_name + " " + activitate.nota}</b>
+                    <input type="checkbox" style={{ width: "20px", height: "20px" }} onClick={() => {
+                      changeActivitateStatus(activitate.id, activitate.status);
+                    }} checked={activitate.status === 1 ? "checked" : ""}
+                    />
+                  </li>
+                })}
+                {
+                  notaDeIndrumare && notaDeIndrumare.tasks && notaDeIndrumare.tasks.length > 0 &&
+                  <button style={{ backgroundColor: "white" }} onClick={genereazaNotaIndrumare}>Genereaza document</button>
+                }
+
+              </ul>
+            </div>
+          </div>
+        </article>
+      }
+      <article
+        className={classes.dosar}
+        style={{ backgroundColor: "darkgrey", borderRadius: "10px" }}
+      >
+        <div style={{ padding: "10px" }}>
+          <h1>
+            {dosar.numar} - {dosar.numeProcuror}
+          </h1>
+          <table border={1} width={"100%"}>
+            <th>Data primei sesizari</th>
+            <th>Institutia la care se afla dosarul</th>
+
+            <tr>
+              <td>{dosar.data_primei_sesizari.split("T")[0]}</td>
+              {dosar.institutia_curenta && <td>{dosar.institutia_curenta}</td>}
+              {!dosar.institutia_curenta && <td>Intrat</td>}
+            </tr>
+          </table>
+          <table border={1} width={"100%"}>
+            <th>Fapte in dosar</th>
+            <th>Persoane Vatamate</th>
+            <tr>
+              <td>
+                {dosar &&
+                  dosar.fapta &&
+                  dosar.fapta.map((f) => {
+                    return (
+                      <tr align={"left"} border={1}>
+                        {" "}
+                        {f.nume_infractiune}
+                      </tr>
+                    );
+                  })}
+              </td>
+              <td>
+                {dosar &&
+                  dosar.parte &&
+                  dosar.parte.map((p, index) => {
+                    let numeString = "";
+                    if (p.ordine === "2") {
+                      numeString = numeString + p.nume;
+                    }
+                    if (
+                      dosar.parte.length > 0 &&
+                      index + 1 < dosar.parte.length &&
+                      p.ordine === "2" &&
+                      numeString !== ""
+                    ) {
+                      numeString = numeString + ", ";
+                    }
+                    return numeString;
+                  })}
+              </td>
+            </tr>
+          </table>
+          <table border={1} width={"100%"}>
+            <th>Autori</th>
+            <th>Cnp</th>
+            <th>Calitate</th>
+            {dosar &&
+              dosar.parte &&
+              dosar.parte.map((p, index) => {
+                let numeString = "";
+                if (p.ordine === "1") {
+                  numeString = numeString + p.nume;
+                }
+                if (
+                  dosar.parte.length > 0 &&
+                  index + 1 < dosar.parte.length &&
+                  p.ordine === "2" &&
+                  numeString !== ""
+                ) {
+                  numeString = numeString + ", ";
+                }
+                if (p.ordine === "1")
                   return (
-                    <tr align={"left"} border={1}>
-                      {" "}
-                      {f.nume_infractiune}
+                    <tr>
+                      <td>{numeString}</td>
+                      <td>{p.cnp}</td>
+                      <td>{p.calitate}</td>
                     </tr>
                   );
-                })}
-            </td>
-            <td>
-              {dosar &&
-                dosar.parte &&
-                dosar.parte.map((p, index) => {
-                  let numeString = "";
-                  if (p.ordine === "2") {
-                    numeString = numeString + p.nume;
-                  }
-                  if (
-                    dosar.parte.length > 0 &&
-                    index + 1 < dosar.parte.length &&
-                    p.ordine === "2" &&
-                    numeString !== ""
-                  ) {
-                    numeString = numeString + ", ";
-                  }
-                  return numeString;
-                })}
-            </td>
-          </tr>
-        </table>
-        <table border={1} width={"100%"}>
-          <th>Autori</th>
-          <th>Cnp</th>
-          <th>Calitate</th>
-          {dosar &&
-            dosar.parte &&
-            dosar.parte.map((p, index) => {
-              let numeString = "";
-              if (p.ordine === "1") {
-                numeString = numeString + p.nume;
-              }
-              if (
-                dosar.parte.length > 0 &&
-                index + 1 < dosar.parte.length &&
-                p.ordine === "2" &&
-                numeString !== ""
-              ) {
-                numeString = numeString + ", ";
-              }
-              if (p.ordine === "1")
-                return (
-                  <tr>
-                    <td>{numeString}</td>
-                    <td>{p.cnp}</td>
-                    <td>{p.calitate}</td>
-                  </tr>
-                );
-              else return;
-            })}
-        </table>
-        <table border={1} width={"100%"}>
-          <th>Starea de fapt</th>
+                else return;
+              })}
+          </table>
+          <table border={1} width={"100%"}>
+            <th>Starea de fapt</th>
 
-          <tr>
-            <td>
-              {dosar &&
-                dosar.fapta &&
-                dosar.fapta.length > 0 &&
-                dosar.fapta[0].situatie}
-            </td>
-          </tr>
-        </table>
-        {!isAc &&
-          !dosar.isControlJudiciar &&
-          !dosar.isSechestru &&
-          !dosar.isArest &&
-          dosar.admitere_contestatie != 1 && (
+            <tr>
+              <td>
+                {dosar &&
+                  dosar.fapta &&
+                  dosar.fapta.length > 0 &&
+                  dosar.fapta[0].situatie}
+              </td>
+            </tr>
+          </table>
+          {!isAc &&
+            !dosar.isControlJudiciar &&
+            !dosar.isSechestru &&
+            !dosar.isArest &&
+            dosar.admitere_contestatie != 1 && (
+              <p>
+                Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
+              </p>
+            )}
+          {dosar && dosar.este_solutionat === 1 && (
             <p>
-              Solutie propusa: <b>{dosar.tip_solutie_propusa}</b>
+              Solutie finala: <b>{dosar.tip_solutie}</b>
             </p>
           )}
-        {dosar && dosar.este_solutionat === 1 && (
-          <p>
-            Solutie finala: <b>{dosar.tip_solutie}</b>
-          </p>
-        )}
-        {!isAc && (
-          <p style={{ backgroundColor: alertaIntrate ? "red" : "" }}>
-            {dosar.data &&
-              `Intrare: ${dosar.data.split("T")[0]
-              }, au trecut ${timpRamasIntrate} zile de la intrare`}
-          </p>
-        )}
-        <p style={{ backgroundColor: alertaArest ? "red" : "" }}>
-          {dosar.data_arest &&
-            `arest: ${dosar.data_arest}, mai sunt ${timpRamasArest} zile pana la expirarea masurii`}{" "}
-        </p>
-        <p style={{ backgroundColor: alertaSechestru ? "red" : "" }}>
-          {dosar.data_sechestru &&
-            `sechestru: ${dosar.data_sechestru}, mai sunt ${timpRamasSechestru} zile pana la expirarea masurii`}
-        </p>
-        <p style={{ backgroundColor: alertaCj ? "red" : "" }}>
-          {dosar.data_cj &&
-            `control judiciar: ${dosar.data_cj}, mai sunt ${timpRamasCj} zile pana la expirarea masurii`}
-        </p>
-        <p style={{ backgroundColor: alertaInterceptari ? "red" : "" }}>
-          {dosar.data_interceptari &&
-            `interceptari: ${dosar.data_interceptari}, mai sunt ${timpRamasInterceptari} zile pana la expirarea masurii`}
-        </p>
-        {!isAc &&
-          !dosar.isControlJudiciar &&
-          !dosar.isSechestru &&
-          !dosar.isArest &&
-          dosar.admitere_contestatie != 1 && (
-            <>
-              <menu className={classes.actions}>
-                <Link
-                  style={{ color: "lightcoral", backgroundColor: "white" }}
-                  to="edit"
-                >
-                  Soluționare
-                </Link>
-                <button style={{ backgroundColor: "black" }} onClick={() => setVreauAdresa(!vreauAdresa)}>Adresa</button>
-              </menu>
-              {vreauAdresa && <menu className={classes.actions}>
-                <button style={{ backgroundColor: "black" }} onClick={genAdrSiceSimplu}>sice simplu</button>
-                <button style={{ backgroundColor: "black" }} onClick={genAdrSiceComplex}>sice complex</button>
-              </menu>}
-            </>
+          {!isAc && (
+            <p style={{ backgroundColor: alertaIntrate ? "red" : "" }}>
+              {dosar.data &&
+                `Intrare: ${dosar.data.split("T")[0]
+                }, au trecut ${timpRamasIntrate} zile de la intrare`}
+            </p>
           )}
-      </div>
-    </article>
+          <p style={{ backgroundColor: alertaArest ? "red" : "" }}>
+            {dosar.data_arest &&
+              `arest: ${dosar.data_arest}, mai sunt ${timpRamasArest} zile pana la expirarea masurii`}{" "}
+          </p>
+          <p style={{ backgroundColor: alertaSechestru ? "red" : "" }}>
+            {dosar.data_sechestru &&
+              `sechestru: ${dosar.data_sechestru}, mai sunt ${timpRamasSechestru} zile pana la expirarea masurii`}
+          </p>
+          <p style={{ backgroundColor: alertaCj ? "red" : "" }}>
+            {dosar.data_cj &&
+              `control judiciar: ${dosar.data_cj}, mai sunt ${timpRamasCj} zile pana la expirarea masurii`}
+          </p>
+          <p style={{ backgroundColor: alertaInterceptari ? "red" : "" }}>
+            {dosar.data_interceptari &&
+              `interceptari: ${dosar.data_interceptari}, mai sunt ${timpRamasInterceptari} zile pana la expirarea masurii`}
+          </p>
+
+          {!isAc &&
+            !dosar.isControlJudiciar &&
+            !dosar.isSechestru &&
+            !dosar.isArest &&
+            dosar.admitere_contestatie != 1 && (
+              <>
+                <menu className={classes.actions}>
+                  <Link
+                    style={{ color: "lightcoral", backgroundColor: "white" }}
+                    to="edit"
+                  >
+                    Soluționare
+                  </Link>
+                  <button style={{ backgroundColor: "black" }} onClick={() => setVreauAdresa(!vreauAdresa)}>Adresa</button>
+
+                </menu>
+                {vreauAdresa &&
+                  <menu className={classes.actions}>
+                    <button style={{ backgroundColor: "black" }} onClick={genAdrSiceSimplu}>sice simplu</button>
+                    <button style={{ backgroundColor: "black" }} onClick={genAdrSiceComplex}>sice complex</button>
+                  </menu>}
+              </>
+            )}
+        </div>
+
+
+
+      </article>
+    </div>
   );
 };
 

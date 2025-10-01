@@ -92,7 +92,7 @@ const MainNavigation = () => {
                     isActive ? classes.active : undefined
                   }
                 >
-                Îndrumator
+                Note de indrumare
                 </NavLink>
               </li>
             )}

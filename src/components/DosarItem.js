@@ -135,7 +135,7 @@ const DosarItem = ({ dosar, isAc }) => {
     const token = getAuthToken();
     let url = BASE_URL + `/indrumator/${notaDeIndrumare.id}/task`;
 
-    console.log(notaTask);
+    if (!notaDeIndrumare.termen) { alert("Va rugam selectati un termen inainte") }
 
     const response = await fetch(url, {
       method: "POST",
@@ -438,10 +438,10 @@ const DosarItem = ({ dosar, isAc }) => {
           <div style={{ padding: "10px" }}>
             <h2>
               Nota de îndrumare: {" "}
-              <button onClick={() => { setShowActivitateForm(!showActivitateForm) }}>
-                <h2 style={{ color: "lightcoral", paddingLeft: "10px", paddingRight: "10px" }}>
-                  + activitate
-                </h2>
+              <button onClick={() => { setShowActivitateForm(!showActivitateForm) }} style={{ backgroundColor: "white", fontSize: "20px", padding: "5px", border: "none" }}>
+
+                + activitate
+
               </button>
               {"  "} termen: <input style={{ fontSize: '20px' }} onChange={onTimeSelect} type="date" id="dataIndrumare"></input>
             </h2>
@@ -471,14 +471,14 @@ const DosarItem = ({ dosar, isAc }) => {
                     <input type="text" style={{ fontSize: '20px', padding: '5px' }} size="50" onChange={(event) => setNotaTask(event.target.value)}></input>
                   </>
                 }
-                <div style={{ paddingTop: "10px" }}>
-                  <button
-                    onClick={() => addActivitate(dosar.id_dosar)}
-                    style={{ fontSize: "20px", padding: "5px", color: "lightcoral", border: "none" }}
-                  >
-                    Adauga activitatea
-                  </button>
-                </div>
+
+                <button
+                  onClick={() => addActivitate(dosar.id_dosar)}
+                  style={{ marginLeft:"10px", fontSize: "20px", backgroundColor: "white", padding: "5px", border: "none" }}
+                >
+                  Adauga
+                </button>
+
               </>
             }
             <h2>Activitati</h2>
@@ -496,7 +496,7 @@ const DosarItem = ({ dosar, isAc }) => {
                 })}
                 {
                   notaDeIndrumare && notaDeIndrumare.tasks && notaDeIndrumare.tasks.length > 0 &&
-                  <button style={{ backgroundColor: "white" }} onClick={genereazaNotaIndrumare}>Genereaza document</button>
+                  <button style={{ backgroundColor: "white", paddingTop: "5px", paddingBottom: "5px" }} onClick={genereazaNotaIndrumare}>Genereaza document</button>
                 }
 
               </ul>

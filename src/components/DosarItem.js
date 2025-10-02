@@ -25,10 +25,12 @@ const DosarItem = ({ dosar, isAc }) => {
   const [notaTask, setNotaTask] = useState();
   const [tasks, setTasks] = useState();
   const [taskStatusModification, setTaskStatusModification] = useState(1);
+  const [indrumatoarePeDosar, setIndrumatoarePeDosar] = useState();
 
   const [showActivitateForm, setShowActivitateForm] = useState(false);
 
   let activitati = [];
+
 
 
   const startDeleteHandler = () => {
@@ -66,6 +68,7 @@ const DosarItem = ({ dosar, isAc }) => {
 
   useEffect(() => {
     const fetchIndrumator = async () => {
+      
       let url = BASE_URL + `/indrumator/${dosar.id_dosar}`;
       let token = getAuthToken();
       const response = await fetch(url, {
@@ -76,18 +79,37 @@ const DosarItem = ({ dosar, isAc }) => {
         },
       });
 
+
       let resData = await response.json();
 
-      console.log(resData);
+      if (Object.keys(resData).length === 0) {
+
+        setNotaDeIndrumare(null);
+      }
 
       if (resData.message === 'error') {
 
         document.getElementById("dataIndrumare").value = null;
         setNotaDeIndrumare();
       } else {
+        console.log(resData);
         setNotaDeIndrumare(resData);
       }
 
+    }
+
+    const fetchIndrumatoarePentruDosar = async () => {
+      let url = BASE_URL + `/indrumator/dosar/${dosar.id_dosar}`;
+      let token = getAuthToken();
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      let resData = await response.json();
+      console.log(resData)
+      setIndrumatoarePeDosar(resData);
     }
 
     const fetchTaskTypes = async () => {
@@ -120,8 +142,10 @@ const DosarItem = ({ dosar, isAc }) => {
       setTasksOptions(resData);
     }
 
+    
     fetchIndrumator();
     fetchTaskTypes();
+    fetchIndrumatoarePentruDosar();
 
     if (notaTypeSelected) {
       fetchTasks();
@@ -312,6 +336,25 @@ const DosarItem = ({ dosar, isAc }) => {
     genereazaAdresa("sice_simplu");
   }
 
+  const finalizeazaNotaIndrumare = async () => {
+
+    const token = getAuthToken();
+    const url = BASE_URL + `/indrumator/finalizeaza/${notaDeIndrumare.id}`
+    let response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        "Content-Type": "Application/json",
+        Authorization: "Bearer " + token,
+      }
+    });
+    const resData = await response.json();
+    
+    document.getElementById("dataIndrumare").value = null;
+    setNotaDeIndrumare();
+    setIndrumatoarePeDosar(resData);
+    
+  }
+
   const genereazaNotaIndrumare = async () => {
     const token = getAuthToken();
     const url = BASE_URL + `/genereaza-documente/note_indrumare`;
@@ -371,6 +414,7 @@ const DosarItem = ({ dosar, isAc }) => {
   const onTimeSelect = async (event) => {
     let url = BASE_URL + "/indrumator";
     let token = getAuthToken();
+
     const response = await fetch(url, {
       method: "POST",
       body: JSON.stringify({
@@ -382,6 +426,7 @@ const DosarItem = ({ dosar, isAc }) => {
         "Content-Type": "application/json",
       },
     });
+    setTaskStatusModification(taskStatusModification + 1)
   }
 
   if (notaDeIndrumare !== null && notaDeIndrumare !== "undefined" && notaDeIndrumare !== undefined) {
@@ -427,6 +472,21 @@ const DosarItem = ({ dosar, isAc }) => {
     setTaskStatusModification(taskStatusModification + 1);
   }
 
+  const handleChangeNota = async (id_nota) => {
+    const token = getAuthToken();
+    const url =  BASE_URL + `/indrumator/refacere_nota_finalizata/${id_nota}`
+    let response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        "Content-Type": "Application/json",
+        Authorization: "Bearer " + token,
+      }
+    });
+    
+    setTaskStatusModification(taskStatusModification + 1);
+    document.getElementById("notaFinalizata").selectedIndex = 0;
+  }
+
   return (
     <div>
       {
@@ -436,6 +496,16 @@ const DosarItem = ({ dosar, isAc }) => {
           style={{ backgroundColor: "darkgrey", borderRadius: "10px" }}
         >
           <div style={{ padding: "10px" }}>
+            <h2>Selecteaza o nota de indrumare finalizata:
+              <select style={{ fontSize: '18px', padding: '2px' }} id="notaFinalizata" onChange={(event) => { handleChangeNota(event.target.value) }} >
+                <option>Selecteaza..</option>
+                {
+                  indrumatoarePeDosar && indrumatoarePeDosar.map(indrumator =>
+                    <option value={indrumator.id}>{indrumator.termen}</option>
+                  )
+                }
+              </select>
+            </h2>
             <h2>
               Nota de îndrumare: {" "}
               <button onClick={() => { setShowActivitateForm(!showActivitateForm) }} style={{ backgroundColor: "white", fontSize: "20px", padding: "5px", border: "none" }}>
@@ -472,12 +542,12 @@ const DosarItem = ({ dosar, isAc }) => {
                   </>
                 }
 
-                <button
+                {notaDeIndrumare && notaDeIndrumare.termen && <button
                   onClick={() => addActivitate(dosar.id_dosar)}
-                  style={{ marginLeft:"10px", fontSize: "20px", backgroundColor: "white", padding: "5px", border: "none" }}
+                  style={{ marginLeft: "10px", fontSize: "20px", backgroundColor: "white", padding: "5px", border: "none" }}
                 >
                   Adauga
-                </button>
+                </button>}
 
               </>
             }
@@ -496,7 +566,10 @@ const DosarItem = ({ dosar, isAc }) => {
                 })}
                 {
                   notaDeIndrumare && notaDeIndrumare.tasks && notaDeIndrumare.tasks.length > 0 &&
-                  <button style={{ backgroundColor: "white", paddingTop: "5px", paddingBottom: "5px" }} onClick={genereazaNotaIndrumare}>Genereaza document</button>
+                  <div>
+                    <button style={{ backgroundColor: "white", paddingTop: "5px", paddingBottom: "5px" }} onClick={genereazaNotaIndrumare}>Genereaza document</button>
+                    <button style={{ backgroundColor: "white", paddingTop: "5px", paddingBottom: "5px" }} onClick={finalizeazaNotaIndrumare}>Finalizeaza nota</button>
+                  </div>
                 }
 
               </ul>

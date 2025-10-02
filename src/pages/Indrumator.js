@@ -7,6 +7,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const IndrumatorPage = () => {
     const { indrumatoare } = useLoaderData();
+    
     return (
         <>
             <Suspense fallback={<p style={{ textAlign: "center" }}>Loading...</p>}>

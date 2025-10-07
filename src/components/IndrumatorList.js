@@ -66,15 +66,16 @@ const IndrumatorList = (indrumatoare) => {
     }
  
     const onChangeYearInput = (event) => {
-        setSearchYear(event.targe.value)
+        setSearchYear(event.target.value)
     }
 
     let indrumatoareFinalizateFilter = indrumatoareFinalizate && indrumatoareFinalizate.filter((indrumator) => {
         console.log(indrumator.dosar)
         console.log(searhNrDosar)
         return(
-            indrumator.dosar.includes(searhNrDosar) &&
-            indrumator.procuror.toLowerCase().includes(numeProcuror.toLowerCase())
+           ( indrumator.dosar.includes(searhNrDosar) &&
+            indrumator.procuror.toLowerCase().includes(numeProcuror.toLowerCase())) 
+            && (indrumator.dosar.split("/")[3].includes(searchYear))
         );
     })
 

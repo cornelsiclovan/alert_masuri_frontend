@@ -13,7 +13,7 @@ const DosareList = ({ dosare, isAc }) => {
     setCuMasuriAsiguratorii(true);
   };
 
- 
+
 
   let dosareFilterFaraMasuri = [];
   let dosareFilterCuSechestru = [];
@@ -39,13 +39,13 @@ const DosareList = ({ dosare, isAc }) => {
     dosareMaiVechiDeSaseLuni = dosare.filter(
       (dosar) =>
         ((new Date(dosar.data).getTime() - new Date()) / (1000 * 3600 * 24)) *
-          -1 >
+        -1 >
         180
     );
   }
 
   useEffect(() => {
-    
+
     setNumarDosare(dosareFilterFaraMasuri.length);
     setDosSaseLuni(dosareMaiVechiDeSaseLuni.length);
   }, [dosareFilterFaraMasuri, dosareMaiVechiDeSaseLuni]);
@@ -180,7 +180,7 @@ const DosareList = ({ dosare, isAc }) => {
   dosareMaiVechiDeSaseLuni = dosareFilterFaraMasuri.filter(
     (dosar) =>
       ((new Date(dosar.data).getTime() - new Date()) / (1000 * 3600 * 24)) *
-        -1 >
+      -1 >
       180
   );
 
@@ -338,28 +338,28 @@ const DosareList = ({ dosare, isAc }) => {
           <br />
           <ul className={classes.list}>
             {dosareFilterFaraMasuri.map((dosar) => {
-             
+
               const timpRamasArest = Math.floor(
                 (new Date(dosar.data_arest).getTime() - dateNow) /
-                  (1000 * 3600 * 24)
+                (1000 * 3600 * 24)
               );
               const timpRamasCj = Math.floor(
                 (new Date(dosar.data_cj).getTime() - dateNow) /
-                  (1000 * 3600 * 24)
+                (1000 * 3600 * 24)
               );
               const timpRamasSechestru = Math.floor(
                 (new Date(dosar.data).getTime() - dateNow) /
-                  (1000 * 3600 * 24)
+                (1000 * 3600 * 24)
               );
               const timpRamasInterceptari = Math.floor(
                 (new Date(dosar.data).getTime() - dateNow) /
-                  (1000 * 3600 * 24)
+                (1000 * 3600 * 24)
               );
 
               let timpRamasIntrate = Math.floor(
                 ((new Date(dosar.data).getTime() - dateNow) /
                   (1000 * 3600 * 24)) *
-                  -1
+                -1
               );
 
               let timpInZile = timpRamasIntrate;
@@ -375,6 +375,18 @@ const DosareList = ({ dosare, isAc }) => {
                 parseInt(dosar.days_remaining) <= 4 ? true : false;
               const alertaInterceptari =
                 timpRamasInterceptari <= 15 ? true : false;
+
+              let colorIntrate = "green";
+
+              if (timpRamasIntrate > 90 && timpRamasIntrate < 180) {
+                colorIntrate = "orange"
+              } else if (timpRamasIntrate > 180) {
+                colorIntrate = "red"
+              }
+
+
+
+
               const alertaIntrate = timpRamasIntrate >= 90 ? true : false;
 
               timpRamasIntrate = "";
@@ -431,13 +443,13 @@ const DosareList = ({ dosare, isAc }) => {
                         )}
                         <p
                           style={{
-                            backgroundColor: alertaIntrate ? "red" : "",
+                            // backgroundColor: alertaIntrate ? "red" : "",
+                            backgroundColor: colorIntrate
                           }}
                         >
                           {!isAc &&
                             dosar.data &&
-                            `Intrare: ${
-                              dosar.data.split("T")[0]
+                            `Intrare: ${dosar.data.split("T")[0]
                             }, au trecut ${timpRamasIntrate} zile de la intrare`}
                         </p>
 
@@ -552,8 +564,7 @@ const DosareList = ({ dosare, isAc }) => {
                         >
                           {!isAc &&
                             dosar.data &&
-                            `Intrare: ${
-                              dosar.data.split("T")[0]
+                            `Intrare: ${dosar.data.split("T")[0]
                             }, au trecut ${timpRamasIntrate} zile de la intrare`}
                         </p>
                         <p>
@@ -628,7 +639,7 @@ const DosareList = ({ dosare, isAc }) => {
           <ul className={classes.list}>
             {cuMasuriAsiguratorii &&
               dosareFilterCuMasuri.map((dosar) => {
-            
+
                 if (
                   dosar.isControlJudiciar ||
                   dosar.isArest ||
@@ -637,22 +648,22 @@ const DosareList = ({ dosare, isAc }) => {
                 ) {
                   const timpRamasArest = Math.floor(
                     (new Date(dosar.data_arest).getTime() - dateNow) /
-                      (1000 * 3600 * 24)
+                    (1000 * 3600 * 24)
                   );
                   const timpRamasCj = Math.floor(
                     (new Date(dosar.data_cj).getTime() - dateNow) /
-                      (1000 * 3600 * 24)
+                    (1000 * 3600 * 24)
                   );
                   const timpRamasSechestru = Math.floor(
                     (new Date(dosar.data).getTime() - dateNow) /
-                      (1000 * 3600 * 24)
+                    (1000 * 3600 * 24)
                   );
                   const timpRamasInterceptari = Math.floor(
                     (new Date(dosar.data_interceptari).getTime() - dateNow) /
-                      (1000 * 3600 * 24)
+                    (1000 * 3600 * 24)
                   );
 
-                  
+
                   const alertaArest = timpRamasArest <= 15 ? true : false;
                   const alertaSechestru =
                     timpRamasSechestru <= 30 ? true : false;
@@ -735,7 +746,7 @@ const DosareList = ({ dosare, isAc }) => {
                         .includes(dosarCautat.toLowerCase()) ||
                       dosar.numar_fost.includes(dosarCautat))
                   ) {
-                  
+
                     return (
                       <li key={dosar.id} className={classes.item}>
                         <Link to={`/dosare/${dosar.id}`}>
@@ -810,22 +821,22 @@ const DosareList = ({ dosare, isAc }) => {
                     ) {
                       const timpRamasArest = Math.floor(
                         (new Date(dosar.data_arest).getTime() - dateNow) /
-                          (1000 * 3600 * 24)
+                        (1000 * 3600 * 24)
                       );
                       const timpRamasCj = Math.floor(
                         (new Date(dosar.data_cj).getTime() - dateNow) /
-                          (1000 * 3600 * 24)
+                        (1000 * 3600 * 24)
                       );
                       let timpRamasSechestru = Math.floor(
                         (new Date(dosar.data).getTime() - dateNow) /
-                          (1000 * 3600 * 24)
+                        (1000 * 3600 * 24)
                       );
                       const timpRamasInterceptari = Math.floor(
                         (new Date(dosar.data_interceptari).getTime() -
                           dateNow) /
-                          (1000 * 3600 * 24)
+                        (1000 * 3600 * 24)
                       );
-                      
+
                       const aniTimpRamasSechestru = Math.floor(
                         timpRamasSechestru * -1 / 360
                       );
@@ -835,7 +846,7 @@ const DosareList = ({ dosare, isAc }) => {
 
                       const alertaArest = timpRamasArest <= 15 ? true : false;
                       const alertaSechestru =
-                        parseInt(-1*timpRamasSechestru) > 150 ? true : false;
+                        parseInt(-1 * timpRamasSechestru) > 150 ? true : false;
                       const alertaCj =
                         parseInt(dosar.days_remaining) <= 15 ? true : false;
                       const alertaInterceptari =
@@ -1012,7 +1023,7 @@ const DosareList = ({ dosare, isAc }) => {
                         timpRamasContestatie = Math.floor(
                           (new Date(dosar.termen_contestatie).getTime() -
                             dateNow) /
-                            (1000 * 3600 * 24)
+                          (1000 * 3600 * 24)
                         );
                       }
 
@@ -1025,8 +1036,16 @@ const DosareList = ({ dosare, isAc }) => {
                         timpRamasContestatie = Math.floor(
                           (dateNow -
                             new Date(dosar.termen_contestatie).getTime()) /
-                            (1000 * 3600 * 24)
+                          (1000 * 3600 * 24)
                         );
+                      }
+
+                      let colorContestatie = "green";
+
+                      if (timpRamasContestatie > 90 && timpRamasContestatie < 180) {
+                        colorContestatie = "orange"
+                      } else if (timpRamasContestatie > 180) {
+                        colorContestatie = "red"
                       }
 
                       if (timpRamasContestatie < 30) {
@@ -1072,9 +1091,10 @@ const DosareList = ({ dosare, isAc }) => {
                               <div>
                                 <time
                                   style={{
-                                    backgroundColor: alertaContestatie
-                                      ? "red"
-                                      : "",
+                                    // backgroundColor: alertaContestatie
+                                    //   ? "red"
+                                    //   : "",
+                                    backgroundColor: colorContestatie
                                   }}
                                 >
                                   {dosar.termen_contestatie &&
@@ -1106,7 +1126,7 @@ const DosareList = ({ dosare, isAc }) => {
                         timpRamasContestatie = Math.floor(
                           (new Date(dosar.termen_contestatie).getTime() -
                             dateNow) /
-                            (1000 * 3600 * 24)
+                          (1000 * 3600 * 24)
                         );
                       }
 
@@ -1119,7 +1139,7 @@ const DosareList = ({ dosare, isAc }) => {
                         timpRamasContestatie = Math.floor(
                           (dateNow -
                             new Date(dosar.termen_contestatie).getTime()) /
-                            (1000 * 3600 * 24)
+                          (1000 * 3600 * 24)
                         );
                       }
 

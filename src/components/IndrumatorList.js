@@ -10,7 +10,7 @@ const IndrumatorList = (indrumatoare) => {
     const [indrumatoareFinalizate, setIndrumatoareFinalizate] = useState()
     const isAdmin = getIsAdmin();
     const [numeProcuror, setNumeProcuror] = useState("");
-    const [searchYear, setSearchYear] = useState();
+    const [searchYear, setSearchYear] = useState("");
     const [searhNrDosar, setSearchNrDosar] = useState("");
 
     useEffect(() => {

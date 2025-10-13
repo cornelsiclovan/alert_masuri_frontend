@@ -370,6 +370,7 @@ const DosareList = ({ dosare, isAc }) => {
               const zileRamasIntrate = restZile % 30;
 
               const alertaArest = timpRamasArest <= 15 ? true : false;
+
               const alertaSechestru = timpRamasSechestru <= 30 ? true : false;
               const alertaCj =
                 parseInt(dosar.days_remaining) <= 4 ? true : false;
@@ -559,7 +560,7 @@ const DosareList = ({ dosare, isAc }) => {
                         )}
                         <p
                           style={{
-                            backgroundColor: alertaIntrate ? "red" : "",
+                            backgroundColor: colorIntrate,
                           }}
                         >
                           {!isAc &&
@@ -663,6 +664,13 @@ const DosareList = ({ dosare, isAc }) => {
                     (1000 * 3600 * 24)
                   );
 
+                  let colorSechestru = 'green';
+
+                  if (timpRamasSechestru > 90 && timpRamasSechestru < 180) {
+                    colorSechestru = 'orange';
+                  } else if (timpRamasSechestru > 180) {
+                    colorSechestru = 'red';
+                  }
 
                   const alertaArest = timpRamasArest <= 15 ? true : false;
                   const alertaSechestru =
@@ -671,6 +679,19 @@ const DosareList = ({ dosare, isAc }) => {
                     parseInt(dosar.days_remaining) <= 15 ? true : false;
                   const alertaInterceptari =
                     timpRamasInterceptari <= 15 ? true : false;
+
+                  let culoareMasuraPreventiva = 'green';
+                  if(parseInt(dosar.days_remaining) < 15) {
+                    culoareMasuraPreventiva = "red"
+                  }
+                  
+                  if(dosar.days_remaining > 15 && dosar.days_remaining < 25) {
+                    culoareMasuraPreventiva = "organge"
+                  }
+
+                  if(dosar.days_remaining > 25) {
+                    culoareMasuraPreventiva = "green"
+                  }
 
                   if (dosarCautat === null || dosarCautat === "") {
                     return (
@@ -714,7 +735,7 @@ const DosareList = ({ dosare, isAc }) => {
                             </time>
                             {dosar.data_sechestru && <br />}
                             <time
-                              style={{ backgroundColor: alertaCj ? "red" : "" }}
+                              style={{ backgroundColor: culoareMasuraPreventiva}}
                             >
                               {dosar.days_remaining &&
                                 `masura preventiva expira in ${dosar.days_remaining} zile`}
@@ -780,7 +801,7 @@ const DosareList = ({ dosare, isAc }) => {
                             </time>
                             {dosar.data_sechestru && <br />}
                             <time
-                              style={{ backgroundColor: alertaCj ? "red" : "" }}
+                              style={{ backgroundColor: culoareMasuraPreventiva }}
                             >
                               {dosar.days_remaining &&
                                 `masura preventiva expira in ${dosar.days_remaining} zile`}
@@ -831,6 +852,9 @@ const DosareList = ({ dosare, isAc }) => {
                         (new Date(dosar.data).getTime() - dateNow) /
                         (1000 * 3600 * 24)
                       );
+
+                       let tsech = -1* timpRamasSechestru;
+
                       const timpRamasInterceptari = Math.floor(
                         (new Date(dosar.data_interceptari).getTime() -
                           dateNow) /
@@ -865,6 +889,15 @@ const DosareList = ({ dosare, isAc }) => {
                       if (zileRamaseSechestru !== 0) {
                         timpRamasSechestru += zileRamaseSechestru + " zile";
                       }
+
+                      let colorSechestru = 'green';
+                     
+                      if (tsech > 90 && tsech < 180) {
+                        colorSechestru = 'orange';
+                      } else if (tsech > 180) {
+                        colorSechestru = 'red';
+                      }
+
 
                       if (dosarCautat === null || dosarCautat === "") {
                         return (
@@ -903,13 +936,11 @@ const DosareList = ({ dosare, isAc }) => {
                                 {dosar.data_sechestru && <br />}
                                 <time
                                   style={{
-                                    backgroundColor: alertaSechestru
-                                      ? "red"
-                                      : "",
+                                    backgroundColor:colorSechestru,
                                   }}
                                 >
                                   {dosar.days_remaining &&
-                                    `de la instituire/mentinere au trecut ${timpRamasSechestru}`}
+                                    `de la instituire/mentineree au trecut ${timpRamasSechestru}`}
                                 </time>
                                 {dosar.data_cj && <br />}
                                 <time
@@ -974,9 +1005,7 @@ const DosareList = ({ dosare, isAc }) => {
                                 {dosar.data_sechestru && <br />}
                                 <time
                                   style={{
-                                    backgroundColor: alertaSechestru
-                                      ? "red"
-                                      : "",
+                                    backgroundColor: colorSechestru,
                                   }}
                                 >
                                   {dosar.days_remaining &&
@@ -1042,10 +1071,15 @@ const DosareList = ({ dosare, isAc }) => {
 
                       let colorContestatie = "green";
 
-                      if (timpRamasContestatie > 90 && timpRamasContestatie < 180) {
+                      if (timpRamasContestatie < 90) {
                         colorContestatie = "orange"
-                      } else if (timpRamasContestatie > 180) {
-                        colorContestatie = "red"
+                      } else if (timpRamasContestatie > 90) {
+                        colorContestatie = "green"
+                      }
+
+
+                      if (alertaContestatie) {
+                        colorContestatie = "red";
                       }
 
                       if (timpRamasContestatie < 30) {
@@ -1143,6 +1177,19 @@ const DosareList = ({ dosare, isAc }) => {
                         );
                       }
 
+                      let colorContestatie = "green";
+
+                      if (timpRamasContestatie < 90) {
+                        colorContestatie = "orange"
+                      } else if (timpRamasContestatie > 90) {
+                        colorContestatie = "green"
+                      }
+
+
+                      if (alertaContestatie) {
+                        colorContestatie = "red";
+                      }
+
                       if (timpRamasContestatie < 30) {
                         alertaContestatie = true;
                       }
@@ -1185,9 +1232,7 @@ const DosareList = ({ dosare, isAc }) => {
                               <div>
                                 <time
                                   style={{
-                                    backgroundColor: alertaContestatie
-                                      ? "red"
-                                      : "",
+                                    backgroundColor: colorContestatie,
                                   }}
                                 >
                                   {dosar.termen_contestatie &&

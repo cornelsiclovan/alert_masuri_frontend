@@ -51,6 +51,10 @@ export const action = async ({ request }) => {
 
 
 
+ 
+  
+
+
   if (response.status === 422 || response.status === 401) {
     return response;
   }
@@ -65,6 +69,19 @@ export const action = async ({ request }) => {
   const isProcuror = resData.isProcuror;
   const isGrefier = resData.isGrefier;
   const userId = resData.userId;
+
+   if(mode === "login" && !isAdmin) {
+    await fetch(`${BASE_URL}` + "/stats?operation=login", 
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + token
+        },
+        body: {}
+
+      }
+    )
+  }
 
   if(mode === "login") {
     localStorage.setItem("token", token);

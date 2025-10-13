@@ -385,6 +385,15 @@ const DosarItem = ({ dosar, isAc }) => {
       dosar.numar.split("/")[3]
 
     if (response.status === 200) {
+      await fetch(BASE_URL + "/stats?operation=nota_indrumare", {
+        method: "POST",
+        headers: {
+        "Content-Type": "Application/json",
+        Authorization: "Bearer " + token,
+      },
+        body: JSON.stringify({})
+      })
+      
       const responseFileRequest = await fetch(
         urlFile + "/" + numarDosarFormatat,
         {

@@ -44,9 +44,9 @@ const DosarForm = ({ method, dosar, procurori }) => {
   const navigate = useNavigate();
   const navigation = useNavigation();
   const userId = getUserId();
- // let aliniate = [];
- // let litere = [];
- // let articole = [];
+  // let aliniate = [];
+  // let litere = [];
+  // let articole = [];
   const [showSolutionType, setShowSolutionType] = useState(true);
   // const [aliniateleMele, setAliniateleMele] = useState([]);
   // let bool = true;
@@ -782,6 +782,16 @@ export const action = async ({ request, params }) => {
     data.get("numar_dosar").split("/")[3]
 
   if (response.status === 200) {
+    await fetch(BASE_URL + "/stats?operation=solutie", {
+      method: "post",
+      headers: {
+        "Content-Type": "Application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({}),
+    })
+
+
     const responseFileRequest = await fetch(
       urlFile + "/" + numarDosarFormatat,
       {

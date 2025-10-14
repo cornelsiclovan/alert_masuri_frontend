@@ -681,12 +681,12 @@ const DosareList = ({ dosare, isAc }) => {
                     timpRamasInterceptari <= 15 ? true : false;
 
                   let culoareMasuraPreventiva = 'green';
-                  if(parseInt(dosar.days_remaining) < 15) {
+                  if(parseInt(dosar.days_remaining) <= 15) {
                     culoareMasuraPreventiva = "red"
                   }
                   
-                  if(dosar.days_remaining > 15 && dosar.days_remaining < 25) {
-                    culoareMasuraPreventiva = "organge"
+                  if(dosar.days_remaining > 15 && dosar.days_remaining <= 25) {
+                    culoareMasuraPreventiva = "orange"
                   }
 
                   if(dosar.days_remaining > 25) {

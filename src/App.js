@@ -27,6 +27,7 @@ import ParticiparePage, { loader as participareLoader } from "./pages/Participar
 import OrdinePage, { loader as ordineLoader, action as ordineAction } from "./pages/Ordine";
 import CalculTermenPage from "./pages/CalculTermen";
 import IndrumatorPage, { loader as indrumatorLoader } from "./pages/Indrumator";
+import DosareCuAnPage, {loader as dosareCuAnLoader} from "./pages/DosareAN";
 
 
 
@@ -83,6 +84,29 @@ const router = createBrowserRouter([
             path: "dosareCuAc",
             element: <DosareCuAcPage />,
             loader: dosareCuAcLoader,
+          },
+          {
+            path: "dosareCuAn",
+            element: <DosareCuAnPage />,
+            loader: dosareCuAnLoader,
+          },
+          {
+            path: "/dosareCuAn/:dosarId",
+            id: "dosaran-detail",
+            loader: dosarDetailLoader,
+            children: [
+              {
+                index: true,
+                element: <DosarDetailPage />,
+                action: deleteDosarAction,
+              },
+              {
+                path: "edit",
+                element: <EditDosarPage />,
+                loader: procuroriLoaderData,
+                action: manipulateDosarAction,
+              },
+            ],
           },
           {
             path: "/dosareCuAc/:dosarId",

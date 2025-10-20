@@ -14,23 +14,32 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const DosarDetailPage = () => {
   let isAc = false;
+  let isAn = false;
   let routeloader = "dosar-detail";
   if (window.location.href.includes("dosareCuAc")) {
     routeloader = "dosarac-detail";
     isAc = true;
   }
+
+
+  if (window.location.href.includes("dosareCuAn")) {
+    routeloader = "dosaran-detail";
+    
+    isAn = true;
+  }
+
   const { dosar, dosare, procurori } = useRouteLoaderData(routeloader);
 
   return (
     <>
       <Suspense fallback={<p style={{ textAlign: "center" }}>Loading ...</p>}>
         <Await resolve={dosar}>
-          {(loadedDosar) => <DosarItem dosar={loadedDosar} isAc={isAc}/>}
+          {(loadedDosar) => <DosarItem dosar={loadedDosar} isAc={isAc} isAn={isAn}/>}
         </Await>
       </Suspense>
       <Suspense fallback={<p style={{ textAlign: "center" }}>Loading ...</p>}>
         <Await resolve={dosare}>
-          {(loadedDosare) => <DosareList dosare={loadedDosare} isAc={isAc}/>}
+          {(loadedDosare) => <DosareList dosare={loadedDosare} isAc={isAc} isAn={isAn}/>}
         </Await>
       </Suspense>
     </>

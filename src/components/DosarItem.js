@@ -8,7 +8,7 @@ import { getAuthToken } from "../util/auth";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-const DosarItem = ({ dosar, isAc }) => {
+const DosarItem = ({ dosar, isAc, isAn }) => {
   const submit = useSubmit();
   const [dateNow, setDate] = useState(Date.now());
   const [vreauAdresa, setVreauAdresa] = useState(false);
@@ -31,7 +31,7 @@ const DosarItem = ({ dosar, isAc }) => {
 
   let activitati = [];
 
-
+  console.log(isAn);
 
   const startDeleteHandler = () => {
     const proceed = window.confirm("Sunteti sigur?");
@@ -599,7 +599,7 @@ const DosarItem = ({ dosar, isAc }) => {
             <th>Institutia la care se afla dosarul</th>
 
             <tr>
-              <td>{dosar.data_primei_sesizari.split("T")[0]}</td>
+              <td>{!isAn && dosar.data_primei_sesizari.split("T")[0]}</td>
               {dosar.institutia_curenta && <td>{dosar.institutia_curenta}</td>}
               {!dosar.institutia_curenta && <td>Intrat</td>}
             </tr>
@@ -683,7 +683,7 @@ const DosarItem = ({ dosar, isAc }) => {
               </td>
             </tr>
           </table>
-          {!isAc &&
+          {(!isAc || !isAn) &&
             !dosar.isControlJudiciar &&
             !dosar.isSechestru &&
             !dosar.isArest &&
@@ -697,7 +697,7 @@ const DosarItem = ({ dosar, isAc }) => {
               Solutie finala: <b>{dosar.tip_solutie}</b>
             </p>
           )}
-          {!isAc && (
+          {(!isAc || !isAn) && (
             <p style={{ backgroundColor: alertaIntrate ? "red" : "" }}>
               {dosar.data &&
                 `Intrare: ${dosar.data.split("T")[0]
@@ -721,7 +721,7 @@ const DosarItem = ({ dosar, isAc }) => {
               `interceptari: ${dosar.data_interceptari}, mai sunt ${timpRamasInterceptari} zile pana la expirarea masurii`}
           </p>
 
-          {!isAc &&
+          {(!isAc || !isAn) &&
             !dosar.isControlJudiciar &&
             !dosar.isSechestru &&
             !dosar.isArest &&

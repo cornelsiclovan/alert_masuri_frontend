@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import classes from "./DosareList.module.css";
 import { useEffect, useState } from "react";
 
-const DosareList = ({ dosare, isAc }) => {
+const DosareList = ({ dosare, isAc, isAn }) => {
   const [cuMasuriAsiguratorii, setCuMasuriAsiguratorii] = useState(true);
   const [dateNow, setDate] = useState(Date.now());
   const [searchName, setSearchName] = useState("");
@@ -23,7 +23,7 @@ const DosareList = ({ dosare, isAc }) => {
 
   let dosareContestatii = [];
 
-  if (!isAc) {
+  if (!isAc && !isAn) {
     dosareFilterCuSechestru = dosare.filter(
       (dosar) => dosar.isSechestru === true
     );
@@ -126,7 +126,7 @@ const DosareList = ({ dosare, isAc }) => {
 
   let i = 0;
 
-  if (isAc) {
+  if (isAc || isAn) {
     dosareFilterFaraMasuri = dosare;
   }
 
@@ -409,9 +409,8 @@ const DosareList = ({ dosare, isAc }) => {
                   <li key={dosar.id} className={classes.item}>
                     <Link
                       to={
-                        !isAc
-                          ? `/dosare/${dosar.id}`
-                          : `/dosareCuAc/${dosar.id}`
+                        (!isAc && !isAn) 
+                          ? `/dosare/${dosar.id}` : !isAn ? `/dosareCuAc/${dosar.id}` : `/dosareCuAn/${dosar.id}`
                       }
                     >
                       <div className={classes.content}>

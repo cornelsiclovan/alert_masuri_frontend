@@ -235,7 +235,7 @@ const DosareList = ({ dosare, isAc, isAn }) => {
 
   return (
     <>
-      {!isAc && (
+      {!isAc && !isAn && (
         <div className={classes.sort}>
           <div className={classes.checkbox}>
             <div className={classes.ul}>
@@ -297,14 +297,20 @@ const DosareList = ({ dosare, isAc, isAn }) => {
         <div className={classes.items}>
           <div style={{ display: "flex" }}>
             <div>
-              {!isAc && <h2> Dosare intrate ({numarDosare}) </h2>}
+              {!isAc && !isAn && <h2> Dosare intrate ({numarDosare}) </h2>}
               {isAc && (
                 <h1 style={{ width: "400px" }}>
                   {" "}
                   Dosare cu AC({numarDosare}){" "}
                 </h1>
               )}
-              {!isAc && <>- Mai vechi de 6 luni ({dosSaseLuni})</>}
+              {isAn && (
+                <h1 style={{ width: "400px" }}>
+                  {" "}
+                  Dosare cu AN({numarDosare}){" "}
+                </h1>
+              )}
+              {!isAc && !isAn && <>- Mai vechi de 6 luni ({dosSaseLuni})</>}
               <button
                 style={{ backgroundColor: "greenyellow" }}
                 onClick={exportToExcel}

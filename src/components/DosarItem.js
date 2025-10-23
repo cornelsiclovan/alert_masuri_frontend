@@ -599,7 +599,7 @@ const DosarItem = ({ dosar, isAc, isAn }) => {
             <th>Institutia la care se afla dosarul</th>
 
             <tr>
-              <td>{!isAn && dosar.data_primei_sesizari.split("T")[0]}</td>
+              <td>{dosar.autor_necunoscut===0 && dosar.data_primei_sesizari.split("T")[0]}</td>
               {dosar.institutia_curenta && <td>{dosar.institutia_curenta}</td>}
               {!dosar.institutia_curenta && <td>Intrat</td>}
             </tr>

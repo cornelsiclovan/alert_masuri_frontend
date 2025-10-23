@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import classes from "./SolutiiList.module.css";
 import ArestatiList from "./ArestatiList";
 
-const SolutiiLunareList = ({ solutii, solutiiFapteVizibile, setSolutiiFapteVizibile }) => {
+const SolutiiFapteList = ({ solutii, solutiiFapteVizibile, setSolutiiFapteVizibile }) => {
   const [rechIsChecked, setRechIsChecked] = useState(true);
   const [declIsChecked, setDeclIsChecked] = useState(true);
   const [renuIsChecked, setRenuIsChecked] = useState(true);
   const [clasIsChecked, setClasIsChecked] = useState(true);
   const [acordIsChecked, setAcordIsChecked] = useState(true);
+  const [fapta, setFapta] = useState("");
 
   const [anSolutie, setAnSolutie] = useState(new Date().getFullYear().toString());
   const [numeProcuror, setNumeProcuror] = useState("");
@@ -27,6 +28,7 @@ const SolutiiLunareList = ({ solutii, solutiiFapteVizibile, setSolutiiFapteVizib
   let rech_acc = 0;
   let toatesolutiile = 0;
   let procuroriList = [];
+
 
   solutii.forEach((element) => {
    
@@ -149,6 +151,10 @@ const SolutiiLunareList = ({ solutii, solutiiFapteVizibile, setSolutiiFapteVizib
   });
 
   solutiiFiltrate = solutiiFiltrate.filter((solutie) => {
+    return solutie.fapta.includes(fapta)
+  })
+
+  solutiiFiltrate = solutiiFiltrate.filter((solutie) => {
 
     if (+lunaSolutie === 0) {
       return true;
@@ -156,6 +162,8 @@ const SolutiiLunareList = ({ solutii, solutiiFapteVizibile, setSolutiiFapteVizib
       return +solutie.luna_solutie === +lunaSolutie;
     }
   });
+
+
 
   let i = 0;
 
@@ -175,7 +183,7 @@ const SolutiiLunareList = ({ solutii, solutiiFapteVizibile, setSolutiiFapteVizib
           style={{
             height: "30px",
             marginTop: "20px",
-            marginLeft: "-100px",
+            marginLeft: "-200px",
             width: "150px",
           }}
 
@@ -192,7 +200,7 @@ const SolutiiLunareList = ({ solutii, solutiiFapteVizibile, setSolutiiFapteVizib
           style={{
             height: "30px",
             marginTop: "20px",
-            marginLeft: "-100px",
+            marginLeft: "-200px",
             width: "200px",
           }}
           type="text"
@@ -208,7 +216,7 @@ const SolutiiLunareList = ({ solutii, solutiiFapteVizibile, setSolutiiFapteVizib
           style={{
             height: "30px",
             marginTop: "20px",
-            marginLeft: "-100px",
+            marginLeft: "-200px",
             width: "150px",
           }}
           type="text"
@@ -254,6 +262,7 @@ const SolutiiLunareList = ({ solutii, solutiiFapteVizibile, setSolutiiFapteVizib
           </option>
         </select>
 
+        <input type="text" placeholder="cauta fapta" style={{height: "30px", width: "300px", marginTop:"20px", marginLeft: "-200px"}} onChange={(event)=>setFapta(event.target.value)} value={fapta}></input>
 
         <div className={classes.checkbox}>
           <div className={classes.ul}>
@@ -341,6 +350,7 @@ const SolutiiLunareList = ({ solutii, solutiiFapteVizibile, setSolutiiFapteVizib
           <div className={classes.td}>an solutie</div>
           <div className={classes.td}>luna solutie</div>
           <div className={classes.td}>solutie pe scurt</div>
+          <div className={classes.td}>fapta</div>
           <div className={classes.td}>Nume</div>
         </div>
         {solutiiFiltrate.map((solutie) => {
@@ -352,6 +362,7 @@ const SolutiiLunareList = ({ solutii, solutiiFapteVizibile, setSolutiiFapteVizib
               <div className={classes.td}>{solutie.an_solutie}</div>
               <div className={classes.td}>{solutie.luna_solutie}</div>
               <div className={classes.td}>{solutie.nume_pe_scurt_solutie}</div>
+                <div className={classes.td}>{solutie.fapta}</div>
               <div className={classes.td}>{solutie.numeProcuror}</div>
             </div>
           );
@@ -363,6 +374,7 @@ const SolutiiLunareList = ({ solutii, solutiiFapteVizibile, setSolutiiFapteVizib
           <div className={classes.td}></div>
           <div className={classes.td}></div>
           <div className={classes.td}></div>
+          <div className={classes.td}></div>
         </div>
       </div>
 
@@ -370,4 +382,4 @@ const SolutiiLunareList = ({ solutii, solutiiFapteVizibile, setSolutiiFapteVizib
   );
 };
 
-export default SolutiiLunareList;
+export default SolutiiFapteList;

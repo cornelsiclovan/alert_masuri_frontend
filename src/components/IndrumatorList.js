@@ -139,12 +139,12 @@ const IndrumatorList = (indrumatoare) => {
     }
 
     const onChangeDosarNr = (event) => {
-       
+
         setNrDosar(event.target.value)
     }
 
     const onClickAddIndrumator = () => {
-        
+
     }
 
     let i = 0;
@@ -189,41 +189,8 @@ const IndrumatorList = (indrumatoare) => {
 
                     <ul className={classes.list}>
                         <h1>Note nefinalizate</h1>
-                        <button onClick={() => { setAdaugPentruAn(!adaugPentruAn) }}> Adauga pentru AN </button>
-                        {
-                            adaugPentruAn &&
-                            <>
-                                <div>
-                                    {"  "} termen: <input style={{ fontSize: '20px' }} onChange={onTimeSelect} type="date" id="dataIndrumare"></input>
-                                    {"  "}nr dosar: <input onChange={onChangeDosarNr} value={nrDosar}></input> {nrDosar && termen && <button onClick={onClickAddIndrumator}>Add</button>} <br />
-                                    <select style={{ fontSize: '20px', padding: '5px' }} id="taskTypeSelect" onChange={(event) => { setNotaTypeSelected(event.target.value) }} name="tip_activitate" value={notaTypeSelected}>
-                                        <option style={{ padding: "5px", fontSize: "15px" }}>Selecteaza ..</option>
-                                        {taskTypes && taskTypes.map(taskType => {
-                                            return <option style={{ padding: "5px", fontSize: "15px" }} value={taskType.id}>{taskType.nume}</option>
-                                        })
-                                        }
-                                    </select>
-                                    {notaTypeSelected &&
-                                        <>
-                                            <select style={{ fontSize: '20px', padding: '5px' }} onChange={(event) => { setTaskSelected(event.target.value) }} name="activitate" value={taskSelected}>
-                                                <option style={{ padding: "5px", fontSize: "15px" }}>Selecteaza ..</option>
-                                                {taskOptions && taskOptions.map(taskOption =>
-                                                    <option style={{ padding: "5px", fontSize: "15px" }} value={taskOption.id}>{taskOption.nume}</option>
-                                                )}
-                                            </select>
-                                            <input type="text" style={{ fontSize: '20px', padding: '5px' }} size="20" onChange={(event) => setNotaTask(event.target.value)}></input>
-                                        </>}
+                       
 
-    
-                                    <br />
-                                    {[1, 2, 3].map(number => {
-                                        return <ul>number</ul>
-                                    })}
-                                    <button>Genereaza document</button>  <button>Finalizeaza nota</button>
-                                </div>
-                            </>
-
-                        }
                         {
 
                             indrumatoare && indrumatoare.indrumatoare.map((indrumator) => {

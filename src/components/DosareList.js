@@ -54,6 +54,7 @@ const DosareList = ({ dosare, isAc, isAn }) => {
   const [renuIsChecked, setRenuIsChecked] = useState(false);
   const [uppIsChecked, setUppIsChecked] = useState(false);
   const [clasIsChecked, setClasIsChecked] = useState(false);
+  const [alteleIsChecked, setAlteleIsChecked] = useState(false);
   const [toate, setToate] = useState(true);
 
   const onChangeSolutieInput = (event) => {
@@ -76,32 +77,42 @@ const DosareList = ({ dosare, isAc, isAn }) => {
       checkToate("upp", uppIsChecked);
       setUppIsChecked(!uppIsChecked);
     }
-  };
+
+    if(event.target.value === "altele") {
+      checkToate("altele", alteleIsChecked)
+      setAlteleIsChecked(!alteleIsChecked);
+    }
+  };  
 
   const checkToate = (tipSol, value) => {
     if (tipSol === "rech") {
       setToate(
-        !(!rechIsChecked || clasIsChecked || renuIsChecked || uppIsChecked)
+        !(!rechIsChecked || clasIsChecked || renuIsChecked || uppIsChecked || alteleIsChecked)
       );
     }
     if (tipSol === "clas") {
       setToate(
-        !(rechIsChecked || !clasIsChecked || renuIsChecked || uppIsChecked)
+        !(rechIsChecked || !clasIsChecked || renuIsChecked || uppIsChecked || alteleIsChecked)
       );
     }
     if (tipSol === "renu") {
       setToate(
-        !(rechIsChecked || clasIsChecked || !renuIsChecked || uppIsChecked)
+        !(rechIsChecked || clasIsChecked || !renuIsChecked || uppIsChecked || alteleIsChecked)
       );
     }
     if (tipSol === "upp") {
       setToate(
-        !(rechIsChecked || clasIsChecked || renuIsChecked || !uppIsChecked)
+        !(rechIsChecked || clasIsChecked || renuIsChecked || !uppIsChecked || alteleIsChecked)
       );
+    }
+    if(tipSol === "altele") {
+      setToate(
+         !(rechIsChecked || clasIsChecked || renuIsChecked || uppIsChecked || !alteleIsChecked)
+      )
     }
   };
 
-  const getCondition = (isRech, isRenu, isClas, isUpp) => {
+  const getCondition = (isRech, isRenu, isClas, isUpp, isAltele) => {
     let condition = false;
 
     if (isRech && rechIsChecked) {
@@ -118,6 +129,10 @@ const DosareList = ({ dosare, isAc, isAn }) => {
 
     if (isUpp && uppIsChecked) {
       condition = condition || isUpp;
+    }
+
+    if (isAltele && alteleIsChecked) {
+      condition = condition || isAltele;
     }
     return condition;
   };
@@ -154,7 +169,13 @@ const DosareList = ({ dosare, isAc, isAn }) => {
         dosar.tip_solutie_propusa.includes("TERMINARE"),
         dosar.tip_solutie_propusa.includes("R.U.P."),
         dosar.tip_solutie_propusa.includes("CLASARE"),
-        dosar.tip_solutie_propusa.includes("UPP")
+        dosar.tip_solutie_propusa.includes("UPP"),
+        (
+          !dosar.tip_solutie_propusa.includes("UPP")
+          &&  !dosar.tip_solutie_propusa.includes("R.U.P.")
+          &&  !dosar.tip_solutie_propusa.includes("CLASARE")
+          &&  !dosar.tip_solutie_propusa.includes("TERMINARE")
+        )
       );
 
       return condition;
@@ -288,6 +309,16 @@ const DosareList = ({ dosare, isAc, isAn }) => {
                   onChange={onChangeSolutieInput}
                 ></input>
                 <label style={{ marginLeft: "-200px" }}>U.P.P.</label>
+              </div>
+              <div className={classes.li}>
+                <input
+                  checked={alteleIsChecked}
+                  type="checkbox"
+                  id="altele"
+                  value="altele"
+                  onChange={onChangeSolutieInput}
+                ></input>
+                <label style={{ marginLeft: "-200px" }}>Altele</label>
               </div>
             </div>
           </div>
